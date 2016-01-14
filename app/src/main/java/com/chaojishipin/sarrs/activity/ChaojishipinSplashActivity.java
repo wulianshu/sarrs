@@ -61,8 +61,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
     private static final String FILENAME = "chaojishipin.mp4";
     private Context mContext;
     private SharedPreferences setting;
-
-    private Handler mHandler;
     private Runnable mTask;
     private AsyncTask mInitTask;
     private boolean isFrist = true;
@@ -152,8 +150,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
     private void initView() {
         mContext = this;
         setContentView(R.layout.chaojishipin_splashactivity_layout);
-
-        mHandler = new Handler();
         mReportLists = new ArrayList<>();
 
         setting = getSharedPreferences(ConstantUtils.SHARE_APP_TAG, 0);

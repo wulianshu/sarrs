@@ -78,7 +78,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
     public final static String pageid = "00S0020017_2";
     private LinearLayout mDelLayout;
 //  private GestureOverlayView mGesture;
-    private Handler mHandler;
     private DownloadManager mDownloadManager;
 
     public void setmListView(SwipeMenuListView mListView) {
@@ -164,7 +163,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         iv_download_back.setOnClickListener(this);
         mDelLayout = (LinearLayout) findViewById(R.id.delete_layout);
         mDelLayout.setOnClickListener(this);
-        mHandler = new Handler();
         mDownloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
         download_no_item = (RelativeLayout) findViewById(R.id.download_no_item);
         mListView = (SwipeMenuListView) findViewById(R.id.DownloadListView);
@@ -1029,57 +1027,10 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         }
     }
 
-    private Handler mDeteDownloadFileHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case Constants.MESSAGE_DELETE_DOWNLOAD_FILE:
-                    cancelLoadingView();
-                    ToastUtil.toastPrompt(DownloadJobActivity.this, R.string.delete_success, 0);
-
-                    showAvailableSpace();
-                    cancelDelete(false);
-                    if (adapter.getCount() < 1) {
-                        onClickBackButton();
-                    } else {
-                        if (index != -1) {
-//                            title2layout.setVisibility(View.GONE);
-                        }
-                        mDownloadManager.registerDownloadObserver(DownloadJobActivity.this);
-                        mDownloadManager.notifyObservers();
-                    }
-                    adapter = new DownloadJobAdapter(jobs, DownloadJobActivity.this, index);
-                    mListView.setAdapter(adapter);
-
-                    if (index == -1) {
-                        iv_download_more.setVisibility(View.GONE);
-                        download_more_tip.setVisibility(View.GONE);
-                        mConfirm_delete.setVisibility(View.VISIBLE);
-                        all_select.setVisibility(View.VISIBLE);
-                        memory_info.setVisibility(View.GONE);
-                    } else {
-                        download_more_tip.setVisibility(View.VISIBLE);
-                        iv_download_more.setVisibility(View.VISIBLE);
-                        mConfirm_delete.setVisibility(View.GONE);
-                        all_select.setVisibility(View.GONE);
-                        memory_info.setVisibility(View.VISIBLE);
-                    }
-                    tv_download_edit.setText(getResources().getString(R.string.edit));
-                    mListView.setIsOpenStatus(true);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-    };
-
     private void DeleteDownloadfile() {
         showLoadingView(DownloadJobActivity.this, false, R.string.deleting);
         executeDelete();
-        mDeteDownloadFileHandler.sendEmptyMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
+        mHandler.sendEmptyMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
     }
 
     private void deleteOneItem(int position) {
@@ -1105,7 +1056,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             mDownloadManager.getDownloadFolderJobs().delete(localKey);
         }
         mDownloadManager.startNextTask();
-        mDeteDownloadFileHandler.sendEmptyMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
+        mHandler.sendEmptyMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
 //        tv_download_edit.setText(getResources().getString(R.string.edit));
 //        mListView.setIsOpenStatus(true);
     }
@@ -1260,7 +1211,45 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
 
     @Override
     protected void handleInfo(Message msg) {
+        switch (msg.what) {
+            case Constants.MESSAGE_DELETE_DOWNLOAD_FILE:
+                cancelLoadingView();
+                ToastUtil.toastPrompt(DownloadJobActivity.this, R.string.delete_success, 0);
 
+                showAvailableSpace();
+                cancelDelete(false);
+                if (adapter.getCount() < 1) {
+                    onClickBackButton();
+                } else {
+                    if (index != -1) {
+//                            title2layout.setVisibility(View.GONE);
+                    }
+                    mDownloadManager.registerDownloadObserver(DownloadJobActivity.this);
+                    mDownloadManager.notifyObservers();
+                }
+                adapter = new DownloadJobAdapter(jobs, DownloadJobActivity.this, index);
+                mListView.setAdapter(adapter);
+
+                if (index == -1) {
+                    iv_download_more.setVisibility(View.GONE);
+                    download_more_tip.setVisibility(View.GONE);
+                    mConfirm_delete.setVisibility(View.VISIBLE);
+                    all_select.setVisibility(View.VISIBLE);
+                    memory_info.setVisibility(View.GONE);
+                } else {
+                    download_more_tip.setVisibility(View.VISIBLE);
+                    iv_download_more.setVisibility(View.VISIBLE);
+                    mConfirm_delete.setVisibility(View.GONE);
+                    all_select.setVisibility(View.GONE);
+                    memory_info.setVisibility(View.VISIBLE);
+                }
+                tv_download_edit.setText(getResources().getString(R.string.edit));
+                mListView.setIsOpenStatus(true);
+                break;
+
+            default:
+                break;
+        }
     }
 
     /**

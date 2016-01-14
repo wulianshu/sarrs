@@ -370,8 +370,8 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
         public void handleMessage(Message msg) {
             ChaoJiShiPinBaseActivity service = mFragmentView.get();
             if (service != null) {
-                super.handleMessage(msg);
                 try {
+                    super.handleMessage(msg);
                     service.handleInfo(msg);
                 } catch (Throwable e) {
                     e.printStackTrace();

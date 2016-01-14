@@ -68,36 +68,11 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
                 bitmap = ImageLoader.getInstance().loadImageSync(picPath);
                 if (bitmap != null) {
                     cutView.setBitmap(bitmap);
-                    cutView.setHandler(handler);
+                    cutView.setHandler(mHandler);
                 }
             }
-
         }
-
     }
-
-    Handler handler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    String newImg = "file://" + msg.obj.toString();
-//                    UserLoginState.getInstance().getUserInfo().setAvatar(newImg); // 保存裁剪后的新图片，用于请求头像修改
-                    LogUtil.e("CutActivity", newImg);
-                    Intent intent = new Intent();
-                    intent.putExtra(IMAGE_URL, newImg);
-                    intent.putExtra("mode", 2);
-                    intent.setAction(ChaojishipinModifyUserInfoDetailActivity.imagePickFinish);
-                    sendBroadcast(intent); // 发送广播，请求头像修改
-                    finish();
-                    break;
-            }
-        }
-
-    };
 
     @Override
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
@@ -125,7 +100,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
             }
             if (bitmap != null) {
                 cutView.setBitmap(bitmap);
-                cutView.setHandler(handler);
+                cutView.setHandler(mHandler);
             }
         }
 //        String[] pojo = {MediaStore.Images.Media.DATA};
@@ -225,7 +200,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
 
         if (bitmap != null) {
             cutView.setBitmap(bitmap);
-            cutView.setHandler(handler);
+            cutView.setHandler(mHandler);
         }
     }
 
@@ -239,7 +214,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
 
             if (photo != null) {
                 cutView.setBitmap(photo);
-                cutView.setHandler(handler);
+                cutView.setHandler(mHandler);
             }
         }
         if (photo == null) {
@@ -363,7 +338,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
         //由于Bitmap内存占用较大，这里需要回收内存，否则会报out of memory异常  
         if (bitmap != null) {
             cutView.setBitmap(bitmap);
-            cutView.setHandler(handler);
+            cutView.setHandler(mHandler);
         }
 
 
@@ -378,7 +353,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
                 bitmap = BitmapFactory.decodeStream(in);
             if (bitmap != null) {
                 cutView.setBitmap(bitmap);
-                cutView.setHandler(handler);
+                cutView.setHandler(mHandler);
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -397,7 +372,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
         Bitmap bitmap = BitmapFactory.decodeStream(is);
         if (bitmap != null) {
             cutView.setBitmap(bitmap);
-            cutView.setHandler(handler);
+            cutView.setHandler(mHandler);
         }
 
     }
@@ -414,7 +389,7 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
         }
         if (bitmap != null) {
             cutView.setBitmap(bitmap);
-            cutView.setHandler(handler);
+            cutView.setHandler(mHandler);
         }
 
     }
@@ -447,7 +422,19 @@ public class ChaojishipinCutActivity extends ChaoJiShiPinBaseActivity implements
 
     @Override
     protected void handleInfo(Message msg) {
-
+        switch (msg.what) {
+            case 0:
+                String newImg = "file://" + msg.obj.toString();
+//                    UserLoginState.getInstance().getUserInfo().setAvatar(newImg); // 保存裁剪后的新图片，用于请求头像修改
+                LogUtil.e("CutActivity", newImg);
+                Intent intent = new Intent();
+                intent.putExtra(IMAGE_URL, newImg);
+                intent.putExtra("mode", 2);
+                intent.setAction(ChaojishipinModifyUserInfoDetailActivity.imagePickFinish);
+                sendBroadcast(intent); // 发送广播，请求头像修改
+                finish();
+                break;
+        }
     }
 
     @Override

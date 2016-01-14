@@ -348,30 +348,6 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         }
     }
 
-
-
-
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 888:
-                    int orientation = msg.arg1;
-                    if (orientation > 30 && orientation < 240) {
-
-                    } else if ((orientation > 240 && orientation < 300) || (orientation > 60 && orientation < 120)) {
-                        System.out.println("切换成横屏");
-                        ChaoJiShiPinVideoDetailActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                        sensor_flag = false;
-                        isFullScreen = true;
-                    } else if ((orientation > 330 && orientation < 360) || (orientation > 0 && orientation < 30)) {
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
     /**
      * 重力感应监听者（执行屏幕切换操作）
      */
@@ -545,8 +521,24 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
     @Override
     protected void handleInfo(Message msg) {
+        switch (msg.what) {
+            case 888:
+                int orientation = msg.arg1;
+                if (orientation > 30 && orientation < 240) {
 
+                } else if ((orientation > 240 && orientation < 300) || (orientation > 60 && orientation < 120)) {
+                    System.out.println("切换成横屏");
+                    ChaoJiShiPinVideoDetailActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    sensor_flag = false;
+                    isFullScreen = true;
+                } else if ((orientation > 330 && orientation < 360) || (orientation > 0 && orientation < 30)) {
+                }
+                break;
+            default:
+                break;
+        }
     }
+
     public SensorManager getSm() {
         return sm;
     }
