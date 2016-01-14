@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_ffffff">
+
+    <ToggleButton
+        android:id="@+id/download_radiobtton"
+        android:layout_width="@dimen/sarrs_dimen_14dp"
+        android:layout_height="@dimen/sarrs_dimen_14dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:background="@drawable/radiobutton_white_bg"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:tag="下载删除"
+        android:textOff=""
+        android:textOn="" />
+    <!--  <ToggleButton
+          android:id="@+id/download_radiobtton"
+          android:layout_centerVertical="true"
+          android:layout_width="@dimen/sarrs_dimen_12dp"
+          android:background="@drawable/radiobutton_background"
+          android:layout_marginLeft="@dimen/sarrs_dimen_5dp"
+          android:layout_height="@dimen/sarrs_dimen_12dp"
+          android:button="@null"
+          android:gravity="center"
+          >
+      </ToggleButton>-->
+    <com.chaojishipin.sarrs.widget.EqualRatioImageView
+        android:id="@+id/main_feed_small_poster"
+        android:layout_width="112dp"
+        android:layout_height="63dp"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+        android:layout_toRightOf="@+id/download_radiobtton"
+        android:clickable="false"
+        android:src="@drawable/search_default_poster"
+        android:scaleType="centerCrop"
+        app:imageHeight="126"
+        app:imageWidth="224" />
+
+    <ImageView
+        android:id="@+id/ifwatch"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignTop="@+id/main_feed_small_poster"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/main_feed_small_poster"
+        android:src="@drawable/redpop"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sarrs_text_20sp"
+        android:background="@drawable/sarrs_pic_ranklist_ranknumber"
+        android:gravity="center"
+        android:textColor="@color/color_ffffff"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/layout_smallposter_info"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:layout_alignTop="@+id/main_feed_small_poster"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left"
+        android:layout_toRightOf="@+id/main_feed_small_poster"
+        android:clickable="false">
+
+        <TextView
+            android:singleLine="true"
+            android:id="@+id/small_poster_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:paddingRight="@dimen/sarrs_dimen_18dp"
+            android:text="甄嬛传"
+            android:maxLines="2"
+            android:lineSpacingExtra="@dimen/sarrs_dimen_4dp"
+            android:textColor="@color/color_444444"
+            android:textSize="@dimen/sarrs_dimen_18dp" />
+
+
+        <ProgressBar
+            android:id="@+id/ProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/sarrs_dimen_6dp"
+            android:layout_centerVertical="true"
+            android:max="100"
+            android:progress="10"
+            android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+            android:progressDrawable="@drawable/progress_style_download" />
+
+        <TextView
+            android:id="@+id/tv_download_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="@string/pause_download"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sarrs_dimen_12dp" />
+
+        <TextView
+            android:id="@+id/tv_download_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="296M/678.7M"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sarrs_dimen_12dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+        android:layout_below="@+id/main_feed_small_poster"
+        android:background="@color/color_F3F3F3"
+        android:visibility="visible">
+    </View>
+</RelativeLayout>
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F3F3F3"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+    <com.chaojishipin.sarrs.widget.TitleActionBar
+        android:visibility="gone"
+        android:id="@+id/mainactivity_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/baseactivity_title_height"
+        app:leftButtonDrawable="@drawable/selector_mainactivity_left"
+        app:rightButtonDrawable="@drawable/selector_mainactivity_right"/>
+  <RelativeLayout
+      android:id="@+id/save_content"
+      android:background="@color/color_F3F3F3"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+  </RelativeLayout>
+
+
+</LinearLayout>

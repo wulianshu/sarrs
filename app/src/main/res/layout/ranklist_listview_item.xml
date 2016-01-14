@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_ffffff">
+
+    <com.chaojishipin.sarrs.widget.EqualRatioImageView
+        android:id="@+id/main_feed_small_poster"
+        android:layout_width="149dp"
+        android:layout_height="84dp"
+        android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_15dp"
+        android:scaleType="centerCrop"
+        app:imageHeight="168"
+        app:imageWidth="298" />
+
+
+    <RelativeLayout
+        android:id="@+id/layout_smallposter_info"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:layout_alignTop="@+id/main_feed_small_poster"
+        android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
+        android:layout_marginLeft="@dimen/sarrs_dimen_14dp"
+        android:layout_toRightOf="@+id/main_feed_small_poster">
+
+        <TextView
+            android:id="@+id/small_poster_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_20dp"
+            android:paddingRight="@dimen/sarrs_dimen_7dp"
+            android:singleLine="true"
+            android:gravity="top"
+            android:textColor="@color/color_444444"
+            android:textSize="@dimen/main_feed_poster_title_size" />
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/small_poster_title"
+            android:layout_marginTop="@dimen/ranklist_subtitlt2title"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/rank1"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:gravity="center"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/ranklist_subtitle_textsize" />
+            <TextView
+                android:id="@+id/rank2"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/ranklist_subtitle2subtitle"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/ranklist_subtitle_textsize" />
+            <TextView
+                android:id="@+id/rank3"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/ranklist_subtitle2subtitle"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/ranklist_subtitle_textsize" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+<View
+    android:id="@+id/divider"
+    android:background="@color/color_F3F3F3"
+    android:layout_height="@dimen/sarrs_dimen_0.5dp"
+    android:layout_width="match_parent"
+    >
+</View>
+</RelativeLayout>
+

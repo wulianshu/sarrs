@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    android:focusable="true"
+    android:clickable="true"
+    android:id="@+id/allparentview"
+    android:orientation="vertical" >
+   <include
+       android:id="@+id/register_activity_notify_titlebar"
+       layout="@layout/registeractivity_titlebar">
+   </include>
+    <View
+        android:id="@+id/black_line"
+        android:layout_below="@+id/register_activity_notify_titlebar"
+        android:layout_width="fill_parent"
+        android:background="@color/color_999999"
+        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+        >
+    </View>
+   <RelativeLayout
+      android:id="@+id/register_activity_notify_error_ln"
+      android:layout_width="fill_parent"
+      android:layout_centerHorizontal="true"
+      android:gravity="center"
+      android:layout_marginTop="36dp"
+      android:layout_below="@+id/black_line"
+      android:layout_height="35dp">
+      <TextView
+          android:id="@+id/register_activity_notify_sms"
+          android:layout_width="wrap_content"
+          android:layout_height="35dp"
+          android:textSize="11sp"
+          android:gravity="center"
+          android:visibility="visible"
+          android:layout_centerInParent="true"
+          android:textColor="@color/color_444444"
+          />
+      <TextView
+          android:id="@+id/register_activity_notify_qrcode"
+          android:layout_width="wrap_content"
+          android:layout_height="35dp"
+          android:visibility="gone"
+          android:gravity="center"
+          android:textSize="15sp"
+          android:layout_centerInParent="true"
+          android:background="@drawable/sarrs_pic_notify_qrcode_bg"
+          android:textColor="@color/color_c5242b"
+          />
+  </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/register_activity_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/register_activity_notify_error_ln"
+        >
+
+        <EditText
+            android:id="@+id/register_activity_notify_eidt"
+            android:layout_width="260dp"
+            android:paddingLeft="8dp"
+            android:maxLength="4"
+            android:textCursorDrawable="@drawable/selector_login_edit_cursor"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:hint="@string/login_input_qr_hint"
+            android:singleLine="true"
+            android:paddingRight="100dp"
+            android:numeric="integer"
+            android:ellipsize="end"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:textSize="22sp"
+            android:textColorHint="@color/color_999999"
+            android:layout_gravity="center_vertical"
+            />
+        <Button
+            android:id="@+id/register_activity_notify_timer"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:textSize="11sp"
+            android:textColor="@color/color_999999"
+            android:text="@string/login_verifycode_btn"
+            android:background="@color/color_F3F3F3"
+            android:layout_alignRight="@+id/register_activity_notify_eidt"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/register_activity_notify_clear_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/register_activity_notify_timer"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_register_clear"
+            />
+
+    </RelativeLayout>
+     <View
+         android:id="@+id/register_activity_notify_line"
+         android:layout_width="155dp"
+         android:layout_height="1dp"
+         android:layout_alignLeft="@+id/register_activity_notify_login"
+         android:layout_alignBottom="@+id/register_activity_input"
+         android:background="@color/color_999999">
+     </View>
+
+     <Button
+         android:id="@+id/register_activity_notify_login"
+         android:layout_width="260dp"
+         android:layout_height="wrap_content"
+         android:text="@string/login_title"
+         android:gravity="center"
+         android:textSize="18sp"
+         android:textColor="@color/color_ffffff"
+         android:background="@color/color_D5D5D5"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="23dp"
+         android:layout_below="@+id/register_activity_input"
+         />
+    <RelativeLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/buttomview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_activity_notify_login"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/register_activity_notify_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:textSize="11sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="@string/html_tilte"
+            />
+    </RelativeLayout>
+
+
+
+
+
+
+</RelativeLayout>

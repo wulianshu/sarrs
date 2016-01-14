@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:background="@color/color_000000"
+    android:orientation="vertical">
+
+    <com.chaojishipin.sarrs.widget.CutView
+        android:id="@+id/cut_activity_cutview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="177dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cut_activity_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@color/color_00000000"
+            android:text="@string/cut_cancel"
+            android:textColor="@color/color_AAAAAA"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/cut_activity_save"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@color/color_00000000"
+            android:text="@string/cut_save"
+            android:textColor="@color/color_FF1E27"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,134 @@
+apply plugin: 'com.android.application'
+//import com.android.builder.core.DefaultManifestParser
+// load properties
+Properties properties = new Properties()
+properties.load(project.rootProject.file('channels.properties').newDataInputStream())
+String channelDefault = properties.getProperty('channel.default')
+String channleList = properties.getProperty('channel.list')
+String[] channelArray = channleList.split(',')
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+
+    defaultConfig {
+        applicationId "com.chaojishipin.sarrs"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 12
+        versionName "1.1.1"
+        // dex突破65535的限制
+        multiDexEnabled true
+        // 默认是官方的渠道
+        //
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE:"00000_official"]
+
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
+        release {
+            //这样写就得把demo.jk文件放在项目目录
+            storeFile file("sarrs.keystore")
+            storePassword KEY_STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+        debug {
+            storeFile file("sarrs.keystore")
+            storePassword KEY_STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+
+    }
+
+    buildTypes {
+        /*
+        *  add by 
+        * */
+
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+
+
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            // 压缩
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            // 混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig  signingConfigs.release
+            // 多渠道
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为sarrs_v1.0_2015-01-15_wandoujia.apk
+                        def fileName = "sarrs_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+
+            }// all
+        } // release
+     }// buildType end
+
+    // 遍历 替换渠道ID
+    productFlavors {
+        for (int i = 0 ; i < channelArray.size(); i++) {
+            def channel = channelArray[i]
+            "${channel}"{
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: channel]
+            }
+        }
+
+
+    }
+}
+
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile 'com.umeng.analytics:analytics:latest.integration'
+    //compile 'de.greenrobot:eventbus:2.4.0'
+    compile project(':thirdparty')
+    compile project(':sarrs_http_api')
+    compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    compile project(':ChaoJiShiPinSlidingMenu')
+    compile 'com.android.support:support-v4:22.1.1'
+    compile project(':pulltorefresh')
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    //    compile files('libs/Msc.jar')
+    //    compile files('libs/universal-image-loader-1.9.3.jar')
+    compile project(':sarrs_videoPlayer')
+    //    compile files('libs/libammsdk.jar')
+    //    compile files('libs/mta-sdk-1.6.2.jar')
+    //    compile files('libs/qq_open_sdk.jar')
+    //    compile files('libs/weibosdkcore_v3.1.1.jar')
+    //    compile files('libs/fastjson-1.1.45.android.jar')
+    compile files('libs/cde-sdk-0.9.82-13.jar')
+    compile files('libs/fastjson-1.2.5.jar')
+    //compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile files('libs/umeng-analytics-v5.6.1.jar')
+}

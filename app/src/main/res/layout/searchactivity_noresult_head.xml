@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/searchactivity_noresult_layout_head"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/searchactivity_noresult_head_height">
+    <TextView
+        android:id="@+id/search_noresult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/searchactivity_noresult_head_topmargin"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/color_b2ffffff"
+        android:textSize="@dimen/sarrs_text_15sp"
+        android:gravity="center_vertical"
+        android:text="@string/search_noresult"/>
+
+    <TextView
+        android:id="@+id/searchactivity_history_layout_head_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/searchlayout_left"
+        android:paddingBottom="@dimen/searchlayout_left"
+        android:textColor="@color/color_b2ffffff"
+        android:textSize="@dimen/sarrs_text_12sp"
+        android:gravity="center_vertical|left"
+        android:text="@string/search_everybody_like"/>
+
+</RelativeLayout>

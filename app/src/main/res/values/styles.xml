@@ -1,0 +1,89 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <!--<item name="android:windowBackground">@color/color_00000000</item>-->
+
+    </style>
+
+    <style name="myTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@drawable/splash_focus</item>
+    </style>
+
+    <style name="defaultHeadActivity" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:windowBackground">@color/color_66000000</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+    </style>
+
+    <style name="CustomProgressStyle" parent="@android:style/Widget.ProgressBar.Large">
+        <item name="android:minWidth">25dip</item>
+        <item name="android:maxWidth">25dip</item>
+        <item name="android:minHeight">25dip</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+    <!--下载begin-->
+    <style name="title_button">
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">centerInside</item>
+        <!--  item name="android:background">@drawable/back_button_default_style</item-->
+    </style>
+
+    <style name="waiting" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:windowBackground">@drawable/drawable_waiting</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <!--下载end-->
+
+    <style name="back_button_style">
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:src">@drawable/selector_videoplayer_back</item>
+    </style>
+
+
+    <!--评论-->
+    <style name="base_small_progressbar_style">
+        <item name="android:maxWidth">18.0dip</item>
+        <item name="android:maxHeight">18.0dip</item>
+        <item name="android:minWidth">18.0dip</item>
+        <item name="android:minHeight">18.0dip</item>
+        <item name="android:indeterminateDrawable">@anim/base_loading_small_anim</item>
+    </style>
+
+    <style name="comment_floor_date_style">
+        <item name="android:textSize">@dimen/comment_floor_normal_num</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/comment_floor_date</item>
+    </style>
+
+    <style name="comment_floor_username_style">
+        <item name="android:textSize">@dimen/comment_floor_username</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/comment_floor_username</item>
+    </style>
+
+    <style name="comment_floor_content_style">
+        <item name="android:textSize">@dimen/comment_floor_content</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/comment_floor_content</item>
+        <item name="android:lineSpacingExtra">@dimen/comment_floor_lineSpacing</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/register_activity_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/color_EEEEEE"
+         >
+    <Button
+        android:id="@+id/register_activity_notify_back"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:gravity="center"
+        android:background="@drawable/selector_register_back"
+        />
+    <TextView
+        android:id="@+id/register_activity_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/color_444444"
+        android:layout_centerInParent="true"
+        android:text="@string/login_page" />
+    <Button
+        android:layout_width="52dp"
+        android:layout_height="30dp"
+        android:id="@+id/register_activity_titlebar_right_btn"
+        android:text="@string/user_confirm"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:layout_marginRight="15dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:textColor="@color/color_ffffff"
+        android:background="@color/color_c5242b"
+        android:layout_alignParentRight="true"
+        />
+    </RelativeLayout>

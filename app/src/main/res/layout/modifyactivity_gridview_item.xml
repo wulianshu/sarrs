@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+
+        <ImageView
+            android:id="@+id/mdetail_activity_gridview_img"
+            android:layout_width="fill_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/sarrs_pic_no_default"
+            android:scaleType="centerCrop"
+            />
+
+</RelativeLayout>

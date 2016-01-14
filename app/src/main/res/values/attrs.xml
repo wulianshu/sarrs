@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleActionBar">
+        <attr name="leftButtonDrawable" format="reference" />
+        <attr name="rightButtonDrawable" format="reference" />
+        <attr name="leftButtonGone" format="boolean" />
+        <attr name="rightButtonGone" format="boolean" />
+        <attr name="titleText" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwipeLayout">
+        <attr name="drag_edge" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="top" value="2"/>
+            <enum name="bottom" value="3"/>
+        </attr>
+        <attr name="show_mode" format="enum">
+            <enum name="lay_down" value="0"/>
+            <enum name="pull_out" value="1"/>
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="EqualRatioImageView">
+        <attr name="imageWidth" format="integer" />
+        <attr name="imageHeight" format="integer" />
+    </declare-styleable>
+
+        <declare-styleable name="CircleImageView">
+            <attr name="border_width" format="dimension" />
+            <attr name="border_color" format="color" />
+        </declare-styleable>
+
+</resources>

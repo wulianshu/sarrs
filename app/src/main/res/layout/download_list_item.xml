@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chaojishipin.sarrs.download.view.SquareLayoutForList xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dip"
+    android:layout_height="match_parent"
+    android:background="@drawable/download_list_layout_bg"
+     android:id="@+id/layout">
+    
+    <RelativeLayout 
+     android:id="@+id/episode_list_layout"
+     android:layout_width="match_parent"
+     android:layout_height="52dip"
+     android:gravity="center">
+     
+     <TextView 
+      android:id="@+id/periods"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="14dp"
+	  android:layout_marginRight="5dp"
+	  android:textColor="@color/color_7e7e7e"
+      android:textSize="12sp"/>
+     
+     <TextView 
+      android:id="@+id/episode_list_item_text"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_below="@id/periods"
+	  android:layout_alignLeft="@id/periods"
+	  android:layout_marginRight="5dp"
+	  android:singleLine="true"
+	  android:textSize="@dimen/font_15"
+	  android:ellipsize="end"
+ 	  android:text="111"/>
+     
+     
+    </RelativeLayout>
+    
+    <!-- 
+    <ImageView 
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_alignLeft="@id/episode_list_layout"
+     android:layout_alignRight="@id/episode_list_layout"
+     android:layout_alignTop="@id/episode_list_layout"
+     android:layout_alignBottom="@id/episode_list_layout"
+     android:background="@drawable/image_border"/>
+ 	-->
+    </com.chaojishipin.sarrs.download.view.SquareLayoutForList>

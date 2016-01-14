@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/videoViewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_000000">
+
+    <SurfaceView
+        android:id="@+id/videoview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:id="@+id/splash"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/splash_focus" />
+
+    <RelativeLayout
+        android:id="@+id/logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/selector_logo" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingTop="@dimen/sarrs_dimen_30dp"
+            android:text="@string/logo"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_dimen_32dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/solganLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/sarrs_dimen_60dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/solgan"
+            android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+            android:gravity="center"
+            android:text="@string/solgan_ch"
+            android:textColor="@color/color_66ffffff"
+            android:textSize="@dimen/sarrs_dimen_18dp" />
+
+        <TextView
+            android:id="@+id/solgan"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="@string/solgan_en"
+            android:textColor="@color/color_7fffffff"
+            android:textSize="@dimen/sarrs_dimen_12dp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/sarrs_dimen_27dp"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/startWatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/startWatch"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_dimen_21dp" />
+
+        <ImageView
+            android:id="@+id/showGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/sarrs_dimen_12dp"
+            android:layout_toRightOf="@+id/startWatch"
+            android:src="@drawable/start_watch" />
+    </RelativeLayout>
+
+    <include layout="@layout/interest_guide"></include>
+</RelativeLayout>

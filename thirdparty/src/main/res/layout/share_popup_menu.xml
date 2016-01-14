@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#f2f2f2"
+    android:id="@+id/root"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/share_title_height"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="@dimen/share_title_padding_top"
+            android:paddingLeft="@dimen/share_title_padding_Left"
+            android:text="@string/share_to"
+            android:textColor="@color/share_to_color"
+            android:textSize="@dimen/share_title_font" />
+        <ImageView
+            android:id="@+id/share_close"
+            android:layout_width="@dimen/share_close_width"
+            android:layout_height="@dimen/share_close_height"
+            android:src="@mipmap/share_close"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/share_line_height"
+        android:background="@color/share_line_color"
+        >
+    </View>
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/share_icon_pannel_left"
+        android:paddingRight="@dimen/share_icon_pannel_right"
+        android:paddingTop="@dimen/share_icon_pannel_top"
+        >
+
+        <LinearLayout
+            android:id="@+id/share_to_wx_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/wx_friends_share" />
+
+            <TextView
+                android:id="@+id/wx_friend_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_wx_friends_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_to_wx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/wx_friend_share" />
+
+            <TextView
+                android:id="@+id/wx_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_wx_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_to_sina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/sina_share" />
+
+            <TextView
+                android:id="@+id/sina_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_sina_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_to_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/qq_share" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_qq_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/share_icon_pannel_left"
+        android:paddingRight="@dimen/share_icon_pannel_right"
+        android:paddingTop="@dimen/share_icon_pannel_top"
+        android:paddingBottom="@dimen/share_icon_pannel_bottom"
+     >
+
+        <LinearLayout
+            android:id="@+id/share_to_qzone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/qq_zone_share" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_qzone_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>        
+
+        <LinearLayout
+            android:id="@+id/share_to_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/sms_share" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_sms_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_to_linking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/linking_share" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_copy_linking"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_to_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/qq_share" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/share_to_qq_tip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/share_icon_name_font" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

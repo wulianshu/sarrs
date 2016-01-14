@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/selectionbar"
+     android:layout_width="fill_parent"
+     android:layout_height="match_parent"
+     android:gravity="center_vertical">
+        
+     <LinearLayout 
+	      android:id="@+id/selection_layout"
+	      android:layout_width="fill_parent"
+	      android:layout_height="fill_parent"
+	      android:orientation="horizontal"
+	      android:baselineAligned="false">
+        
+        <TextView
+            android:id="@+id/download_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/download_selectbar_selector"
+            android:textColor="@color/download_manager_textcolor"
+            android:textSize="15sp"
+            android:text="@string/download_video"/>
+
+        <TextView
+            android:id="@+id/localvideo_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/download_selectbar_selector"
+            android:textColor="@color/download_manager_textcolor"
+            android:textSize="15sp"
+            android:text="@string/local_video"
+            android:visibility="gone"/>
+    </LinearLayout>
+        
+        <ImageView
+            android:id="@+id/select_image"
+            android:layout_alignParentBottom="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pic_silder" 
+            android:visibility="gone"/> 
+             
+</RelativeLayout>

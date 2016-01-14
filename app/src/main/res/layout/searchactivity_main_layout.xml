@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/searchactivity_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/searchactivity_main_layout_voice_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="@dimen/resultText_marginTop"
+            android:layout_marginTop="@dimen/resultText_marginTop"
+            android:singleLine="true"
+            android:text="@string/search_main_voice_text"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_text_18sp" />
+
+        <TextView
+            android:id="@+id/searchactivity_main_layout_tipTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:singleLine="true"
+            android:text="@string/search_main_tip_before_start"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_text_18sp" />
+
+        <com.chaojishipin.sarrs.widget.WaveView
+            android:id="@+id/waveview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp" />
+
+    </RelativeLayout>
+</RelativeLayout>

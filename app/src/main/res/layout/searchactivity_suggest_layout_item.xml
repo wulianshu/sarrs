@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/searchactivity_suggest_layout_item"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/searchlayout_height">
+    <!--android:foreground="?attr/leso_main_selector"-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/searchboxicon_left"
+        android:paddingRight="@dimen/searchboxicon_left"
+        android:gravity="center_vertical">
+<!--        <com.chaojishipin.sarrs.widget.EqualRatioImageView
+            android:id="@+id/poster_img"
+            android:layout_width="112dp"
+            android:layout_height="63dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/searchactivity_item_marginRight"
+            android:focusable="false"
+            android:scaleType="fitXY"
+            app:imageHeight="63"
+            app:imageWidth="112" />-->
+        <TextView
+            android:id="@+id/searchactivity_suggest_layout_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="电影"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_text_15sp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="center"
+            />
+        <LinearLayout
+            android:id="@+id/searchactivity_suggest_play_layout"
+            android:layout_width="@dimen/searchactivity_suggest_play_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/searchactivity_suggest_layout_item_line"
+                android:layout_width="@dimen/sarrs_dimen_3dp"
+                android:layout_height="@dimen/searchactivity_line_hieght"
+                android:background="@color/color_1Affffff"
+                />
+
+            <ImageView
+                android:id="@+id/searchactivity_suggest_layout_item_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/sarrs_pic_suggest_play"
+                />
+            <TextView
+                android:id="@+id/play_conut_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_b2ffffff"
+                android:textSize="@dimen/sarrs_text_12sp"
+                android:text="@string/suggest_play" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>

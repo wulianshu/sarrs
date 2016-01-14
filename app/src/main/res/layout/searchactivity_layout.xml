@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/searchactivity_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--为了实现在高斯模糊的背景上在设置半透明颜色-->
+    <RelativeLayout
+        android:id="@+id/searchactivity_layout_mohu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_cc222222">
+
+        <include layout="@layout/searchactivity_result_layout"></include>
+
+        <include layout="@layout/searchactivity_main_layout"></include>
+
+        <include layout="@layout/searchactivity_main_icon_layout"></include>
+
+
+    </RelativeLayout>
+
+    <com.chaojishipin.sarrs.widget.NetStateView
+        android:id="@+id/searchactivity_netview"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"></com.chaojishipin.sarrs.widget.NetStateView>
+</RelativeLayout>

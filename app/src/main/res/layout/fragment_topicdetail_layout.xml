@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/mtitlebar"
+        layout="@layout/common_baseactivity_top_layout"/>
+    <View
+        android:id="@+id/black_line"
+        android:layout_below="@id/mtitlebar"
+        android:layout_width="fill_parent"
+        android:background="@color/color_999999"
+        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+       >
+    </View>
+    <ListView
+        android:layout_below="@id/black_line"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="@dimen/sarrs_dimen_0.5dp"
+        android:divider="@color/color_F3F3F3"
+        android:id="@+id/topicdetailactivity_listview">
+    </ListView>
+
+    <com.chaojishipin.sarrs.widget.NetStateView
+        android:id="@+id/mainchannle_fragment_netview"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"></com.chaojishipin.sarrs.widget.NetStateView>
+
+    <com.chaojishipin.sarrs.widget.SarrsToast
+        android:id="@+id/sarrs_top_toast"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"></com.chaojishipin.sarrs.widget.SarrsToast>
+
+</RelativeLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="black">#444444</color>
+    <color name="share_title_color">#444444</color>
+    <color name="share_line_color">#d5d5d5</color>
+    <color name="share_to_color">#666666</color>
+    <color name="share_bg_black">#e5111111</color>
+
+    <color name="share_icon_title_color">#ffffff</color>
+    <color name="right_share_to_color">#ffffff</color>
+    <color name="right_share_line_color">#29ffffff</color>
+
+</resources>
+
+

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/color_ffffff"
+    android:layout_height="wrap_content">
+
+    <com.chaojishipin.sarrs.widget.EqualRatioImageView
+        android:id="@+id/main_feed_small_poster"
+        android:layout_width="149dp"
+        android:layout_height="84dp"
+        android:scaleType="centerCrop"
+        app:imageHeight="168"
+        app:imageWidth="298"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_15dp"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sarrs_text_20sp"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:textColor="@color/color_ffffff"
+        android:background="@drawable/sarrs_pic_ranklist_ranknumber"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_smallposter_info"
+        android:layout_toRightOf="@+id/main_feed_small_poster"
+        android:layout_alignTop="@+id/main_feed_small_poster"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
+        android:layout_height="84dp"
+        android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left">
+
+        <TextView
+            android:id="@+id/small_poster_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:paddingRight="@dimen/sarrs_dimen_10dp"
+            android:textColor="@color/color_333333"
+            android:singleLine="true"/>
+
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/small_poster_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sarrs_text_11sp"
+            android:paddingRight="@dimen/sarrs_dimen_10dp"
+            android:layout_marginTop="@dimen/sarrs_dimen_12dp"
+            android:textColor="@color/color_666666"
+            android:singleLine="true"/>
+
+
+        <ImageView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/main_small_feed_playicon"
+            android:layout_width="@dimen/sarrs_dimen_10.5dp"
+            android:layout_height="@dimen/sarrs_dimen_8.5dp"
+            android:layout_marginBottom="@dimen/sarrs_dimen_2.5dp"
+            android:background="@drawable/sarrs_pic_small_playicon"
+            android:layout_marginTop="@dimen/main_small_feed_comment_margin"
+            />
+
+        <TextView
+            android:id="@+id/main_small_feed_play_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/main_small_feed_playicon"
+            android:textSize="@dimen/sarrs_text_11sp"
+            android:textColor="@color/color_999999"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/sarrs_dimen_11dp"
+            android:text="aaa"
+            android:gravity="center"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

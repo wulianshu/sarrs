@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/comment_floor_padding">
+
+    <ImageView
+        android:id="@+id/floor_avater"
+        android:layout_width="@dimen/user_avater_size"
+        android:layout_height="@dimen/user_avater_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="8.0dip"
+        android:padding="2.0dip"
+        android:src="@drawable/biz_pc_account_usr_icon" />
+
+    <TextView
+        android:id="@+id/floor_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/floor_avater"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/floor_avater"
+        android:gravity="left|center"
+        android:textAppearance="@style/comment_floor_date_style" />
+
+    <TextView
+        android:id="@+id/floor_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/floor_avater"
+        android:layout_alignTop="@id/floor_avater"
+        android:layout_toLeftOf="@id/floor_date"
+        android:layout_toRightOf="@id/floor_avater"
+        android:gravity="left|center"
+        android:singleLine="true"
+        android:textAppearance="@style/comment_floor_username_style" />
+
+    <com.chaojishipin.sarrs.widget.FloorView
+        android:id="@+id/sub_floors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/floor_avater"
+        android:layout_marginTop="5.0dip"
+        android:background="@android:color/transparent" />
+
+    <TextView
+        android:id="@+id/floor_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sub_floors"
+        android:layout_marginTop="5.0dip"
+        android:textAppearance="@style/comment_floor_content_style" />
+
+
+</RelativeLayout>

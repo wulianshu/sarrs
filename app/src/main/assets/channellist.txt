@@ -1,0 +1,65 @@
+{
+    "items": [
+        {
+            "content_type": 10
+        },
+        {
+            "icon": "http://i0.letvimg.com/img/201505/21/channel_icon/recommend.png",
+            "title": "精彩推荐",
+            "icon_select": "http://i3.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_recommod.png",
+            "content_type": 7,
+            "cid": 0
+        },
+        {
+            "icon": "http://i2.letvimg.com/img/201505/21/topic.png",
+            "title": "专题",
+            "icon_select": "http://i1.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_subject.png",
+            "content_type": 8
+        },
+        {
+            "icon": "http://i1.letvimg.com/img/201505/21/channel_icon/rank.png",
+            "title": "排行榜",
+            "icon_select": "http://i1.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_rank.png",
+            "content_type": 9
+        },
+        {
+            "content_type": 10
+        },
+        {
+            "icon": "http://i3.letvimg.com/img/201505/21/channel_icon/drama.png",
+            "title": "电视剧",
+            "icon_select": "http://i2.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_tv.png",
+            "content_type": 7,
+            "cid": 1
+        },
+        {
+            "icon": "http://i2.letvimg.com/img/201505/21/channel_icon/movie.png",
+            "title": "电影",
+            "icon_select": "http://i1.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_movie.png",
+            "content_type": 7,
+            "cid": 2
+        },
+        {
+            "icon": "http://i2.letvimg.com/img/201505/21/channel_icon/cartoon.png",
+            "title": "动漫",
+            "icon_select": "http://i3.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_cartoon.png",
+            "content_type": 7,
+            "cid": 3
+        },
+        {
+            "icon": "http://i0.letvimg.com/img/201505/21/channel_icon/show.png",
+            "title": "综艺",
+            "icon_select": "http://i1.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_varity.png",
+            "content_type": 7,
+            "cid": 4
+        },
+        {
+            "icon": "http://i3.letvimg.com/img/201505/21/channel_icon/record.png",
+            "title": "纪录片",
+            "icon_select": "http://i2.letvimg.com/lc01_img/201506/10/15/59/selected/selected/selected_record.png",
+            "content_type": 7,
+            "cid": 16
+        }
+    ],
+    "status": "200"
+}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/big_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider">
+
+        <com.chaojishipin.sarrs.widget.EqualRatioImageView
+            android:id="@+id/main_frontview_poster"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:imageHeight="9"
+            app:imageWidth="16" />
+
+        <ImageView
+
+            android:id="@+id/topicdetail_top_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/selector_topicdetail_back" />
+
+        <ImageView
+            android:id="@+id/topicdetail_top_share"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/selector_topicdetailheaderview_share" />
+
+        <ImageView
+
+            android:id="@+id/topicdetail_top_loving"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/topicdetail_top_share"
+            android:src="@drawable/sarrs_pic_topicdetailactivity_loving_normal" />
+
+
+
+        <RelativeLayout
+            android:id="@+id/main_frontview_poster_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/main_frontview_poster"
+            android:background="@color/color_222222">
+
+
+            <TextView
+                android:id="@+id/main_frontview_poster_comment1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+                android:layout_marginLeft="@dimen/main_feed_poster_title_margin"
+                android:lineSpacingExtra="@dimen/sarrs_dimen_3dp"
+                android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
+                android:textColor="@color/color_ffffff"
+                android:textSize="@dimen/sarrs_text_12sp" />
+
+            <ImageView
+                android:id="@+id/more_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_main_more"
+                android:focusable="false"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sarrs_dimen_68dp"
+            android:layout_above="@+id/main_frontview_poster_info"
+            android:background="@drawable/topic_poster_shade" >
+            <TextView
+                android:id="@+id/main_frontview_poster_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/main_feed_poster_title_margin"
+                android:singleLine="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/sarrs_dimen_5dp"
+                android:textColor="@color/color_ffffff"
+                android:textSize="@dimen/sarrs_text_18sp" />
+            </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

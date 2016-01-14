@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/selector_videodetail_grid_border"
+    >
+
+        <TextView
+            android:id="@+id/videodetail_fragmentbottom_grid_item_btn"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:background="@color/color_ffffff"
+            android:textColor="@color/color_666666"
+            android:text="1" />
+
+        <ImageView
+            android:id="@+id/videodetail_fragmentbottom_grid_item_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/sarrs_pic_videodetail_play"
+            />
+
+</RelativeLayout>

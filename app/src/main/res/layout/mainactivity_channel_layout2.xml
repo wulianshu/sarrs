@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/color_ffffff"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/mainactivity_pull_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<!--
+        <com.chaojishipin.sarrs.widget.PullToRefreshSwipeListView
+            android:id="@+id/mainchannle_fragment_listview2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:visibility="visible"></com.chaojishipin.sarrs.widget.PullToRefreshSwipeListView>
+-->
+
+        <com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView
+            android:id="@+id/mainchannle_fragment_listview2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:visibility="visible">
+        </com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView>
+        <ListView
+            android:id="@+id/mainchannle_fragment_commentlistview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:visibility="gone"></ListView>
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/sarrs_dimen_18dp"
+            android:layout_marginRight="@dimen/sarrs_dimen_18dp"
+            android:background="@drawable/sarrs_pic_serach_icon" />
+    </RelativeLayout>
+
+
+    <com.chaojishipin.sarrs.widget.NetStateView
+        android:id="@+id/mainchannle_fragment_netview"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"></com.chaojishipin.sarrs.widget.NetStateView>
+
+    <com.chaojishipin.sarrs.widget.SarrsToast
+        android:id="@+id/sarrs_top_toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"></com.chaojishipin.sarrs.widget.SarrsToast>
+
+</RelativeLayout>

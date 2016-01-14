@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F3F3F3">
+
+    <LinearLayout
+        android:id="@+id/public_loading_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/public_loading_layout_net_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/public_loading_net_icon"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sarrs_pic_nonet_icon">
+    </ImageView>
+
+    <Button
+        android:id="@+id/public_loading_zero_work_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_width="@dimen/btn_no_net_look_width"
+        android:layout_height="@dimen/btn_no_net_look_height"
+        android:background="@drawable/selector_no_net_look"
+        android:layout_alignBottom="@+id/public_loading_net_icon"
+        android:layout_marginBottom="@dimen/btn_no_nte_look_margin_bottom"
+        android:textColor="@drawable/selector_no_net_look_tetx"
+        android:text="@string/sarrs_str_zero_work"
+        android:textSize="@dimen/btn_no_net_look_textsize"/>
+
+        <Button
+            android:id="@+id/public_loading_retry_refresh"
+            android:layout_above="@id/public_loading_zero_work_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_width="@dimen/btn_no_net_look_width"
+            android:layout_height="@dimen/btn_no_net_look_height"
+            android:text="@string/sarrs_str_retry_refresh"
+            android:textSize="@dimen/btn_no_net_look_textsize"
+            android:textColor="@drawable/selector_retry_refresh_text"
+            android:background="@drawable/selector_retry_refresh_btn_bg"
+            android:layout_marginBottom="@dimen/btn_refresh_retry_margin_bottom"/>
+    
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/btn_public_loading_net_disconect_text_size"
+                android:text="@string/sarrs_str_net_discontect"
+                android:layout_above="@id/public_loading_retry_refresh"
+                android:textColor="@color/color_444444"
+                android:layout_marginBottom="@dimen/public_loading_disconnect_text_margin_bottom"/>
+
+    </RelativeLayout>
+
+
+</merge>

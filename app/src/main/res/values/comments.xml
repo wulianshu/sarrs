@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="comment1">
+        <!-- parentId-->
+        <item>-1</item>
+        <!-- userId-->
+        <item>13213546</item>
+        <!-- id-->
+        <item>1</item>
+        <!-- content-->
+        <item>comment is 评论</item>
+        <!-- userName-->
+        <item>用户1</item>
+        <!-- date-->
+        <item>2014&#045;02&#045;20 08:27:34</item>
+        <!-- floorNum-->
+        <item>1</item>
+    </string-array>
+    <string-array name="comment2">
+        <item>-1</item>
+        <item>13213546</item>
+        <item>2</item>
+        <item>我的手机是法拉利的</item>
+        <item>用户1</item>
+        <item>2014&#045;02&#045;20 08:30:34</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="comment3">
+        <item>2</item>
+        <item>13213547</item>
+        <item>3</item>
+        <item>我的裤子是宝马牌的</item>
+        <item>用户2</item>
+        <item>2014&#045;02&#045;20 08:33:34</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="comment4">
+        <item>2</item>
+        <item>13213548</item>
+        <item>4</item>
+        <item>我的手机是奔驰的</item>
+        <item>用户3</item>
+        <item>2014&#045;02&#045;21 08:37:35</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="comment5">
+        <item>2</item>
+        <item>13213549</item>
+        <item>5</item>
+        <item>我的车是劳斯莱斯的————还送了两节南富电池</item>
+        <item>用户4</item>
+        <item>2014&#045;02&#045;21 08:48:08</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="comment6">
+        <item>2</item>
+        <item>13213550</item>
+        <item>6</item>
+        <item>我的手表是八星八钻的劳斯丹顿</item>
+        <item>用户5</item>
+        <item>2014&#045;02&#045;21 08:51:38</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="comment7">
+        <item>2</item>
+        <item>13213551</item>
+        <item>7</item>
+        <item>我的老婆是大众的</item>
+        <item>用户6</item>
+        <item>2014&#045;02&#045;21 09:20:38</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="comment8">
+        <item>2</item>
+        <item>13213552</item>
+        <item>8</item>
+        <item>6楼获年度最佳无私奖</item>
+        <item>用户7</item>
+        <item>2014&#045;02&#045;21 09:30:45</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="comment9">
+        <item>2</item>
+        <item>13213553</item>
+        <item>9</item>
+        <item>七楼正解,呵呵呵呵呵</item>
+        <item>用户8</item>
+        <item>2014&#045;02&#045;21 09:37:12</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="comment10">
+        <item>-1</item>
+        <item>13213554</item>
+        <item>10</item>
+        <item>不明觉厉</item>
+        <item>用户9</item>
+        <item>2014&#045;02&#045;21 09:10:29</item>
+        <item>1</item>
+    </string-array>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <com.chaojishipin.sarrs.widget.NoScrollGridView
+        android:id="@+id/video_detail_expand_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_ffffff"
+        android:focusable="false"
+        android:gravity="center"
+        android:listSelector="@null"
+        android:numColumns="6"
+        android:paddingBottom="1dp"
+        >
+    </com.chaojishipin.sarrs.widget.NoScrollGridView>
+    <com.chaojishipin.sarrs.widget.NoScrollListView
+        android:id="@+id/video_detail_expand_list"
+        android:layout_width="match_parent"
+        android:divider="@color/color_F3F3F3"
+        android:dividerHeight="1dp"
+        android:visibility="gone"
+        android:focusable="false"
+        android:listSelector="@null"
+        android:layout_height="wrap_content">
+    </com.chaojishipin.sarrs.widget.NoScrollListView>
+</LinearLayout>

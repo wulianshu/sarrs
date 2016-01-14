@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chaojishipin.sarrs.download.view.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="54dip"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/episode_grid_item"
+     >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/episode_item_num"
+        android:gravity="center"
+        android:textSize="@dimen/font_14"
+        android:text="10"
+        android:textColor="#4F6D8C"
+        android:background="@drawable/download_layout_bg"/>
+
+</com.chaojishipin.sarrs.download.view.SquareLayout>

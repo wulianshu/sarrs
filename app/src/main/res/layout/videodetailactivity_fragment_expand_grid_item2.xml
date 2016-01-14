@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:focusable="false"
+    android:background="@color/color_19000000"
+    >
+    <!-- 全屏剧集展示 listview item-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/video_detail_anim_bottom_showlist_item_ln"
+        >
+    <ImageView
+        android:id="@+id/video_detail_anim_bottom_showlist_item_logo"
+        android:layout_width="112dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:focusable="false"
+        android:textColor="@color/color_666666" />
+    <ImageView
+        android:id="@+id/video_detail_anim_bottom_showlist_item_playimg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sarrs_pic_videodetail_zy_playicon"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_marginTop="25dp"
+        android:focusable="false"
+        android:layout_marginLeft="20dp"
+
+        />
+
+    <TextView
+        android:id="@+id/video_detail_anim_bottom_showlist_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="22dp"
+        android:gravity="left|center_vertical"
+        android:focusable="false"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:paddingBottom="3dp"
+        android:ellipsize="end"
+        android:textColor="@color/color_ffffff" />
+   </LinearLayout>
+  <!-- 全屏剧集展示 grid item-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_19000000"
+        >
+        <TextView
+            android:id="@+id/video_detail_anim_bottom_showgrid_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:background="@drawable/selector_full_screen_episode"
+            android:text="6"
+            android:ellipsize="end"
+            android:focusable="false"
+            android:textColor="@color/color_ffffff" />
+        <ImageView
+            android:id="@+id/video_detail_anim_bottom_showgrid_item_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/sarrs_pic_videodetail_play"
+            />
+    </RelativeLayout>
+
+
+
+
+
+</LinearLayout>
+
+
+

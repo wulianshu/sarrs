@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="1dp"
+        android:background="@color/color_F3F3F3"
+        android:id="@+id/video_detail_expand_tagcontainer"
+        >
+
+        <TextView
+            android:id="@+id/video_detail_expand_tag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:focusable="false"
+            android:textColor="@color/color_666666" >
+        </TextView>
+
+        <ImageView android:id="@+id/video_detail_expand_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:src="@drawable/sarrs_pic_videodetail_arrow_btn_down"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="4dp"/>
+
+        <ProgressBar
+            android:id="@+id/video_detail_expand_progressbar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:focusable="false"
+            android:indeterminateDuration="500"
+            android:indeterminateDrawable="@drawable/selector_videodetail_expand_grid_loading"
+            android:visibility="gone" />
+
+    </FrameLayout>
+<!--    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_F3F3F3">
+
+    </View>-->
+    <com.chaojishipin.sarrs.widget.NoScrollGridView
+        android:id="@+id/video_detail_expand_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_ffffff"
+        android:focusable="false"
+        android:gravity="center"
+        android:listSelector="@null"
+        android:numColumns="6"
+        android:paddingBottom="1dp"
+        android:visibility="gone" >
+    </com.chaojishipin.sarrs.widget.NoScrollGridView>
+    <com.chaojishipin.sarrs.widget.NoScrollListView
+        android:id="@+id/video_detail_expand_list"
+        android:layout_width="match_parent"
+        android:divider="@color/color_F3F3F3"
+        android:dividerHeight="1dp"
+        android:visibility="gone"
+        android:focusable="false"
+        android:listSelector="@null"
+        android:layout_height="wrap_content">
+    </com.chaojishipin.sarrs.widget.NoScrollListView>
+</LinearLayout>

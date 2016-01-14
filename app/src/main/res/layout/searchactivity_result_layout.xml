@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/searchactivity_result_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/search_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/searchlayout_height"
+        android:background="@color/color_666666">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/searchbox_height"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:background="@drawable/searchbox_background"
+            android:layout_marginLeft="@dimen/searchlayout_left"
+            android:layout_marginRight="@dimen/searchlayout_left"
+            >
+            <ImageView
+                android:id="@+id/et_search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/sarrs_pic_searchboxicon"
+                android:layout_marginRight="@dimen/searchboxicon_left"
+                android:layout_marginLeft="@dimen/searchboxicon_left" />
+
+            <ImageView
+                android:id="@+id/et_search_delete_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/selector_search_delete"
+                android:layout_marginRight="@dimen/searchboxicon_left"
+                android:layout_marginLeft="@dimen/searchboxicon_left" />
+            <AutoCompleteTextView
+                android:id="@+id/et_search_topbar_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/et_search_icon"
+                android:layout_toLeftOf="@id/et_search_delete_icon"
+                android:background="@color/color_00000000"
+                android:cursorVisible="true"
+                android:hint="@string/search_hint"
+                android:textColor="@color/color_ffffff"
+                android:singleLine="true"
+                android:textColorHint="@color/color_9b9999"
+                android:textSize="@dimen/sarrs_text_15sp"
+                android:imeOptions="actionSearch"
+                android:maxLength="50"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+    
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/searchactivity_result_layout_PullToRefreshListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_edit_layout"
+        android:dividerHeight="0dp"
+        android:divider="@color/color_1Affffff"
+        android:fadingEdge="none">
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+    <ListView
+        android:id="@+id/searchactivity_suggest_layout_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_edit_layout"
+        android:dividerHeight="1dp"
+        android:divider="@color/color_1Affffff"
+        android:fadingEdge="none"
+        android:visibility="gone">
+    </ListView>
+
+    <ListView
+        android:id="@+id/searchactivity_history_layout_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_edit_layout"
+        android:dividerHeight="1dp"
+        android:divider="@color/color_1Affffff"
+        android:fadingEdge="none"
+        android:visibility="gone">
+    </ListView>
+
+
+</RelativeLayout>

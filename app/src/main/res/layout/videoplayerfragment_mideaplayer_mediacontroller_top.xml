@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_player_top_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_b2000000">
+
+    <RelativeLayout
+        android:id="@+id/top_small"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_videoplayer_title_marginleft"
+        android:background="@color/color_00000000">
+
+        <TextView
+            android:id="@+id/tv_video_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_videoplayer_title_marginleft"
+            android:layout_marginRight="80dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/color_b2ffffff"
+            android:textSize="@dimen/sarrs_text_15sp" />
+
+    </RelativeLayout>
+   <Button
+       android:id="@+id/tv_video_more"
+       android:layout_width="44dp"
+       android:layout_height="44dp"
+       android:visibility="gone"
+       android:background="@drawable/selector_slide_triger"
+       android:layout_alignParentRight="true"
+       android:layout_alignParentTop="true"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <RelativeLayout
+         android:id="@+id/top"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_contenth">
+
+         <RelativeLayout
+             android:id="@+id/top"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/dimen_videoplayer_pannel_top_high"
+             android:background="@color/color_B2000000">
+
+             <ImageView
+                 android:id="@+id/videoplayer_playback_btn"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginLeft="10dip"
+                 android:background="@drawable/selector_videoplayer_playback" />
+
+             <TextView
+                 android:id="@+id/tv_select"
+                 android:layout_width="60dp"
+                 android:layout_height="30dp"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginBottom="5dip"
+                 android:layout_marginRight="10dip"
+                 android:layout_marginTop="5dip"
+                 android:background="@drawable/videoplayer_select_selector"
+                 android:gravity="center"
+                 android:text="@string/videoplayer_select"
+                 android:textColor="@drawable/select_text_selector"
+                 android:textSize="@dimen/font_12" />
+
+             <TextView
+                 android:id="@+id/tv_video_title"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerVertical="true"
+                 android:layout_marginLeft="@dimen/dimen_videoplayer_title_marginleft"
+                 android:layout_marginRight="80dp"
+                 android:layout_toRightOf="@id/videoplayer_playback_btn"
+                 android:ellipsize="marquee"
+                 android:focusable="true"
+                 android:focusableInTouchMode="true"
+                 android:marqueeRepeatLimit="marquee_forever"
+                 android:scrollHorizontally="true"
+                 android:singleLine="true"
+                 android:text=""
+                 android:textColor="@color/color_B2ffffff"
+                 android:textSize="@dimen/font_14" />
+
+         </RelativeLayout>
+
+         <RelativeLayout
+             android:id="@+id/down"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/dimen_videoplayer_pannel_top_high"
+             android:layout_below="@id/top"
+             android:background="@color/blue_26a4e3_70"
+             android:visibility="gone">
+
+             <TextView
+                 android:id="@+id/tv_video_title1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginLeft="@dimen/dimen_videoplayer_title_marginleft"
+                 android:layout_marginRight="10dp"
+                 android:singleLine="true"
+                 android:text="@string/change_clarity_text"
+                 android:textColor="@color/white_70"
+                 android:textSize="@dimen/font_14" />
+
+             <TextView
+                 android:id="@+id/change_clarity"
+                 android:layout_width="60dp"
+                 android:layout_height="30dp"
+                 android:layout_centerVertical="true"
+                 android:layout_marginBottom="5dip"
+                 android:layout_marginLeft="10dp"
+                 android:layout_marginRight="10dip"
+                 android:layout_marginTop="5dip"
+                 android:layout_toRightOf="@id/tv_video_title1"
+                 android:background="@drawable/videoplayer_change_clarity_selector"
+                 android:gravity="center"
+                 android:text="@string/change_clarity"
+                 android:textColor="@drawable/select_text_selector"
+                 android:textSize="@dimen/font_12" />
+
+         </RelativeLayout>
+     </RelativeLayout>-->
+</RelativeLayout>

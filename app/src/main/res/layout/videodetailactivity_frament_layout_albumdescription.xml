@@ -1,0 +1,239 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/videodetail_albumdes"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:id="@+id/videodetail_ln"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+
+        >
+
+        <TextView
+            android:id="@+id/videodetail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="#444444"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/videodetail_pub_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp">
+        <!-- 发布者-->
+        <TextView
+            android:id="@+id/videodetail_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/videodetail_publisher"
+            android:textColor="#666666"
+            android:textSize="11dp" />
+
+        <TextView
+            android:id="@+id/videodetail_publisherName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/videodetail_publisher"
+            android:textColor="#666666"
+            android:textSize="11dp" />
+        <!-- 观看次数 -->
+        <TextView
+            android:id="@+id/videodetail_viewcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textSize="11dp" />
+    </RelativeLayout>
+
+    <!--  !!!!!!!!!!!!!!!!!!!!!!!隐藏模块!!!!!!!!!!!!!!!!!!!!!!! -->
+
+
+    <LinearLayout
+        android:id="@+id/videodetail_drop_ln"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <!--评分-->
+        <LinearLayout
+            android:id="@+id/videodetail_score_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/videodetail_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/videodetail_score"
+                android:textColor="#666666"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/videodetail_movie_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11dp"
+
+                />
+        </LinearLayout>
+
+        <!-- 导演 -->
+        <LinearLayout
+            android:id="@+id/videodetail_director_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/videodetail_dy_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11dp" />
+        </LinearLayout>
+        <!-- 主演 -->
+        <LinearLayout
+            android:id="@+id/videodetail_actors_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/videodetail_zy_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11dp"
+
+                />
+        </LinearLayout>
+        <!--类型-->
+        <LinearLayout
+            android:id="@+id/videodetail_subCategoryName_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/videodetail_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/videodetail_type"
+                android:textColor="#666666"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/videodetail_video_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11dp"
+
+                />
+        </LinearLayout>
+        <!--年份-->
+        <LinearLayout
+            android:id="@+id/videodetail_date_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/videodetail_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/videodetail_date"
+                android:textColor="#666666"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/videodetail_publish_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11dp"
+
+                />
+        </LinearLayout>
+        <!--地区-->
+        <LinearLayout
+            android:id="@+id/videodetail_area_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/videodetail_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/videodetail_area"
+                android:textColor="#666666"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/videodetail_area_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11dp"
+
+                />
+        </LinearLayout>
+
+        <!--简介-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="7dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/videodetail_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="7dp"
+                android:textColor="#666666"
+                android:textSize="12dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

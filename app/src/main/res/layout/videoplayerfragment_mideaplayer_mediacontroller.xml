@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 播放器控制面板主题 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mediacontroller_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/mediacontroller_top"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <!--android:layout_marginTop="@dimen/dimen_mediacontroller_margintop"-->
+
+        <include
+            layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_top" />
+
+        <ImageView
+            android:id="@+id/mediacontroller_top_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/selector_videoplayer_back" />
+    </RelativeLayout>
+
+    <!-- 播放器底部页面 -->
+    <RelativeLayout
+        android:id="@+id/mediacontroller_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dimen_videoplayer_title_marginleft"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_bottom" />
+    </RelativeLayout>
+    <!--选集面板 -->
+    <FrameLayout
+        android:id="@+id/mediacontroller_select_layout"
+        android:layout_width="316dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@color/color_b2000000"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_album"
+            android:clickable="true" />
+
+    </FrameLayout>
+    <!-- 下拉menu布局 -->
+    <RelativeLayout
+        android:id="@+id/tv_tv_video_menu_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/mediacontroller_top"
+        android:visibility="gone">
+
+        <com.chaojishipin.sarrs.widget.SarrsSlideMenuView
+            android:id="@+id/tv_tv_video_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </com.chaojishipin.sarrs.widget.SarrsSlideMenuView>
+    </RelativeLayout>
+    <!-- 锁屏布局 -->
+
+    <ImageButton
+        android:id="@+id/videoplayer_lockscreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="11dip"
+        android:layout_marginTop="0.5dip"
+        android:background="@drawable/elector_videoplayer_lockscreen"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <!-- 影片加载时的Loading -->
+    <include
+        android:id="@+id/layout_loading"
+        layout="@layout/videoplayerfragment_mideaplayer_loading_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
+    <!-- 网络异常界面-->
+    <include
+        android:id="@+id/videoplayer_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_net"/>
+    <!-- 加载超时界面-->
+    <include
+        android:id="@+id/videoplayer_load_timeout_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_timeout"/>
+    <!-- 快进快退-->
+    <include
+
+        android:id="@+id/fast_toast"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        layout="@layout/fast_toast_layout"/>
+</RelativeLayout>

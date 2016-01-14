@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    android:focusable="false"
+    android:gravity="center"
+    android:layout_centerInParent="true"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/fast_toast_bg"
+    android:padding="@dimen/sarrs_dimen_10dp"
+    >
+    <ImageView android:layout_width="33dp"
+        android:focusable="false"
+        android:layout_height="22dp"
+        android:id="@+id/fast_icon"
+        android:layout_centerHorizontal="true">
+        </ImageView>
+
+    <LinearLayout
+        android:focusable="false"
+        android:id="@+id/center_layout"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+        android:layout_below="@id/fast_icon"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+    <TextView
+        android:focusable="false"
+        android:id="@+id/now_length"
+        android:textColor="#c5242b"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sarrs_dimen_12dp"
+        android:layout_width="wrap_content">
+        </TextView>
+    <TextView
+        android:focusable="false"
+        android:layout_width="wrap_content"
+        android:text="/"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/sarrs_dimen_12dp"
+        >
+    </TextView>
+        <TextView
+            android:focusable="false"
+            android:id="@+id/tv_total_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sarrs_dimen_12dp"
+            >
+        </TextView>
+    </LinearLayout>
+   <!-- <SeekBar
+        android:id="@+id/fast_seekbar"
+        android:layout_below="@+id/center_layout"
+        android:layout_width="130dp"
+        android:layout_height="@dimen/sarrs_dimen_3dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_5dp"
+        android:progressDrawable="@drawable/progress_style_play"
+        >
+     </SeekBar>-->
+    <SeekBar
+        android:focusable="false"
+        android:id="@+id/fast_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/center_layout"
+        android:gravity="center"
+        android:maxHeight="@dimen/mediacontorller_play_seekbar_maxheight"
+        android:minHeight="@dimen/mediacontorller_play_seekbar_minheight"
+        android:progress="8"
+        android:progressDrawable="@drawable/progress_style_play"
+        android:thumb="@null"
+
+        />
+</RelativeLayout>
+</RelativeLayout>

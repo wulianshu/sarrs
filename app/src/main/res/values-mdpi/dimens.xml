@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ranklist_subtitlt2title">12dp</dimen>
+    <dimen name="ranklist_subtitle2subtitle">5dp</dimen>
+    <dimen name="ranklist_subtitle_textsize">11dp</dimen>
+    <dimen name="main_feed_poster_title_size">17dp</dimen>
+</resources>

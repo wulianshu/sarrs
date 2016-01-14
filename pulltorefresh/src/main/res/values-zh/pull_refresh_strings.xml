@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="pull_to_refresh_pull_label">下拉可以刷新</string>
+  <string name="pull_to_refresh_release_label">松开立即刷新</string>
+  <string name="pull_to_refresh_refreshing_label">正在刷新…</string>
+  <!-- Mode From Bottom-->
+  <string name="pull_to_refresh_load_more_lable">上拉加载更多数据</string>
+  <string name="pull_to_refresh_load_more_release">松开立即加载更多数据</string>
+  <string name="pull_to_refresh_load_more_loading">正在加载数据…</string>
+<!--
+  <string name="pull_to_refresh_from_bottom_pull_label">上拉加载更多数据</string>
+  <string name="pull_to_refresh_from_bottom_refreshing_label">正在加载数据…</string>
+  <string name="pull_to_refresh_from_bottom_release_label">松开立即加载更多数据</string>-->
+</resources>

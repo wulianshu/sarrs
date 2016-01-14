@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/right_edit_button"
+        android:title="@string/edit"
+        android:actionLayout="@layout/actionbar_history_item"
+        app:actionLayout="@layout/actionbar_history_item"
+        app:showAsAction="always"
+        />
+
+</menu>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:id="@+id/playcontroll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000">
+    
+	<FrameLayout
+	android:id="@+id/videoplayer_parent_layout"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	
+	<RelativeLayout 
+	 android:id="@+id/videoview_position"
+	 android:gravity="center"
+	 android:background="#000000"
+	 android:layout_width="fill_parent"
+	 android:layout_height="fill_parent">
+	</RelativeLayout>
+	
+	<include layout="@layout/videoplayerfragment_mideaplayer_mediacontroller"/>
+	</FrameLayout>    
+</RelativeLayout>

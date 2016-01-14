@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+     android:id="@+id/videolayout_new"
+     android:layout_width="fill_parent"
+     android:layout_height="67.5dip"
+     android:descendantFocusability="blocksDescendants"
+     android:background="@drawable/download_folder_selector">
+ 	<ProgressBar
+                 android:id="@+id/ProgressBar"
+                 style="?android:attr/progressBarStyleHorizontal"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:max="100"
+                 android:progressDrawable="@drawable/progress_style_download" />
+ 	<LinearLayout
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_centerVertical="true"
+         android:orientation="horizontal" >
+      <ToggleButton
+         android:id="@+id/btnDelete"
+         android:layout_width="28dp"
+         android:layout_height="28dp"
+         android:layout_marginLeft="12dp"
+         android:clickable="false"
+         android:focusable="false"
+         android:layout_gravity="center_vertical"
+         android:background="@drawable/localvideoswitchselector"
+         android:tag="下载删除"
+      	 android:textOn=""
+      	 android:textOff=""
+      	 android:visibility="gone"/>
+     <LinearLayout
+         android:id="@+id/ll_one"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="10dip"
+         android:layout_centerVertical="true"
+         android:orientation="vertical" >
+
+         <RelativeLayout
+             android:id="@+id/relaLayTitle"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="68dip"
+             android:gravity="center_vertical" >
+
+             <TextView
+                 android:id="@+id/downloadName"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:ellipsize="middle"
+                 android:lines="1"
+                 android:singleLine="true"
+                 android:text="风行视频"
+                 android:textAppearance="?android:textAppearanceMedium"
+                 android:textColor="#000000"
+                 android:textSize="14.5sp" />
+         </RelativeLayout>
+
+         <!-- <LinearLayout
+             android:id="@+id/linearLayProcess"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="55dip"
+             android:layout_marginTop="2dip"
+             android:gravity="right|center"
+             android:orientation="horizontal">
+
+             <ProgressBar
+                 android:id="@+id/ProgressBar"
+                 style="?android:attr/progressBarStyleHorizontal"
+                 android:layout_width="fill_parent"
+                 android:layout_height="2.5dip"
+                 android:max="100"
+                 android:progressDrawable="@drawable/progress_style_download" />
+         </LinearLayout> -->
+
+         <LinearLayout
+             android:id="@+id/linearLayProcessStatus"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="1dip"
+             android:orientation="horizontal" >
+
+             <TextView
+                 android:id="@+id/downloadLength"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textColor="@color/download_text_number"
+                 android:textSize="12sp" />
+
+             <!-- <TextView
+                 android:id="@+id/rowProgress"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="0dip"
+                 android:lines="1"
+                 android:textColor="#8c8c8c"
+                 android:textSize="12sp" /> -->
+
+             <TextView
+                 android:id="@+id/lblStatus"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="0dip"
+                 android:text=" 状态"
+                 android:textColor="#8c8c8c"
+                 android:textSize="12sp"
+                 android:visibility="gone" />
+         </LinearLayout>
+
+     </LinearLayout>
+
+     </LinearLayout>
+
+	<LinearLayout
+	     android:id="@+id/downloadControlLayout"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:layout_alignParentRight="true"
+         android:gravity="center">
+     <Button
+         android:id="@+id/downloadControl"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@drawable/download_controlbtn_selector"
+         android:tag="开始"
+         android:textColor="#ffffff"
+         android:textSize="11.0sp" />
+      <ImageView
+         android:id="@+id/ifwatch"
+         android:layout_width="22dp"
+         android:layout_height="22dp"
+         android:layout_marginRight="20dp"
+         android:layout_marginLeft="18dp"
+         android:src="@drawable/redpop"
+         android:visibility="gone"/>
+	</LinearLayout>
+    <!--  <ToggleButton
+         android:id="@+id/btnDelete"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:layout_centerInParent="true"
+         android:layout_marginRight="0dp"
+         android:background="@drawable/localvideoswitchselector"
+         android:tag="下载删除"
+      	 android:textOn=""
+      	 android:textOff=""
+         android:visibility="gone" /> -->
+     <TextView
+        android:id="@+id/rowProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/downloadControlLayout"
+        android:layout_marginTop="38dp"
+        android:layout_marginRight="5dp"
+        android:lines="1"
+        android:text="111"
+        android:textColor="@color/downloading_rate"
+        android:textSize="11sp" />
+     <LinearLayout
+         android:id="@+id/totalvideos"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:layout_alignParentRight="true"
+         android:layout_centerInParent="true"
+         android:gravity="center"
+         android:layout_marginRight="20dp"
+         android:orientation="vertical"
+         android:visibility="gone">
+      <ImageView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@drawable/totalvideos" />
+       <TextView
+         android:id="@+id/videocount"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="@color/download_text_number"
+         android:textSize="11sp"/>
+	</LinearLayout>
+ </RelativeLayout>
+<LinearLayout
+     android:id="@+id/iv_folder"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:orientation="vertical">
+ <ImageView
+     android:layout_width="fill_parent"
+     android:layout_height="0.5dp"
+     android:layout_weight="1"
+     android:layout_marginLeft="5dip"
+     android:layout_marginRight="5dip"
+     android:layout_marginTop="1dip"
+     android:background="@color/download_press"
+    />
+ <ImageView
+     android:layout_width="fill_parent"
+     android:layout_height="0.5dp"
+     android:layout_weight="1"
+     android:layout_marginLeft="10dip"
+     android:layout_marginRight="10dip"
+     android:layout_marginTop="1dip"
+     android:background="@color/download_press"
+    />
+ </LinearLayout>
+</LinearLayout>

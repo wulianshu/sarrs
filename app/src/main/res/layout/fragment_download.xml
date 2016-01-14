@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/downlaod_selectbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dip"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+        <include layout="@layout/activity_download_selectbar" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/vpage_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/available_space_layout"
+        android:layout_below="@id/downlaod_selectbar"
+        android:background="#ffffff">
+
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/vpager"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:flipInterval="30"-->
+            <!--android:persistentDrawingCache="animation"-->
+            <!--/>-->
+        <FrameLayout
+            android:id="@+id/download_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
+    </RelativeLayout>
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/available_space_layout"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="18dp"-->
+    <!--android:layout_alignParentBottom="true">-->
+    <!--&lt;!&ndash;-->
+    <!--<ImageView-->
+    <!--android:id="@+id/dividerline"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="@dimen/bottomdividerlineheight"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:background="#28000000"-->
+    <!--android:contentDescription="@string/divideline"/>-->
+    <!--&ndash;&gt;-->
+    <!--<ProgressBar-->
+    <!--android:id="@+id/available_space_bar"-->
+    <!--style="?android:attr/progressBarStyleHorizontal"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:max="100"-->
+    <!--android:progressDrawable="@drawable/download_progress_style" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/available_space_tv"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:singleLine="true"-->
+    <!--android:text="@string/download_space"-->
+    <!--android:textColor="@color/aviablespacecolor"-->
+    <!--android:textSize="10sp" />-->
+    <!--</RelativeLayout>-->
+
+    <include layout="@layout/download_available_space_layout" />
+
+    <ImageView
+        android:id="@+id/bottomimgdevider"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:layout_alignTop="@id/bottomlayout"
+        android:background="@color/color_4c000000" />
+</RelativeLayout>

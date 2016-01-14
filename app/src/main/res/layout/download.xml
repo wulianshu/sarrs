@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/downing_folder_item" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/item_downing_folder"
+        >
+        <include layout="@layout/fragment_download_delete" />
+        <com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuListView
+            android:id="@+id/DownloadListView"
+            android:layout_below="@+id/top_edit_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@color/transparent"
+            android:divider="@color/color_f3f3f3"
+            android:dividerHeight="0.5dp"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="none"
+            android:gravity="center"
+            android:listSelector="@color/transparent"
+            android:paddingBottom="8dip"
+            android:scrollbars="none"
+            android:background="@color/color_f3f3f3"
+            >
+        </com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuListView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        >
+        <include layout="@layout/download_no_item"></include>
+    </RelativeLayout>
+
+    <!--<android.gesture.GestureOverlayView-->
+        <!--android:id="@+id/gestures"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:eventsInterceptionEnabled="false"-->
+        <!--android:gestureStrokeType="multiple"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<com.chaojishipin.sarrs.download.view.FixedViewFlipper-->
+            <!--android:id="@+id/DownloadViewFlipper"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1">-->
+
+            <!--<ListView-->
+                <!--android:id="@+id/DownloadListView"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:cacheColorHint="@color/transparent"-->
+                <!--android:divider="@color/color_ffffff"-->
+                <!--android:dividerHeight="0.5dip"-->
+                <!--android:drawSelectorOnTop="false"-->
+                <!--android:fadingEdge="none"-->
+                <!--android:gravity="left"-->
+                <!--android:listSelector="@color/transparent"-->
+                <!--android:paddingBottom="8dip"-->
+                <!--android:paddingLeft="9dip"-->
+                <!--android:paddingRight="10dip"-->
+                <!--android:paddingTop="8dip"-->
+                <!--android:scrollbars="none"-->
+                <!--></ListView>-->
+
+
+            <!--<include layout="@layout/download_no_item"></include>-->
+        <!--</com.chaojishipin.sarrs.download.view.FixedViewFlipper>-->
+    <!--</android.gesture.GestureOverlayView>-->
+
+
+
+</RelativeLayout>

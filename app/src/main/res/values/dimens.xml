@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="baseactivity_title_height">44dip</dimen>
+    <dimen name="baseactivity_title_size">18sp</dimen>
+    <dimen name ="shape_width">1dip</dimen>
+    <dimen name="shape_corner_r">5dip</dimen>
+    <dimen name="btn_no_net_look_height">44dip</dimen>
+    <dimen name="btn_no_net_look_width">200dip</dimen>
+    <dimen name="btn_no_nte_look_margin_bottom">30dip</dimen>
+    <dimen name="btn_refresh_retry_margin_bottom">20dip</dimen>
+    <dimen name="public_loading_disconnect_text_margin_bottom">40dip</dimen>
+    <dimen name="btn_no_net_look_textsize">15sp</dimen>
+    <dimen name="btn_public_loading_net_disconect_text_size">18sp</dimen>
+
+    <dimen name="slidingmenu_left_view_icon_marginlfet">20dip</dimen>
+    <dimen name="slidingmenu_left_line_height">1dip</dimen>
+    <dimen name="slidingmenu_main_ui_left">120dip</dimen>
+    <dimen name="slidingmenu_width">255dip</dimen>
+    <dimen name="slidingmenu_shadow_width">4dip</dimen>
+    <dimen name="slidingmenu_left_view_height">55dip</dimen>
+    <dimen name="slidingmenu_left_view_title_size">15sp</dimen>
+
+    <dimen name="mainactivity_title_size">18sp</dimen>
+    <dimen name="main_big_modle_behiend_margin">105.5dp</dimen>
+    <dimen name="main_feed_behiend_textsize">12sp</dimen>
+    <dimen name="mina_feed_behiend_text_margin_bottom">13dip</dimen>
+    <dimen name="main_feed_front_tag_textsize">12sp</dimen>
+    <dimen name="main_feed_poster_title_size">18dp</dimen>
+    <dimen name="download_poster_title_size">16sp</dimen>
+    <dimen name="main_feed_poster_comment">11sp</dimen>
+    <dimen name="main_feed_poster_title_margin">16dp</dimen>
+    <dimen name="main_frontview_feed_play_margin">18dp</dimen>
+    <dimen name="main_feed_small_behiden_margin">20dp</dimen>
+    <dimen name="main_small_feed_comment_margin">16sp</dimen>
+    <dimen name="main_small_feed_poster_margin">16sp</dimen>
+    <dimen name="main_small_feed_tag_margin_left">12dp</dimen>
+    <dimen name="main_smal_feed_poster_info_margin_left">15dp</dimen>
+    <dimen name="main_small_feed_playcount_margin_left">3dp</dimen>
+
+    <!--文字size区域-->
+    <dimen name="sarrs_text_11sp">11dp</dimen>
+    <dimen name="sarrs_text_12sp">12sp</dimen>
+    <dimen name="sarrs_text_13sp">13sp</dimen>
+    <dimen name="sarrs_text_15sp">15sp</dimen>
+    <dimen name="sarrs_text_18sp">18sp</dimen>
+    <dimen name="sarrs_text_20sp">20sp</dimen>
+    <!--文字size区域-->
+
+    <!--搜索-->
+    <dimen name="resultText_marginTop">14dp</dimen>
+    <dimen name="searchlayout_height">44dp</dimen>
+    <dimen name="searchbox_height">30dp</dimen>
+    <dimen name="searchlayout_left">10dp</dimen>
+    <dimen name="searchboxicon_left">10dp</dimen>
+    <dimen name="searchactivity_item_height">83dp</dimen>
+    <dimen name="searchactivity_item_content_height">82.5dp</dimen>
+    <dimen name="searchactivity_item_marginRight">15dp</dimen>
+    <dimen name="searchactivity_line_hieght">26dp</dimen>
+    <dimen name="searchactivity_suggest_play_width">60dp</dimen>
+    <dimen name="searchactivity_suggest_null_height">21dp</dimen>
+    <dimen name="searchactivity_history_item_height">46dp</dimen>
+    <dimen name="searchactivity_main_icon_padding">20dp</dimen>
+    <dimen name="searchactivity_noresult_head_height">145dp</dimen>
+    <dimen name="searchactivity_noresult_head_topmargin">45dp</dimen>
+    <dimen name="searchactivity_noresult_head_topmargin_line">44.5dp</dimen>
+
+    <dimen name="sarrs_dimen_1dp">1dp</dimen>
+    <dimen name="sarrs_dimen_1.5dp">1.5dp</dimen>
+    <dimen name="sarrs_dimen_2dp">2dp</dimen>
+    <dimen name="sarrs_dimen_2.5dp">2.5dp</dimen>
+    <dimen name="sarrs_dimen_3dp">3dp</dimen>
+    <dimen name="sarrs_dimen_4dp">4dp</dimen>
+    <dimen name="sarrs_dimen__5dp">-5dp</dimen>
+    <dimen name="sarrs_dimen_5dp">5dp</dimen>
+
+    <dimen name="sarrs_dimen_5.5dp">5.5dp</dimen>
+    <dimen name="sarrs_dimen_6dp">6dp</dimen>
+    <dimen name="sarrs_dimen_8dp">8dp</dimen>
+    <dimen name="sarrs_dimen_8.5dp">8.5dp</dimen>
+    <dimen name="sarrs_dimen_12dp">12dp</dimen>
+    <dimen name="ranklist_subtitle_textsize">12dp</dimen>
+    <dimen name="ranklist_subtitlt2title">12dp</dimen>
+    <dimen name="ranklist_subtitle2subtitle">5dp</dimen>
+    <dimen name="sarrs_dimen_13dp">13dp</dimen>
+    <dimen name="sarrs_dimen_14dp">14dp</dimen>
+    <dimen name="sarrs_dimen_14.5dp">14.5dp</dimen>
+    <dimen name="sarrs_dimen_15dp">15dp</dimen>
+    <dimen name="sarrs_dimen_15.5dp">15.5dp</dimen>
+    <dimen name="sarrs_dimen_16dp">16dp</dimen>
+    <dimen name="sarrs_dimen_17dp">17dp</dimen>
+    <dimen name="sarrs_dimen_18dp">18dp</dimen>
+    <dimen name="sarrs_dimen_19dp">19dp</dimen>
+    <dimen name="sarrs_dimen_21dp">21dp</dimen>
+    <dimen name="sarrs_dimen_25dp">25dp</dimen>
+    <dimen name="sarrs_dimen_27dp">27dp</dimen>
+    <dimen name="sarrs_dimen_30dp">30dp</dimen>
+    <dimen name="sarrs_dimen_32dp">32dp</dimen>
+    <dimen name="sarrs_dimen_35dp">35dp</dimen>
+    <dimen name="sarrs_dimen_40dp">40dp</dimen>
+    <dimen name="sarrs_dimen_44dp">44dp</dimen>
+    <dimen name="sarrs_dimen_48dp">48dp</dimen>
+    <dimen name="sarrs_dimen_50dp">50dp</dimen>
+    <dimen name="sarrs_dimen_54dp">54dp</dimen>
+    <dimen name="sarrs_dimen_60dp">60dp</dimen>
+    <dimen name="sarrs_dimen_62dp">62dp</dimen>
+    <dimen name="sarrs_dimen_64dp">64dp</dimen>
+    <dimen name="sarrs_dimen_68dp">68dp</dimen>
+    <dimen name="sarrs_dimen_69dp">69dp</dimen>
+    <dimen name="sarrs_dimen_36dp">36dp</dimen>
+
+    <dimen name="sarrs_dimen_22dp">22dp</dimen>
+    <dimen name="sarrs_dimen_24dp">24dp</dimen>
+    <dimen name="sarrs_dimen_26.5dp">26.5dp</dimen>
+    <dimen name="sarrs_dimen_37dp">37dp</dimen>
+    <dimen name="sarrs_dimen_9dp">9dp</dimen>
+    <dimen name="sarrs_dimen_10dp">10dp</dimen>
+    <dimen name="sarrs_dimen_10.5dp">10.5dp</dimen>
+    <dimen name="sarrs_dimen_11dp">11dp</dimen>
+    <dimen name="sarrs_dimen_11.5dp">11.5dp</dimen>
+    <dimen name="sarrs_dimen_7dp">7dp</dimen>
+    <dimen name="sarrs_dimen_0.5dp">0.5dp</dimen>
+    <dimen name="sarrs_dimen_120dp">120dp</dimen>
+    <dimen name="sarrs_dimen_172.5dp">172.5dp</dimen>
+    <dimen name="sarrs_dimen_180dp">180dp</dimen>
+    <dimen name="sarrs_dimen_200dp">200dp</dimen>
+    <dimen name="sarrs_dimen_55dp">55dp</dimen>
+    <dimen name="sarrs_dimen_74dp">74dp</dimen>
+    <dimen name="sarrs_dimen_90dp">90dp</dimen>
+    <dimen name="sarrs_dimen_97dp">97dp</dimen>
+    <dimen name="sarrs_dimen_98dp">98dp</dimen>
+    <dimen name="sarrs_dimen_100dp">100dp</dimen>
+    <dimen name="sarrs_dimen_102dp">102dp</dimen>
+    <dimen name="sarrs_dimen_115dp">115dp</dimen>
+    <dimen name="sarrs_dimen_70dp">70dp</dimen>
+    <dimen name="sarrs_dimen_80dp">80dp</dimen>
+    <dimen name="sarrs_dimen_85dp">85dp</dimen>
+    <dimen name="sarrs_dimen_88dp">88dp</dimen>
+    <dimen name="sarrs_dimen_125dp">125dp</dimen>
+    <dimen name="sarrs_dimen_135dp">135dp</dimen>
+    <dimen name="sarrs_dimen_144dp">144dp</dimen>
+    <dimen name="sarrs_dimen_220dp">220dp</dimen>
+    <dimen name="sarrs_dimen_20dp">20dp</dimen>
+    <dimen name="sarrs_dimen_0dp">0dip</dimen>
+    <!--搜索-->
+    <!--播放器-->
+    <dimen name="dimen_videoplayer_title_marginleft">44dp</dimen>
+    <dimen name="dimen_videoplayer_time_marginleft">0dp</dimen>
+    <dimen name="mediacontorller_play_seekbar_maxheight">3dp</dimen>
+    <dimen name="mediacontorller_play_seekbar_minheight">2dp</dimen>
+    <dimen name="mediacontorller_play_seekbar_thumboffset">2dp</dimen>
+    <dimen name="playloading_icon_marginTop">70dp</dimen>
+    <dimen name ="playloading_tip_text_maringtop">10dp</dimen>
+    <dimen name ="mediacontorller_play_bottom_epsiode_width">64dp</dimen>
+    <dimen name="dimen_mediacontroller_margintop">-23dip</dimen>
+
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!--播放器-->
+
+    <!--首页item 内容距离上面距离-->
+    <dimen name="main_fragment_cell_content_top_margin">20dp</dimen>
+
+    <!--下载 begin-->
+    <dimen name="font_14">14sp</dimen>
+    <dimen name="font_15">15sp</dimen>
+    <dimen name="font_16">16sp</dimen>
+    <dimen name="font_17">17sp</dimen>
+    <dimen name="font_21">21sp</dimen>
+    <dimen name="nav_height">48dp</dimen>
+    <dimen name="right_menu_width">53dp</dimen>
+    <dimen name="right_menu_height">30dp</dimen>
+    <dimen name="menu_font_size">15dp</dimen>
+    <!--下载end-->
+
+    <!--评论start-->
+    <dimen name="user_avater_size">24.0dip</dimen>
+    <dimen name="comment_floor_padding">16.0dip</dimen>
+    <dimen name="comment_floor_normal_num">11.0sp</dimen>
+    <dimen name="comment_floor_username">13.0sp</dimen>
+    <dimen name="comment_floor_content">17.0sp</dimen>
+    <dimen name="comment_floor_lineSpacing">3.0dip</dimen>
+    <dimen name="comment_sub_floor_padding">10.0dip</dimen>
+    <!--评论end-->
+</resources>

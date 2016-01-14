@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F3F3F3"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/mtitlebar"
+        layout="@layout/common_baseactivity_top_layout" />
+
+    <View
+        android:id="@+id/black_line"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+        android:background="@color/color_999999"></View>
+
+    <ImageView
+        android:src="@drawable/app_icon"
+        android:layout_width="@dimen/sarrs_dimen_120dp"
+        android:layout_height="@dimen/sarrs_dimen_120dp"
+        android:layout_below="@+id/black_line"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/sarrs_dimen_55dp"></ImageView>
+
+    <TextView
+        android:id="@+id/about_us_tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sarrs_dimen_15dp"
+        android:text="1.0.1"
+        android:textColor="@color/color_444444"
+        android:textSize="@dimen/sarrs_dimen_18dp"></TextView>
+
+    <TextView
+        android:id="@+id/about_us_tv_description1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sarrs_dimen_14.5dp"
+        android:text="@string/about_us_description1"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/sarrs_dimen_15dp"></TextView>
+
+    <TextView
+        android:id="@+id/about_us_tv_description2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sarrs_dimen_4dp"
+        android:text="@string/about_us_description2"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/sarrs_dimen_15dp"></TextView>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sarrs_dimen_44dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_55dp"
+        android:background="@color/color_ffffff"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/image_wechat"
+            android:layout_width="@dimen/sarrs_dimen_30dp"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/about_us_wechat"
+            android:layout_marginLeft="@dimen/sarrs_dimen_15dp"
+            ></ImageView>
+        <TextView
+            android:layout_toRightOf="@id/image_wechat"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+            android:gravity="center_vertical"
+            android:text="@string/about_us_guanzhu_weichat"
+            >
+        </TextView>
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:textColor="@color/color_999999"
+            android:layout_marginRight="@dimen/sarrs_dimen_15dp"
+            android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+            android:gravity="center_vertical"
+            android:text="@string/about_us_weichat"
+            >
+        </TextView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sarrs_dimen_44dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_1dp"
+        android:gravity="center_vertical"
+        android:background="@color/color_ffffff">
+        <ImageView
+            android:id="@+id/image_weibo"
+            android:layout_width="@dimen/sarrs_dimen_30dp"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/about_us_weibo"
+            android:layout_marginLeft="@dimen/sarrs_dimen_15dp"
+            ></ImageView>
+        <TextView
+            android:layout_toRightOf="@id/image_weibo"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+            android:gravity="center_vertical"
+            android:text="@string/about_us_guanzhu_weibo"
+            >
+        </TextView>
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:layout_marginRight="@dimen/sarrs_dimen_15dp"
+            android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/color_999999"
+            android:text="@string/about_us_weibo"
+            >
+        </TextView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sarrs_dimen_44dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_1dp"
+        android:gravity="center_vertical"
+        android:background="@color/color_ffffff">
+        <ImageView
+            android:id="@+id/image_qq"
+            android:layout_width="@dimen/sarrs_dimen_30dp"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/about_us_qq"
+            android:layout_marginLeft="@dimen/sarrs_dimen_15dp"
+            ></ImageView>
+        <TextView
+            android:layout_toRightOf="@id/image_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+            android:gravity="center_vertical"
+            android:text="@string/about_us_yonghufankui_qq"
+            >
+        </TextView>
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sarrs_dimen_30dp"
+            android:textSize="@dimen/sarrs_dimen_15dp"
+            android:textColor="@color/color_999999"
+            android:layout_marginRight="@dimen/sarrs_dimen_15dp"
+            android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+            android:gravity="center_vertical"
+            android:text="@string/about_us_qq"
+            >
+        </TextView>
+
+    </RelativeLayout>
+
+</LinearLayout>

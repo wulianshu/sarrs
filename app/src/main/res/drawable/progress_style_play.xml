@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="0dip" />
+
+            <gradient
+                android:angle="90"
+                android:centerColor="#33ffffff"
+                android:centerY="0.75"
+                android:endColor="#33ffffff"
+                android:startColor="#33ffffff" />
+        </shape>
+    </item>
+     
+    <item android:id="@android:id/secondaryProgress">
+         <clip>
+            <shape>
+                <corners android:radius="0dip" />
+
+                <gradient
+                    android:angle="90"
+                    android:centerColor="#99CCCCCC"
+                    android:centerY="0.75"
+                    android:endColor="#99CCCCCC"
+                    android:startColor="#99CCCCCC" />
+            </shape>
+        </clip>
+    </item>
+    <item android:id="@android:id/progress">
+       <clip>
+            <shape>
+                <corners android:radius="0dip" />
+
+                <gradient
+                    android:angle="90"
+                    android:centerColor="#C5242B"
+                    android:centerY="0.75"
+                    android:endColor="#C5242B"
+                    android:startColor="#C5242B" />
+            </shape>
+        </clip>
+    </item>
+    
+    <!-- 
+     <item android:id="@android:id/background" android:drawable="@drawable/videoplayerbg"/>
+     <item android:id="@android:id/secondaryProgress" android:drawable="@drawable/videoplayer_secondprogress"/>
+     <item android:id="@android:id/progress" android:drawable="@drawable/videoplayer_progress"/>
+   -->
+
+</layer-list>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/searchactivity_result_layout_item"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/searchactivity_item_height"
+    >
+    <!--android:foreground="?attr/leso_main_selector"-->
+
+    <RelativeLayout
+        android:id="@+id/itemContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/searchboxicon_left"
+        android:paddingTop="@dimen/searchboxicon_left"
+        android:paddingLeft="@dimen/searchboxicon_left"
+        android:paddingRight="@dimen/searchboxicon_left">
+        <com.chaojishipin.sarrs.widget.EqualRatioImageView
+            android:id="@+id/poster_img"
+            android:layout_width="112dp"
+            android:layout_height="63dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/searchactivity_item_marginRight"
+            android:focusable="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/search_default_poster"
+            app:imageHeight="63"
+            app:imageWidth="112" />
+        <TextView
+            android:id="@+id/searchactivity_result_layout_item_categoryName"
+            android:layout_width="@dimen/sarrs_dimen_35dp"
+            android:layout_height="@dimen/sarrs_dimen_14dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/sarrs_dimen_5dp"
+            android:background="@drawable/sarrs_pic_categoryname_bg"
+            android:text="电影"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_text_11sp"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/searchactivity_result_layout_item_video_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/poster_img"
+            android:textColor="@color/color_b2ffffff"
+            android:textSize="@dimen/sarrs_text_15sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="阿萨德艰苦撒大家阿斯兰健康相当大消费大国大大缩短" />
+        <ImageView
+            android:id="@+id/play_conut_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/poster_img"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/sarrs_pic_play_count"
+            />
+        <TextView
+            android:id="@+id/play_conut_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/play_conut_img"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/sarrs_dimen_3dp"
+            android:textColor="@color/color_b2ffffff"
+            android:textSize="@dimen/sarrs_text_11sp"
+            android:layout_marginBottom="-2dp"
+            android:gravity="bottom"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="999万+" />
+    </RelativeLayout>
+
+    <View
+        android:layout_marginTop="@dimen/searchactivity_item_content_height"
+        android:layout_width="fill_parent"
+        android:background="@color/color_19ffffff"
+        android:layout_height="@dimen/sarrs_dimen_0.5dp">
+    </View>
+
+
+</FrameLayout>

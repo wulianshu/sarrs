@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_downing_folder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_ffffff"
+    android:visibility="gone">
+
+    <RelativeLayout
+        android:id="@+id/default_downing_poster"
+        android:layout_width="112dp"
+        android:layout_height="63dp"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+        android:background="#00A0E9">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sarr_pic_widget_slide_menu_download_normal" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:layout_alignTop="@+id/default_downing_poster"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left"
+        android:layout_toRightOf="@+id/default_downing_poster">
+
+        <TextView
+            android:id="@+id/downloadName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:paddingRight="@dimen/sarrs_dimen_5dp"
+            android:singleLine="true"
+            android:text="@string/download_is_downloading"
+            android:textColor="@color/color_444444"
+            android:textSize="@dimen/download_poster_title_size" />
+
+        <TextView
+            android:id="@+id/downing_folder_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/downloadName"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/color_444444"
+            android:textSize="@dimen/download_poster_title_size" />
+
+        <TextView
+            android:id="@+id/rate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:paddingLeft="@dimen/sarrs_dimen_1dp"
+            android:text="@string/download_speed"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sarrs_dimen_12dp" />
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sarrs_dimen_1dp"
+        android:layout_below="@+id/default_downing_poster"
+        android:background="@color/color_F3F3F3"
+        android:visibility="visible">
+    </View>
+
+</RelativeLayout>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.chaojishipin.sarrs"
+    android:versionCode="11"
+    android:versionName="1.1.1" >
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- 直播添加 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- 添加快捷方式权限 -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <!-- 删除快捷方式权限 -->
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE"/>
+    <application
+        android:name=".ChaoJiShiPinApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".activity.ChaojishipinSplashActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/myTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="sarrs" />
+            </intent-filter>
+        </activity>
+        <!--  -->
+        <activity
+            android:name=".activity.ChaoJiShiPinMainActivity"
+            android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+
+            <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
+        </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
+        <activity
+            android:name=".activity.DefaultHeadNameActivity"
+            android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/defaultHeadActivity" />
+
+        <!-- TODO 优化singleTask -->
+        <activity
+            android:name=".activity.ChaoJiShiPinVideoDetailActivity"
+            android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden|locale|layoutDirection"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+
+            <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
+            <intent-filter>
+
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="sarrs1" />
+                <data android:scheme="sarrs2" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.SearchActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|screenSize"
+            android:label="@string/title_activity_search"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.ChaojishipinRegisterActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.HistoryRecordActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChaojishipinLoginActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DownLoadListActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChaojishipinModifyUserInfoActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChaojishipinModifyUserInfoDetailActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChaojishipinCutActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChaojishipinHtmlActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChaojishipinAboutUsActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SaveActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:exported="true"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activity.PlayActivityFroWebView"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask" />
+
+        <!-- QQ 注册 -->
+        <!-- <activity -->
+        <!-- android:name=".activity.ChaoJiShiPinBaseActivity" -->
+        <!-- android:label="@string/title_activity_chao_ji_shi_pin_base" > -->
+        <!-- </activity> -->
+
+
+        <!-- Umeng统计 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5583bcdb67e58e6c78001621" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+        <!-- 讯飞移动统计分析 -->
+        <meta-data
+            android:name="IFLYTEK_APPKEY"
+            android:value="&apos;56601675&apos;" />
+        <meta-data
+            android:name="IFLYTEK_CHANNEL"
+            android:value="SARRS_ANDROID" />
+        <!-- 讯飞移动统计分析 -->
+
+
+        <!-- CDE 服务注册 -->
+        <service
+            android:name="com.letv.pp.service.CdeService"
+            android:process=":cde" />
+
+        <receiver
+            android:name=".receiver.NetWorkStateReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <!--
+        <receiver
+            android:name=".receiver.PackageStartReceiver"
+            android:enabled="true"
+            android:exported="true"
+            >
+            <intent-filter>
+                &lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;
+                <action android:name="android.intent.action.package_added" />
+                <action android:name="android.intent.action.package_removed" />
+                <action android:name="android.intent.action.my_package_replaced" />
+                <action android:name="android.intent.action.package_replaced" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </receiver>
+        -->
+        <activity
+            android:name=".activity.ChaoJiShiPinTopicDetailActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:label="@string/title_activity_chao_ji_shi_pin_topic_detail"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="sarrs4" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.ChaoJiShiPinRankListDetailActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:label="@string/title_activity_chao_ji_shi_pin_topic_detail"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="sarrs5" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".download.service.DownloadService" />
+
+        <receiver android:name=".download.download.DownloadBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.funshion.video.DOWNLOADCAN3G" />
+                <action android:name="com.funshion.video.CUTDOWNLOADSPEED" />
+                <action android:name="com.chaojishipin.SDCARDNOSPACE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+                <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".download.download.SdcardBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.chaojishipin.sarrs.download.activity.DownloadActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".download.activity.DownloadJobActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.ShowHeaderActivity" />
+
+        <receiver
+            android:name=".broadcastreceiver.AppReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
+    </application>
+
+</manifest>

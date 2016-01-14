@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_ffffff">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_tag"
+        android:visibility="gone"
+        >
+        <TextView
+            android:id="@+id/save_date"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="28dp"
+            android:layout_height="40dp"
+            android:textSize="15dp"
+            android:visibility="visible"
+            android:text="2015年10月9日"
+            android:gravity="left|bottom"
+            android:textColor="@color/all_select"
+            />
+        <View
+            android:id="@+id/save_line"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/save_date"
+            android:layout_height="@dimen/sarrs_dimen_1dp"
+            android:background="@color/color_F3F3F3"
+            android:visibility="visible">
+        </View>
+    </RelativeLayout>
+
+
+   <!-- <com.chaojishipin.sarrs.widget.SarrsMainMenuView
+          android:id="@+id/sarrs_menuview"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/save_item"
+            android:layout_alignBottom="@+id/save_item"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        </com.chaojishipin.sarrs.widget.SarrsMainMenuView>-->
+    <!--com.chaojishipin.sarrs.widget.SarrsListItemView -->
+    <com.chaojishipin.sarrs.widget.DeleteRelativelayout
+        android:id="@+id/save_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time_tag"
+        >
+        <!-- real move layout-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_ffffff"
+            >
+            <ToggleButton
+                android:id="@+id/save_toggle"
+                android:layout_width="@dimen/sarrs_dimen_14dp"
+                android:layout_height="@dimen/sarrs_dimen_14dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+                android:background="@drawable/radiobutton_white_bg"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:tag="下载删除"
+                android:visibility="gone"
+                android:textOff=""
+                android:textOn="" />
+            <com.chaojishipin.sarrs.widget.EqualRatioImageView
+                android:id="@+id/main_feed_small_poster"
+                android:layout_width="112dp"
+                android:layout_height="63dp"
+                android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/save_toggle"
+                android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+                android:clickable="false"
+                android:scaleType="centerCrop"
+                app:imageHeight="126"
+                app:imageWidth="224" />
+            <TextView
+                android:id="@+id/save_cname"
+                android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+                android:layout_marginLeft="@dimen/sarrs_dimen_12dp"
+                android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+                android:layout_toRightOf="@+id/download_radiobtton"
+                android:layout_alignLeft="@+id/main_feed_small_poster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sarrs_dimen_12dp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:text="@string/CARTOON"
+                android:background="@drawable/sarrs_pic_mainactivity_tag"
+                >
+            </TextView>
+            <RelativeLayout
+                android:id="@+id/layout_smallposter_info"
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                android:layout_alignTop="@+id/main_feed_small_poster"
+                android:layout_marginBottom="@dimen/sarrs_dimen_5dp"
+                android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left"
+                android:layout_toRightOf="@+id/main_feed_small_poster"
+                android:clickable="false">
+
+                <TextView
+                    android:id="@+id/save_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:paddingRight="@dimen/sarrs_dimen_18dp"
+                    android:text="甄嬛传"
+                    android:singleLine="true"
+                    android:textColor="@color/color_444444"
+                    android:textSize="15dp" />
+                <TextView
+                    android:id="@+id/save_history"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/save_title"
+                    android:layout_marginTop="13dp"
+                    android:textColor="@color/color_999999"
+                    android:gravity="top|left"
+                    android:text="更新到xxx期"
+                    android:textSize="12dp"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/sarrs_dimen_10dp">
+                </TextView>
+                <TextView
+                    android:id="@+id/save_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:gravity="bottom|left"
+                    android:text="观看至xx分"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="@color/color_999999"
+                    android:textSize="12dp" />
+            </RelativeLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/sarrs_dimen_1dp"
+                android:layout_below="@+id/main_feed_small_poster"
+                android:background="@color/color_F3F3F3"
+                android:visibility="visible">
+            </View>
+        </RelativeLayout>
+
+    </com.chaojishipin.sarrs.widget.DeleteRelativelayout>
+
+
+</RelativeLayout>
+

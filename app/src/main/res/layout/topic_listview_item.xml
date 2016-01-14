@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <RelativeLayout
+        android:id="@+id/big_layout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/divider"
+        android:layout_height="wrap_content">
+
+        <com.chaojishipin.sarrs.widget.EqualRatioImageView
+            android:id ="@+id/main_frontview_poster"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:imageHeight="9"
+            app:imageWidth="16" />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sarrs_dimen_5.5dp"
+            android:gravity="center"
+            android:textColor="@color/color_ffffff"
+            android:background="@drawable/sarrs_pic_ranklist_ranknumber"/>
+
+        <ImageView
+            android:layout_above="@+id/main_frontview_poster_info"
+            android:id="@+id/img_play_count"
+            android:layout_width="@dimen/sarrs_dimen_10.5dp"
+            android:layout_height="@dimen/sarrs_dimen_8.5dp"
+            android:background="@drawable/sarrs_pic_small_playicon_new"
+            android:layout_toLeftOf="@+id/tv_play_count"
+            android:layout_marginBottom="@dimen/sarrs_dimen_11.5dp"
+            android:layout_marginRight="@dimen/sarrs_dimen_4dp"
+
+            />
+
+        <TextView
+            android:layout_above="@+id/main_frontview_poster_info"
+            android:id="@+id/tv_play_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/main_small_feed_playicon"
+            android:textSize="@dimen/sarrs_text_11sp"
+            android:textColor="@color/color_ffffff"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/sarrs_dimen_9dp"
+            android:layout_marginBottom="@dimen/sarrs_dimen_9dp"
+            android:shadowColor="#e0000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:gravity="center"/>
+
+        <RelativeLayout
+            android:id="@+id/main_frontview_poster_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_ffffff"
+            android:layout_below="@id/main_frontview_poster">
+
+            <TextView
+                android:id="@+id/main_frontview_poster_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/main_feed_poster_title_size"
+                android:textColor="@color/color_333333"
+                android:singleLine="true"
+                android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+                android:layout_marginTop="@dimen/sarrs_dimen_13dp"
+                android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+                />
+
+            <TextView
+                android:id="@+id/main_frontview_poster_comment1"
+                android:layout_below="@+id/main_frontview_poster_title"
+                android:layout_alignLeft="@+id/main_frontview_poster_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="@dimen/sarrs_dimen_12dp"
+                android:layout_marginTop="@dimen/sarrs_dimen_7dp"
+                android:textColor="@color/color_666666"
+                android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+                android:layout_marginBottom="@dimen/sarrs_dimen_24dp"
+                />
+
+        </RelativeLayout>
+
+        <View
+              android:layout_below="@+id/main_frontview_poster_info"
+              android:layout_width="match_parent"
+              android:background="@color/color_F3F3F3"
+              android:visibility="gone"
+              android:layout_height="10dp"/>
+        <View
+            android:visibility="gone"
+            android:layout_below="@+id/main_frontview_poster_info"
+            android:id="@+id/divider_bottom"
+            android:layout_width="fill_parent"
+            android:background="@color/color_F3F3F3"
+            android:layout_height="@dimen/sarrs_dimen_10dp">
+        </View>
+    </RelativeLayout>
+</RelativeLayout>

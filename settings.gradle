@@ -1,0 +1,5 @@
+include ':app', ':thirdparty'
+include ':sarrs_http_api'
+include ':ChaoJiShiPinSlidingMenu'
+include ':pulltorefresh'
+include ':sarrs_videoPlayer'

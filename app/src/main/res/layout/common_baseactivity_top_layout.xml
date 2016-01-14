@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/baseactivity_titlebar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/baseactivity_title_height"
+    android:background="@color/color_ccEcEcEC">
+
+    <LinearLayout
+        android:id ="@+id/baseactivity_left_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_width="@dimen/baseactivity_title_height"
+        android:layout_height="@dimen/baseactivity_title_height">
+        <ImageView
+            android:id="@+id/baseactivity_left_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id ="@+id/baseactivity_right_layout"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/baseactivity_title_height"
+        android:layout_height="@dimen/baseactivity_title_height">
+        <ImageView
+            android:id="@+id/baseactivity_right_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/baseactivity_title"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/baseactivity_title_size"
+        android:textColor="@color/color_444444"/>
+
+</RelativeLayout>
+

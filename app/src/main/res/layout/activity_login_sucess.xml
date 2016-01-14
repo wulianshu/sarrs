@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_66000000">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/default_head_layout"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/sarrs_dimen_40dp"
+        android:gravity="center"
+        android:text="@string/sucess_login"
+        android:textColor="@color/color_ffffff"
+        android:textSize="@dimen/sarrs_dimen_25dp" />
+
+    <RelativeLayout
+        android:id="@+id/default_head_layout"
+        android:layout_width="@dimen/sarrs_dimen_100dp"
+        android:layout_height="@dimen/sarrs_dimen_115dp"
+        android:layout_above="@+id/default_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:background="@drawable/default_head_bg"
+        android:paddingLeft="@dimen/sarrs_dimen_2dp"
+        android:paddingRight="@dimen/sarrs_dimen_2dp"
+        android:paddingTop="@dimen/sarrs_dimen_2dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/default_head"
+            android:layout_width="@dimen/sarrs_dimen_98dp"
+            android:layout_height="@dimen/sarrs_dimen_98dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/default_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/sarrs_dimen_35dp"
+        android:gravity="center"
+        android:textColor="@color/color_ffffff"
+        android:textSize="@dimen/sarrs_dimen_18dp" />
+
+    <RelativeLayout
+        android:id="@+id/login_content"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/bottom_close"
+        android:layout_marginBottom="@dimen/sarrs_dimen_55dp">
+
+        <TextView
+            android:id="@+id/context1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/login_content1"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_dimen_15dp" />
+
+        <TextView
+            android:id="@+id/modify_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/context1"
+            android:gravity="center"
+            android:text="@string/login_content2"
+            android:textColor="@color/color_ffffff"
+            android:textSize="@dimen/sarrs_dimen_15dp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottom_close"
+        android:layout_width="@dimen/sarrs_dimen_220dp"
+        android:layout_height="@dimen/sarrs_dimen_44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/sarrs_dimen_135dp"
+        android:background="@drawable/selector_login_sucess_close">
+
+        <TextView
+            android:id="@+id/close_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/login_close"
+            android:textColor="@drawable/selector_login_sucess_context"
+            android:textSize="@dimen/sarrs_dimen_18dp" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/top_edit_layout"
+    android:background="@color/color_ffffff">
+
+
+    <com.chaojishipin.sarrs.widget.EqualRatioImageView
+        android:id="@+id/download_poster"
+        android:layout_width="112dp"
+        android:layout_height="63dp"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+        android:layout_toRightOf="@+id/edit_delete"
+        android:scaleType="centerCrop"
+        android:src="@drawable/search_default_poster"
+        app:imageHeight="126"
+        app:imageWidth="244" />
+
+    <ToggleButton
+        android:id="@+id/edit_delete"
+        android:layout_width="@dimen/sarrs_dimen_14dp"
+        android:layout_height="@dimen/sarrs_dimen_14dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:background="@drawable/radiobutton_background"
+        android:clickable="false"
+        android:focusable="false"
+        android:tag="下载删除"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ifwatch"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignTop="@+id/download_poster"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/download_poster"
+        android:src="@drawable/redpop"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_alignTop="@+id/download_poster"
+        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
+        android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left"
+        android:layout_toRightOf="@+id/download_poster">
+
+        <TextView
+            android:id="@+id/downloadName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingRight="@dimen/sarrs_dimen_18dp"
+            android:text="@string/download_name"
+            android:textColor="@color/color_444444"
+            android:textSize="@dimen/download_poster_title_size" />
+
+        <TextView
+            android:id="@+id/download_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="@string/download_nums"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/main_feed_front_tag_textsize" />
+
+        <TextView
+            android:id="@+id/downloadLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+            android:gravity="center"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/main_feed_front_tag_textsize" />
+    </RelativeLayout>
+
+</RelativeLayout>

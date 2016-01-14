@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--启动页 -->
+    <string name="logo">超级视频</string>
+    <string name="logo_context">给你想看，要你好看</string>
+    <string name="solgan_ch">和懂你的人一起看</string>
+    <string name="solgan_en">Watch together,with the one who knows you</string>
+    <string name="startWatch">开始观影</string>
+    <string name="excuteWatch">进入观影</string>
+    <string name="guide_title">请选择感兴趣的内容:</string>
+
+    <string name="recommend">精彩推荐</string>
+    <string name="app_name">超级视频</string>
+    <string name="title_activity_chao_ji_shi_pin_main">ChaoJiShiPinMainActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_chao_ji_shi_pin_base">ChaoJiShiPinBaseActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_chao_ji_shi_pin_videodetail">Detail</string>
+    <string name="sarrs_str_zero_work">零流量观看</string>
+    <string name="sarrs_str_retry_refresh">刷新重试</string>
+    <string name="sarrs_str_net_discontect">网络断开了</string>
+
+    <string name="xlistview_header_hint_normal">x</string>
+    <string name="xlistview_header_hint_ready">松开更新推荐</string>
+    <string name="xlistview_header_hint_loading">正在推荐</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
+    <string name="xlistview_footer_hint_normal">查看更多</string>
+    <string name="xlistview_footer_hint_ready">玩命加载中…</string>
+
+    <string name="net_record_msg">网络已经中断，请检测你的网络</string>
+    <string name="net_error_msg">服务器傲娇了，点击刷新试试</string>
+    <string name="net_error_retry">刷新试试</string>
+    <!--下拉刷新-->
+    <!-- 自定义组件 -->
+    <string name="pull_to_refresh">下拉可以刷新</string>
+    <string name="release_to_refresh">松开更新推荐</string>
+    <string name="lastUpdateTime">最近更新：%s</string>
+    <string name="load_full">已加载全部</string>
+    <string name="no_data">暂无数据</string>
+    <string name="more">正在推荐</string>
+    <string name="pull_refresh_img_des">正在推荐</string>
+    <!--toast -->
+    <string name="sarrs_tost_close">关闭</string>
+
+    <string name="sarrrs_str_delete">不喜欢</string>
+    <string name="sarrs_str_collect">收藏</string>
+    <string name="sarrs_str_share">分享</string>
+    <!--首页toast -->
+    <string name="sarrs_toast_notice_normal_start">超级视频为您推荐</string>
+    <string name="sarrs_toast_notice_nodata">超级视频推荐返回数据为空</string>
+    <string name="sarrs_toast_notice_normal_end">条视频</string>
+    <string name="sarrs_toast_notice_no_result">暂无更新，休息一会</string>
+    <!-- 半屏播放页 -->
+    <string name="play_no_data">网络比较慢数据还没加载完成,请稍等</string>
+    <string name="videodetail_publisher">发布者：</string>
+    <string name="videodetail_score">评分：</string>
+    <string name="videodetail_director">导演：</string>
+    <string name="videodetail_actors">主演：</string>
+    <string name="videodetail_type">类型：</string>
+    <string name="videodetail_date">年份：</string>
+    <string name="videodetail_area">地区：</string>
+    <string name="videodetail_des">简介：</string>
+    <string name="videodetail_episode">剧集</string>
+    <string name="videodetail_episode_count">共52集</string>
+    <string name="videodetail_episode_periord">期 </string>
+    <string name="search_hint">请输入影片名、导演或演员</string>
+    <string name="suggest_play">播放</string>
+    
+    <string name="search_no_voice">您好像没说话，建议大声说出影片名称试试，或调高话筒声音</string>
+    <string name="search_main_tip_before_start">正在倾听中……</string>
+    <string name="search_main_tip_start">轻触取消录音</string>
+    <string name="search_main_tip_stop">轻触屏幕重新识别声音</string>
+    <string name="search_main_voice_text">可以说：海贼王动漫</string>
+    <string name="search_history">搜索历史</string>
+    <string name="search_history_clear">清除</string>
+    <string name="search_noresult">很抱歉，小编没有找到相关视频</string>
+    <string name="search_illegal">根据相关法律法规和政策规定 部分结果未予显示。让小编给您推荐些片子吧</string>
+    <string name="search_everybody_like">大家都在看</string>
+    <string name="search_result_foryou">为你搜索到以下结果:</string>
+    <string name="search_toplist">热门搜索</string>
+    <!--设置界面-->
+    <string name="setting_clear_cache">清除缓存</string>
+    <string name="setting_download_path">/chaojishipin/download</string>
+    <string name="setting_version_upgrade">版本升级</string>
+    <string name="setting_about_us">关于我们</string>
+    <string name="setting_version_no">检查新版本</string>
+    <string name="cache_size">5.2M</string>
+    <string name="setting_new">最新</string>
+    <string name="setting_version">版本</string>
+    <string name="setting_already_new">当前已是最新版本</string>
+    <!--关于我们-->
+    <string name="about_us_title">关于我们</string>
+    <string name="about_us_description1">超级视频用心做最懂你的视频应用,</string>
+    <string name="about_us_description2">带给你新的搜索和观影体验</string>
+    <string name="about_us_guanzhu_weichat">关注微信公众号</string>
+    <string name="about_us_guanzhu_weibo">关注官方微博</string>
+    <string name="about_us_yonghufankui_qq">用户反馈QQ群</string>
+    <string name="about_us_weichat">超级视频</string>
+    <string name="about_us_weibo">超级视频官网</string>
+    <string name="about_us_qq">467071724</string>
+    <!-- 升级-->
+    <string name="cancel_upgrade_download">取消</string>
+    <string name="upgrade_downloading_title">正在下载</string>
+    <string name="upgrade_downloading_message">请稍候...</string>
+
+    <string name="upgrade_desc1">当前版本：</string>
+    <string name="upgrade_desc2">，发现新版本：</string>
+    <string name="upgrade_desc3">，是否更新？</string>
+    <string name="upgrade_title">软件更新</string>
+    <string name="upgrade_ok">立即升级</string>
+    <string name="upgrade_cancel">稍后再说</string>
+    <string name="force_upgrade_title">强制升级</string>
+    <string name="force_upgrade_ok">确定</string>
+    <string name="no_upgrade_desc1">当前版本：</string>
+    <string name="no_upgrade_desc2">已是最新版，无需更新！</string>
+    <string name="no_upgrade_ok">确定</string>
+
+
+    <!-- 播放器相关-->
+    <string name="player_play">播放</string>
+    <string name="play_finish">本集还剩5秒</string>
+    <string name="player_setting">网络设置</string>
+    <string name="player_loading_tip">玩命加载中...</string>
+    <string name="player_loading_record">已从上次观看位置继续播放</string>
+    <string name="player_net_wifi">wifi已连接，可以放心使用</string>
+    <!--    <string name = "player_no_net_tip">网络不能用鸟,请检查网络设置</string>-->
+    <string name="RPG_net_tip">您正在使用数据流量,观看视频将产生\n流量费用</string>
+    <!-- 讯飞appid -->
+    <string name="xunfei_app_id">56601675</string>
+    <!--登录 -->
+    <string name="login_user_default_name">点击登录</string>
+    <string name="login_title">登录</string>
+    <string name="login_next">下一步</string>
+    <string name="login_input_hint">请输入手机号</string>
+    <string name="login_input_qr_hint">输入验证码</string>
+    <string name="login_verifycode_title">已发送验证码短信到</string>
+    <string name="login_verifycode_btn">60秒后可\n重新获取</string>
+    <string name="login_verifycode_send_retry">重新获取</string>
+    <string name="login_verifycode_error">验证码失效</string>
+    <string name="login_verifycode_error_max">验证码错误</string>
+    <string name="login_verifycode_notice">秒后可\n重新获取</string>
+    <string name="login_success">登录成功</string>
+    <string name="login_failed">登录失败</string>
+    <string name="login_canceled">取消登录</string>
+    <string name="logout_success">退出登录</string>
+    <string name="logout_failed">退出登录失败</string>
+    <string name="again_click_exist">再按一次返回键退出</string>
+    <!--第一次成功登录-->
+    <string name="sucess_login">登录成功</string>
+    <string name="login_content1">为您匹配到一位名人作为目前的身份</string>
+    <string name="login_content2">不喜欢，换我自己>></string>
+    <string name="login_close">我知道了</string>
+    <!--gender -->
+    <string name="gender_0">男</string>
+    <string name="gender_1">女</string>
+    <string name="gender_2">保密</string>
+    <!--titlebar -->
+    <string name="user_info">个人信息</string>
+    <string name="login_page">登录</string>
+    <string name="user_confirm">确定</string>
+    <string name="user_nc">昵称</string>
+    <string name="user_xb">性别</string>
+    <string name="user_img">头像选择</string>
+    <string name="sarrs_str_setting">设置</string>
+    <string name="sarrs_str_download">我的下载</string>
+    <!--输入框 -->
+    <string name="modify_nc_failed">修改信息失败</string>
+    <string name="modify_tx_sucess">头像修改成功</string>
+    <string name="modify_tx_fail">头像修改失败</string>
+    <string name="edit_hint">请输入手机号登录</string>
+    <string name="edit_hint_nick">请输入昵称</string>
+    <string name="rule_info">4-30位字符，支持中英文，数字和“_”</string>
+    <string name="rule_nick_null">请输入昵称</string>
+    <string name="rule_nick_same">昵称已经存在</string>
+    <string name="rule_nick_error_notice">只支持中英文、数字和"_"</string>
+    <string name="rule_nick_max_notice">只允许输入4-30个字符</string>
+    <!-- 相册-->
+    <string name="cut_cancel">取消</string>
+    <string name="cut_save">确定</string>
+    <!--html隐私政策 -->
+    <string name="html_notice">用户协议以及隐私政策</string>
+    <string name="html_tilte">登录代表同意《超级视频用户协议以及隐私政策》</string>
+    <!--下载begin-->
+    <string name="download_title">我的下载</string>
+    <string name="download_is_downloading">正在下载</string>
+    <string name="download_manager">下载管理</string>
+
+    <string name="edit">编辑</string>
+    <string name="check_all">全选</string>
+    <string name="delete_up">删除</string>
+    <string name="download_space">已占用0M/剩余0.00G可用</string>
+    <string name="download_video">下载视频</string>
+    <string name="local_video">本地视频</string>
+    <string name="navi_text_download">正在缓存</string>
+    <string name="file_has_been_removed">该文件可能被人为删除或移动</string>
+    <string name="net_shutdown">网络中断</string>
+    <string name="no_sdcard_added">等待加载SD卡</string>
+    <string name="no_space_tip">SD卡空间已满，请先清理空间再继续</string>
+    <string name="deselect_all">取消全选</string>
+    <string name="nonet_tip">网络不能用鸟,请检查网络设置</string>
+    <string name="moblie_net_tip_new">当前为3G/2G网络，继续播放会耗费流量</string>
+    <string name="wifi_tip">正在使用wifi网络</string>
+    <string name="tip">提示</string>
+    <string name="confir_delete">确认删除?</string>
+    <string name="wireless_tip">正在使用移动网络，可能产生较大流量</string>
+    <string name="continue_download">继续下载</string>
+    <string name="pause_download">暂停下载</string>
+    <string name="already_pause_download">已暂停</string>
+    <string name="sd_change_message_before">还未加载</string>
+    <string name="sd_change_message_middle">，确定选用</string>
+    <string name="sd_change_message_after">重新下载影片？</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="complete">完成</string>
+    <string name="sdcard_nospace">手机内存不足，暂时无法下载视频</string>
+    <string name="download_faile">缓存失败</string>
+    <string name="done">完成</string>
+    <string name="allpause">全部暂停</string>
+    <string name="allstart">全部开始</string>
+    <string name="alldownload">全部下载</string>
+    <string name="downloadingTitle">正在下载</string>
+    <string name="delete_file">确认删除？</string>
+    <string name="undefind_delete_file">没有可删除文件！</string>
+    <string name="delete_success">删除成功！</string>
+    <string name="delete_failed">删除失败！</string>
+    <string name="deleting">删除视频中</string>
+    <string name="download_name">海贼王</string>
+    <string name="cancel_all">全部取消</string>
+    <string name="download_speed">0.0M/s</string>
+    <string name="download_nums">0个视频</string>
+    <string name="contentDescription">contentDescription</string>
+    <string name="continue_play">继续播放</string>
+    <string name="videodetailfragment_juji">剧集</string>
+    <string name="videodetailfragment_latestjuji">更新至</string>
+    <string name="videodetailfragment_quanji">共</string>
+    <string name="filedeletetip">抱歉您所播放的文件已经被移动或删除</string>
+    <string name="download_can_play_rate">下完10%即可播放</string>
+    <string name="delete_below">个视频?</string>
+    <string name="download_no_item_title">暂无下载的视频</string>
+    <string name="download_no_item_content">在详情页点击下载按钮进行下载</string>
+    <string name="di">第</string>
+    <string name="episode">集</string>
+    <string name="download_phone_path">手机内置存储</string>
+    <string name="download_sd_path">SD卡</string>
+    <string name="time_less_than_1_min">1分钟内</string>
+    <string name="time_less_than_1_hour">%1$d分钟前</string>
+    <string name="time_less_than_ten_minute">观看至0%1$d:%2$d</string>
+    <string name="time_less_than_1_hour_histroy">观看至%1$d:%2$d</string>
+    <string name="time_more_than_1_hour">观看至%1$s:%2$s</string>
+    <string name="time_less_than_1_day">%1$d小时前</string>
+    <string name="time_more_than_1_day">%1$s-%2$s</string>
+    <string name="updateto">更新至</string>
+    <string name="episode_total">集全</string>
+    <string name="down_exists">该视频已在下载列表中！</string>
+    <string name="already_download">下载完毕！</string>
+    <string name="addfailure">暂不支持下载</string>
+    <string name="addok">已添加至下载列表</string>
+    <string name="compulate_size">正在计算…</string>
+    <string name="video_no_content">未获取到内容，请点击重试</string>
+    <!--下载end-->
+    <string name="title_activity_chao_ji_shi_pin_topic_detail">ChaoJiShiPinTopicDetailActivity
+    </string>
+    <string name="share">分享</string>
+    <string name="collection">收藏</string>
+    <string name="flash_required">您没有安装flash插件，部分视频无法播放</string>
+    <!--sarrs slide menu -->
+    <string name="sarrs_slide_menu_download">下载</string>
+    <string name="sarrs_slide_menu_save">收藏</string>
+    <string name="sarrs_slide_menu_share">分享</string>
+
+    <!--评论文案-->
+    <string name="comment_title1">最热评论</string>
+    <string name="comment_title2">最新评论</string>
+    <string name="comment_content">评论功能即将开启！\n给您不一样的评论体验！\n敬请期待</string>
+    <string name="comment_sucess">评论成功</string>
+    <string name="comment_fail">评论失败</string>
+    <string name="show_hidden_comment">展开隐藏楼层</string>
+    <string name="comment">文字评论</string>
+
+
+    <!-- -->
+    <string name="view_count">观看</string>
+    <string name="down_load">下载</string>
+    <string name="do_save">收藏</string>
+    <string name="down_load_more">下载更多剧集</string>
+    <!--个人信息 begin-->
+    <string name="no_header">您还没设置头像哟</string>
+    <!--个人信息 end-->
+    <string name="moblie_net_tip">当前为3G/2G网络，继续播放会耗费流量。是否继续？</string>
+    <string name="moblie_load_timeout">小播播加载得筋疲力尽,手动点赞!</string>
+    <string name="moblie_load_refresh">刷新</string>
+    <string name="exit">退出</string>
+    <string name="string_continue">继续</string>
+    <string name="neterror">网络不可用，请检查后重试</string>
+    <!--收藏 -->
+    <string name="save_delete">删除成功</string>
+    <string name="save_title">我的收藏</string>
+    <string name="save_success">收藏成功</string>
+    <string name="save_failed">收藏失败</string>
+    <string name="save_cancel">取消收藏</string>
+    <string name="save_latest">更新到</string>
+    <string name="save_zy">期</string>
+    <string name="save_dsj">集</string>
+    <string name="save_total">共</string>
+    <string name="save_tiao">条</string>
+    <string name="save_unend">(未完结)</string>
+    <string name="save_end">(已完结)</string>
+    <string name="save_no_item_title">您还没有收藏记录</string>
+    <string name="save_no_item_content">在推荐页可以对您喜欢的影片快速收藏</string>
+    <!--视频类型-->
+    <string name="CARTOON">动漫</string>
+    <string name="TV_SERIES">电视剧</string>
+    <string name="VARIETY">综艺</string>
+    <string name="MOVIES">电影</string>
+    <string name="DOCUMENTARY">记录片</string>
+    <string name="SPECIAL">专题</string>
+    <string name="OTHER">其他</string>
+    <!--播放记录-->
+
+    <string name="HISTORYRECORD">播放记录</string>
+    <string name="LASTTIMEVIEW">上次观看到</string>
+    <string name="VIEW_NO_ONE_MINUTE">观看还不足1分钟</string>
+    <string name="VIEW_OVER">已看完</string>
+    <string name="minute">分</string>
+    <string name="second">秒</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="today">今天</string>
+    <string name="no_historyrecord_data">您还没有观看记录</string>
+    <string name="no_historyrecord_tip">我们在首页给你推荐了很多好看的视频</string>
+    <string name="no_login_tip">登录之后，即可获取所有播放记录</string>
+    <string name="instant_login">立即登录</string>
+    <string name="play_in_last_position">已从上次观看位置继续播放</string>
+    <string name="wonderful_is_about_to_show">精彩即将呈现:</string>
+    <string name="resource">来源:</string>
+    <string name="no_net_no_delete">网络不可用不能执行删除操作</string>
+    <string name="double_click2top">双击回顶部</string>
+</resources>

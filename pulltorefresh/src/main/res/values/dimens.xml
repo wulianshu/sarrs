@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">17dp</dimen>
+    <dimen name="LargeTextSize">20sp</dimen>
+
+    <dimen name="refresh_size">20dp</dimen>
+    <dimen name="refresh_text_size">15dp</dimen>
+    <dimen name="refresh_right_margin">5dp</dimen>
+
+
+
+</resources>

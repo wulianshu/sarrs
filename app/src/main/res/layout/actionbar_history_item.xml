@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    android:background="@drawable/videoplay_play_pre_selector"> -->
+
+     <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:gravity="center"
+        android:textColor="@color/actionbar_title"
+        android:id="@+id/actionbar_history_text"
+        android:text="@string/edit" 
+ 	    android:layout_width="@dimen/right_menu_width"
+ 	    android:layout_height="@dimen/right_menu_height"
+ 	    android:layout_alignParentRight="true"
+ 	    style="@style/title_button"
+ 	    android:textSize="@dimen/menu_font_size"
+        android:background="@drawable/right_edit_button"
+        android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+        />
+
+<!-- </RelativeLayout> -->

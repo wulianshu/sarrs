@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_F3F3F3">
+    <RelativeLayout
+       android:id="@+id/setting_clear_catch"
+       android:layout_width="match_parent"
+       android:background="@color/color_ffffff"
+       android:layout_marginTop="@dimen/main_smal_feed_poster_info_margin_left"
+       android:layout_height="@dimen/btn_no_net_look_height"
+       android:gravity="center_vertical">
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/setting_clear_cache"
+        android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left">
+        </TextView>
+
+       <TextView
+           android:id="@+id/setting_tv_catch"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/main_smal_feed_poster_info_margin_left"
+           android:layout_alignParentRight="true"
+           android:layout_marginRight="@dimen/main_smal_feed_poster_info_margin_left"
+           android:textColor="@color/color_999999"
+           >
+           </TextView>
+       </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_version_upgrade"
+        android:layout_width="match_parent"
+        android:background="@color/color_ffffff"
+        android:layout_marginTop="@dimen/shape_width"
+        android:layout_height="@dimen/btn_no_net_look_height"
+        >
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:text="@string/setting_version_upgrade"
+            android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left">
+        </TextView>
+
+        <TextView
+            android:id="@+id/setting_tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/main_smal_feed_poster_info_margin_left"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/main_smal_feed_poster_info_margin_left"
+            android:textColor="@color/color_999999"
+            android:text="@string/setting_version_no"
+            >
+
+        </TextView>
+        <ImageView
+            android:id="@+id/setting_circle_imageview"
+            android:layout_marginTop="@dimen/sarrs_dimen_10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:visibility="gone"
+            android:layout_marginRight="@dimen/sarrs_dimen_7dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/setting_circle_red"
+            >
+        </ImageView>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/setting_about_us"
+        android:layout_width="match_parent"
+        android:background="@color/color_ffffff"
+        android:layout_marginTop="@dimen/main_smal_feed_poster_info_margin_left"
+        android:layout_height="@dimen/btn_no_net_look_height"
+        android:gravity="center_vertical">
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:text="@string/setting_about_us"
+            android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left">
+        </TextView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/sarrs_pic_modify_right_more"
+            >
+        </ImageView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/color_F3F3F3"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+    </RelativeLayout>
+</LinearLayout>

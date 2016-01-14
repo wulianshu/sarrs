@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:orientation="vertical">
+    <!-- 解决播放器闪烁问题 方式1：需要创建一个空 surfaceview  -->
+    <SurfaceView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    <!-- 播放器fragment-->
+    <LinearLayout
+        android:id="@+id/videodetail_medie_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+    <!-- 播放器底部fragment-->
+    <LinearLayout
+        android:id="@+id/videodetail_media_bottom_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"></LinearLayout>
+
+</LinearLayout>

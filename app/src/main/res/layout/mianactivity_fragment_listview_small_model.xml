@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.chaojishipin.sarrs.widget.SwipeLayout
+        android:id = "@+id/smallmodel_swipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id ="@+id/small_behind_view"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/layout_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_main_behiend_bg"
+                >
+
+                <ImageView
+                    android:id="@+id/delete_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/main_feed_small_behiden_margin"
+                    android:layout_marginBottom="@dimen/main_feed_small_behiden_margin"
+                    android:background="@drawable/selector_main_delete"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/main_feed_behiend_textsize"
+                    android:layout_alignBottom="@id/delete_icon"
+                    android:layout_marginBottom="@dimen/mina_feed_behiend_text_margin_bottom"
+                    android:textColor="@color/color_ffffff"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/sarrrs_str_delete"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/layout_collcet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_main_behiend_bg"
+                >
+
+                <ImageView
+                    android:id="@+id/collcet_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/main_feed_small_behiden_margin"
+                    android:layout_marginBottom="@dimen/main_feed_small_behiden_margin"
+                    android:background="@drawable/selector_main_small_collect"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/main_feed_behiend_textsize"
+                    android:layout_alignBottom="@id/collcet_icon"
+                    android:layout_marginBottom="@dimen/mina_feed_behiend_text_margin_bottom"
+                    android:textColor="@color/color_ffffff"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/sarrs_str_collect"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/layout_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_main_behiend_bg"
+                >
+
+                <ImageView
+                    android:id="@+id/share_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/main_feed_small_behiden_margin"
+                    android:layout_marginBottom="@dimen/main_feed_small_behiden_margin"
+                    android:background="@drawable/selector_main_small_share"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/main_feed_behiend_textsize"
+                    android:layout_alignBottom="@id/share_icon"
+                    android:layout_marginBottom="@dimen/mina_feed_behiend_text_margin_bottom"
+                    android:textColor="@color/color_ffffff"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/sarrs_str_share"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/small_front_view"
+            android:background="@color/color_ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.chaojishipin.sarrs.widget.EqualRatioImageView
+                android:id="@+id/main_feed_small_poster"
+                android:layout_width="149dp"
+                android:layout_height="84dp"
+                android:scaleType="centerCrop"
+                app:imageHeight="167"
+                app:imageWidth="298"
+                android:layout_marginBottom="@dimen/main_small_feed_poster_margin"
+                android:layout_marginTop="@dimen/main_small_feed_poster_margin"/>
+
+            <TextView
+                android:id ="@+id/main_feed_small_poster_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_ffffff"
+                android:layout_alignTop="@+id/main_feed_small_poster"
+                android:layout_alignLeft="@+id/main_feed_small_poster"
+                android:background="@drawable/sarrs_pic_small_tag"
+                android:layout_marginLeft="@dimen/main_small_feed_tag_margin_left" />
+
+            <RelativeLayout
+                android:id="@+id/layout_smallposter_info"
+                android:layout_toRightOf="@+id/main_feed_small_poster"
+                android:layout_alignTop="@+id/main_feed_small_poster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left">
+
+                <TextView
+                    android:id="@+id/small_poster_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/main_feed_poster_title_size"
+                    android:paddingRight="32dp"
+                    android:textColor="@color/color_444444"
+                    android:singleLine="true"/>
+
+                <TextView
+                    android:id="@+id/small_poster_comment1"
+                    android:layout_below="@+id/small_poster_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_666666"
+                    android:textSize="@dimen/main_feed_poster_comment"
+                    android:layout_marginTop="@dimen/main_small_feed_comment_margin"
+                    android:singleLine="true"/>
+
+
+
+                <ImageView
+                    android:id="@+id/main_small_feed_playicon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sarrs_pic_small_playicon"
+                    android:layout_marginTop="@dimen/main_small_feed_comment_margin"
+                    android:layout_below="@id/small_poster_comment1"/>
+
+                <TextView
+                    android:id="@+id/main_small_feed_play_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/main_small_feed_playicon"
+                    android:textSize="@dimen/main_feed_poster_comment"
+                    android:textColor="@color/color_666666"
+                    android:layout_below="@+id/small_poster_comment1"
+                    android:layout_marginLeft="@dimen/main_small_feed_playcount_margin_left"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"/>
+
+
+            </RelativeLayout>
+            <ImageView
+                android:id="@+id/main_small_more_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_below="@+id/small_front_view"
+            android:layout_width="match_parent"
+            android:background="@color/color_F3F3F3"
+            android:layout_height="20dp"/>
+        </RelativeLayout>
+    </com.chaojishipin.sarrs.widget.SwipeLayout>
+</RelativeLayout>

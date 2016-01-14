@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent" >
+ <!-- <RelativeLayout
+        android:id="@+id/channel_detail_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_height"
+        android:background="@color/blue_main" >
+
+        <ImageView
+            android:id="@+id/leftButtonLayout"
+            style="@style/back_button_style"
+            android:layout_width="48dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/download_middle_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/navi_text_download"    
+            android:textColor="@color/white_FFFFFF"
+            android:textSize="@dimen/font_21" />
+
+       
+        <LinearLayout 
+ 	    android:id="@+id/delete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="10dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:background="@drawable/channel_backlayout_selector"
+        >
+         <TextView
+            android:id="@+id/deleteicon"
+            style="@style/title_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="编辑"
+            android:textColor="@color/white_FFFFFF"
+            android:textSize="@dimen/font_17" />
+    </LinearLayout>
+    </RelativeLayout>  -->
+   <RelativeLayout
+        android:id="@+id/titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_height"
+        android:background="@color/blue_main"
+        android:layout_alignParentTop="true" >
+
+		<ImageView
+            android:id="@+id/leftButtonLayout"
+            style="@style/back_button_style"
+            android:layout_width="48dp"
+            android:layout_height="match_parent" />
+
+
+      <LinearLayout
+            android:id="@+id/comment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"          
+            android:orientation="horizontal"
+            android:background="@drawable/channel_backlayout_selector" >
+
+            <TextView
+                android:id="@+id/download_middle_title"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="@string/navi_text_download"               
+                android:textColor="@color/white"
+            	android:textSize="@dimen/font_21" />
+        </LinearLayout>
+        <!-- 全选-->
+     <!--  <RelativeLayout
+        android:id="@+id/userselectdeleteitem"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@id/leftButtonLayout"
+        android:background="@drawable/deletetitleselector"
+        android:minWidth="175dip"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/deletecount"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="@dimen/main_home_app_marginleft"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/main_home_app_text_color"
+            android:textSize="@dimen/main_home_app_text_size" />
+
+        <ImageView
+            android:id="@+id/morearrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/deletecount"
+            android:background="@drawable/localvideo_more_arrow" />
+    </RelativeLayout> -->
+    </RelativeLayout>
+
+ <!-- 删除按钮-->
+ 	 <LinearLayout 
+ 	    android:id="@+id/delete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/nav_height"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="1dp"
+        android:paddingRight="5dp"
+        android:paddingTop="1dp">
+         <TextView
+            android:id="@+id/deleteicon"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="编辑"
+            android:textColor="@drawable/editeselector"
+            android:textSize="@dimen/font_17" />
+    </LinearLayout>
+    
+    <!-- 扫描按钮-->
+<!-- 	<LinearLayout 
+	    android:id="@+id/refresh_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/delete_layout"
+        android:gravity="center_vertical"
+        android:paddingRight="10dip"
+        android:paddingLeft="10dip"
+        android:background="@drawable/channel_backlayout_selector"
+        android:visibility="gone"
+        >
+    	<ImageView
+        android:id="@+id/refreshicon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/refreshnormal1"
+        android:scaleType="centerCrop"/>
+     </LinearLayout>  -->
+ 
+</RelativeLayout>

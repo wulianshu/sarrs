@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title_action_bar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/baseactivity_title_height"
+    android:background="@color/color_ccEcEcEC">
+
+    <ImageView
+        android:id="@+id/mainactivity_left_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/mainactivity_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:singleLine="true"
+        android:textColor="@color/color_444444"
+        android:textSize="@dimen/mainactivity_title_size" />
+
+    <ImageView
+        android:id="@+id/mainactivity_right_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:scaleType="centerCrop" />
+
+    <Button
+        android:id="@+id/right_edit_btn"
+        android:layout_width="@dimen/right_menu_width"
+        android:layout_height="@dimen/right_menu_height"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/sarrs_dimen_10dp"
+        android:background="@drawable/right_edit_button"
+        android:text="编辑"
+        android:textColor="@color/color_666666"
+        android:textSize="@dimen/menu_font_size"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_4c000000" />
+</RelativeLayout>

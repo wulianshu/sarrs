@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="normal" parent="@style/Theme.AppCompat.Light">
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--  <item name="homeAsUpIndicator">@drawable/back_selector</item> -->
+    </style>
+
+</resources>

@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/common_baseactivity_top_layout"/>
+
+    <com.chaojishipin.sarrs.widget.PublicLoadLayout
+        android:id = "@+id/baseactivity_content_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.chaojishipin.sarrs.widget.PublicLoadLayout>
+
+</LinearLayout>

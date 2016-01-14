@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 播放器控制面板主题 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:background="@color/color_000000"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_height="fill_parent">
+
+    <ImageView
+        android:id="@+id/mediacontroller_top_back2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/selector_videoplayer_back" />
+    <ImageView
+        android:id="@+id/videoplayer_net_error_icon"
+        android:layout_width="118dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="35dp"
+        android:visibility="gone"
+        android:src="@drawable/sarrs_pic_player_net_error"/>
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/controller_net_error"
+             android:gravity="center"
+             android:layout_centerInParent="true"
+             android:textColor="@color/color_ffffff"
+             />
+         <Button
+             android:id="@+id/controller_net_error_play"
+             android:layout_below="@+id/controller_net_error"
+             android:layout_width="150dp"
+             android:layout_height="36dp"
+             android:visibility="gone"
+             android:layout_marginTop="20dp"
+             android:layout_centerInParent="true"
+             android:textColor="@color/color_c5242b"
+             android:text="@string/player_play"
+             android:background="@drawable/selector_videoplayer_net_error_play"
+             android:textSize="@dimen/font_15"
+             >
+
+         </Button>
+         <Button
+             android:id="@+id/controller_net_error_setting"
+             android:layout_below="@+id/controller_net_error"
+             android:layout_width="150dp"
+             android:layout_height="36dp"
+             android:layout_marginTop="20dp"
+             android:visibility="gone"
+             android:layout_centerInParent="true"
+             android:textColor="@color/color_c5242b"
+             android:text="@string/player_setting"
+             android:background="@drawable/selector_videoplayer_net_error_play"
+             android:textSize="@dimen/font_15"
+             >
+
+         </Button>
+
+
+
+
+</RelativeLayout>
