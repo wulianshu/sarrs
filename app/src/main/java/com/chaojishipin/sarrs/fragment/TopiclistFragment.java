@@ -150,24 +150,7 @@ public class TopiclistFragment extends ChaoJiShiPinBaseFragment implements PullT
      * @auth daipei
      */
     public void buildDrawingCacheAndIntent() {
-        View view = getActivity().getWindow().getDecorView();
-        view.destroyDrawingCache();
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache(true);
-        /**
-         * 获取当前窗口快照，相当于截屏
-         */
-        Bitmap bitmap = view.getDrawingCache();
-        /**
-         * 压缩图片大小
-         */
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 1, stream);
-        byte[] bytes = stream.toByteArray();
-
-        Intent intent = new Intent(getActivity(), SearchActivity.class);
-        intent.putExtra("bitmap", bytes);
-        startActivity(intent);
+        SearchActivity.launch(getActivity());
     }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {

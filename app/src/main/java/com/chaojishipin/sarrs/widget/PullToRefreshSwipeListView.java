@@ -244,6 +244,7 @@ public class PullToRefreshSwipeListView extends PullToRefreshAdapterViewBase<Lis
 		ListView lv = createListView(context, attrs);
 		lv.setHorizontalFadingEdgeEnabled(false);
 		lv.setVerticalFadingEdgeEnabled(false);
+		lv.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		// Set it to this so it can be used in ListActivity/ListFragment
 		lv.setId(android.R.id.list);
 		return lv;

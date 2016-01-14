@@ -90,7 +90,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         // 打开应用才判断升级逻辑
         SaveUserinfo.getLoginuserinfo(this);
         if (mIntent.getBooleanExtra(UpgradeHelper.FROM_SPLASH, false))
-        initData();
+            initData();
         initView();
         setListener();
         registInfo(this);

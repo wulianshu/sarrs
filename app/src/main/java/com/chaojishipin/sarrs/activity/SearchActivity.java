@@ -1,12 +1,13 @@
 package com.chaojishipin.sarrs.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,7 +19,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.adapter.SearchHistoryAdapter;
 import com.chaojishipin.sarrs.adapter.SearchNoResultAdapter;
@@ -55,13 +56,14 @@ import com.chaojishipin.sarrs.listener.onRetryListener;
 import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
-import com.chaojishipin.sarrs.utils.MyBlur;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.chaojishipin.sarrs.widget.NetStateView;
 import com.chaojishipin.sarrs.widget.WaveView;
+import com.dangdang.original.common.util.Blur;
+import com.dangdang.original.common.util.ScreenShot;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.iflytek.cloud.ErrorCode;
@@ -174,7 +176,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (null != bitmap) {
+        if (null != bitmap && !bitmap.isRecycled()) {
             bitmap.recycle();
         }
         exitXunFei();
@@ -196,7 +198,13 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         mEt_search_delete_icon = (ImageView) findViewById(R.id.et_search_delete_icon);
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.searchactivity_result_layout_PullToRefreshListView);
         mSearchactivity_suggest_layout_listView = (ListView) findViewById(R.id.searchactivity_suggest_layout_listView);
+        mSearchactivity_suggest_layout_listView.setVerticalFadingEdgeEnabled(false);
+        mSearchactivity_suggest_layout_listView.setHorizontalFadingEdgeEnabled(false);
+        mSearchactivity_suggest_layout_listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mSearchactivity_history_layout_listView = (ListView) findViewById(R.id.searchactivity_history_layout_listView);
+        mSearchactivity_history_layout_listView.setVerticalFadingEdgeEnabled(false);
+        mSearchactivity_history_layout_listView.setHorizontalFadingEdgeEnabled(false);
+        mSearchactivity_history_layout_listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mSearchactivity_result_layout = (RelativeLayout) findViewById(R.id.searchactivity_result_layout);
         mSearchactivity_layout_mohu = (RelativeLayout) findViewById(R.id.searchactivity_layout_mohu);
         mSearchactivity_main_layout = (RelativeLayout) findViewById(R.id.searchactivity_main_layout);
@@ -842,15 +850,15 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
      * @param view
      */
     private void blurBackgound(final View view) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            byte[] bytes = intent.getByteArrayExtra("bitmap");
-            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            MyBlur blur = new MyBlur(SearchActivity.this, view);
-            blur.applyBlur(bitmap);
-        } else if (bitmap != null) {
-            MyBlur blur = new MyBlur(SearchActivity.this, view);
-            blur.applyBlur(bitmap);
+        try{
+            if(bitmap == null){
+                bitmap = ((ChaoJiShiPinApplication)getApplication()).getBitmap();
+                bitmap = Blur.fastblur(this, bitmap, 6);
+            }
+            view.setBackgroundDrawable(new BitmapDrawable(bitmap));
+        }catch(Throwable e){
+            view.setBackgroundColor(Color.DKGRAY);
+            e.printStackTrace();
         }
     }
 
@@ -1361,5 +1369,12 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    public static void launch(Activity ac){
+        Bitmap bm = ScreenShot.shoot(ac);
+        ((ChaoJiShiPinApplication)ac.getApplication()).setBitmap(bm);
+        Intent intent = new Intent(ac, SearchActivity.class);
+        ac.startActivity(intent);
     }
 }

@@ -64,6 +64,15 @@ public class
     private boolean isSpeedCut = false;
     private Stack<Activity> activityStack;
 
+    private Bitmap mBitmap;
+
+    public void setBitmap(Bitmap bm){
+        mBitmap = bm;
+    }
+
+    public Bitmap getBitmap(){
+        return mBitmap;
+    }
 
     @Override
     public void onCreate() {

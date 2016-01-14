@@ -20,6 +20,7 @@ public class NoScrollListView extends ListView {
 	private void init(){
 		this.setVerticalFadingEdgeEnabled(false);
 		this.setHorizontalFadingEdgeEnabled(false);
+		this.setOverScrollMode(View.OVER_SCROLL_NEVER);
 	}
 
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

@@ -105,6 +105,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
 	private void registerListener() {
 		this.setVerticalFadingEdgeEnabled(false);
 		this.setHorizontalFadingEdgeEnabled(false);
+		this.setOverScrollMode(OVER_SCROLL_NEVER);
 		setOnScrollListener(this);
 		setOnGroupClickListener(this);
 	}
