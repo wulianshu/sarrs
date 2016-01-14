@@ -624,9 +624,10 @@ public abstract class NanoHTTPD {
                 }
 
                 if (header != null) {
-                    for (String key : header.keySet()) {
-                        String value = header.get(key);
-                        pw.print(key + ": " + value + "\r\n");
+                    Iterator it = header.entrySet().iterator();
+                    while(it.hasNext()){
+                        Map.Entry entry = (Map.Entry) it.next();
+                        pw.print(entry.getKey() + ": " + entry.getValue() + "\r\n");
                     }
                 }
 
@@ -1130,18 +1131,20 @@ public abstract class NanoHTTPD {
                         pname = pname.substring(1, pname.length() - 1);
 
                         String value = "";
+                        StringBuffer sb = new StringBuffer();
                         if (item.get("content-type") == null) {
                             while (mpline != null && !mpline.contains(boundary)) {
                                 mpline = in.readLine();
                                 if (mpline != null) {
                                     int d = mpline.indexOf(boundary);
                                     if (d == -1) {
-                                        value += mpline;
+                                        sb.append(mpline);
                                     } else {
-                                        value += mpline.substring(0, d - 2);
+                                        sb.append(mpline.substring(0, d - 2));
                                     }
                                 }
                             }
+                            value = sb.toString();
                         } else {
                             if (boundarycount > bpositions.length) {
                                 throw new ResponseException(Response.Status.INTERNAL_ERROR, "Error processing request");

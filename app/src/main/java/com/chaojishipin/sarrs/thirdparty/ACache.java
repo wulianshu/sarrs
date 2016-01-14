@@ -152,10 +152,12 @@ public class ACache {
         try {
             in = new BufferedReader(new FileReader(file));
             String readString = "";
+            StringBuffer sb = new StringBuffer();
             String currentLine;
             while ((currentLine = in.readLine()) != null) {
-                readString += currentLine;
+                sb.append(currentLine);
             }
+            readString = sb.toString();
             if (!Utils.isDue(readString)) {
                 return Utils.clearDateInfo(readString);
             } else {

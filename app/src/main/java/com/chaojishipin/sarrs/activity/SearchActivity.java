@@ -79,8 +79,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener, onRetryListener {
     private static final String TAG = SearchActivity.class.getSimpleName();
@@ -802,8 +804,10 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         mIatResults.put(sn, text);
 
         StringBuffer resultBuffer = new StringBuffer();
-        for (String key : mIatResults.keySet()) {
-            resultBuffer.append(mIatResults.get(key));
+        Iterator it = mIatResults.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry entry = (Map.Entry) it.next();
+            resultBuffer.append(entry.getValue());
         }
         mSearchKey = resultBuffer.toString();
 //        ToastUtil.showShortToast(this, "mSearchKey is " + mSearchKey);

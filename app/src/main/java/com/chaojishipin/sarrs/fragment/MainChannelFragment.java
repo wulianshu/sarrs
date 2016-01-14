@@ -77,7 +77,7 @@ import java.util.List;
  */
 public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  View.OnClickListener,
         AdapterView.OnItemClickListener, onRetryListener, PullToRefreshSwipeMenuListView.OnMenuItemClickListener, PullToRefreshSwipeMenuListView.OnSwipeListener, SarrsMainMenuView.onSlideMenuItemClick {
-//    PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener,
+    //    PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener,
     public final String pageid = "00S002000_2";
     //"00S002000_1"
     private PullToRefreshSwipeMenuListView mXListView;
@@ -175,8 +175,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
 //      mXListView.setMenuCreator(creator);
         mXListView.setSwipeable(false);
         mXListView.setOnMenuItemClickListener(this);
-      //  mXListView.setOnSwipeListener(this);
-       // mXListView.setOnMenuItemClick(this);
+        //  mXListView.setOnSwipeListener(this);
+        // mXListView.setOnMenuItemClick(this);
         mSearchIcon = (ImageView) view.findViewById(R.id.search_icon);
         mSearchIcon.setOnClickListener(this);
         mXListView.setOnItemClickListener(this);
@@ -441,33 +441,33 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
         // 构造上报参数
         buidlParam();
         switch(position){
-             //不喜欢
-             case 0:
-                 LogUtil.e("xll", "");
-                 mAlbumLists.remove(mparentId);
-                 mainActivityChannelAdapter.notifyDataSetChanged();
-                 // 负反馈上报
-                 DataReporter.reportDislike(id, source, cid, type, token, netType, bucket, seid);
-                 break;
-             //收藏
-             case 1:
+            //不喜欢
+            case 0:
+                LogUtil.e("xll", "");
+                mAlbumLists.remove(mparentId);
+                mainActivityChannelAdapter.notifyDataSetChanged();
+                // 负反馈上报
+                DataReporter.reportDislike(id, source, cid, type, token, netType, bucket, seid);
+                break;
+            //收藏
+            case 1:
                 if(UserLoginState.getInstance().isLogin()){
-                     checkSave();
+                    checkSave();
                    /*  if(adapter!=null&&adapter instanceof HeaderViewListAdapter){
                          mainActivityChannelAdapter=(MainActivityChannelAdapter2)((HeaderViewListAdapter) adapter).getWrappedAdapter();
                      }
 */
-                 }else{
-                     startActivity(new Intent(getActivity(), ChaojishipinRegisterActivity.class));
-                 }
-                 break;
-             //分享
-             case 2:
-                 share(parentId);
-                 // 分享上报
-                 DataReporter.reportAddShare(id, source, cid, type, token, netType, bucket, seid);
-                 break;
-         }
+                }else{
+                    startActivity(new Intent(getActivity(), ChaojishipinRegisterActivity.class));
+                }
+                break;
+            //分享
+            case 2:
+                share(parentId);
+                // 分享上报
+                DataReporter.reportAddShare(id, source, cid, type, token, netType, bucket, seid);
+                break;
+        }
     }
 
     private class RequestChannelListener implements RequestListener<MainActivityData> {
@@ -823,9 +823,9 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
             }
         });
     }
-public void uploadstat(AbsListView absListView){
+    public void uploadstat(AbsListView absListView){
         if(mAlbumLists == null || mAlbumLists.size()<=0){
-          return;
+            return;
         }
         int beginposition =  absListView.getFirstVisiblePosition();
         int endposition = absListView.getLastVisiblePosition();
@@ -835,6 +835,7 @@ public void uploadstat(AbsListView absListView){
         if(endposition>mAlbumLists.size()){
             endposition = mAlbumLists.size();
         }
+        StringBuffer sb = new StringBuffer();
         String vid = "";
         for(int j=beginposition-1;j<=endposition-1;j++){
             if(!alreadyupgvid.contains(mAlbumLists.get(j).getVideos().get(0).getGvid()) && j<mAlbumLists.size()){
@@ -842,34 +843,38 @@ public void uploadstat(AbsListView absListView){
                     j=0;
                 }
                 LogUtil.e("wulianshu", "上报的位置:" + j);
-                alreadyupgvid.add(mAlbumLists.get(j).getVideos().get(0).getGvid());
-                vid +=  mAlbumLists.get(j).getVideos().get(0).getGvid()+",";
+                String tmp = mAlbumLists.get(j).getVideos().get(0).getGvid();
+                alreadyupgvid.add(tmp);
+                sb.append(tmp).append(",");
             }
         }
-    if(!TextUtils.isEmpty(vid)) {
-        vid = vid.substring(0, vid.length() - 1);
-        MainActivityAlbum mainActivityAlbum = mAlbumLists.get(beginposition - 1);
-        mainActivityAlbum.getVideos().get(0).setGvid(vid);
-        //Object object,String acode,String pageid,String ref,String rank,String rid_topcid,String sa,String pn,String input
-        UploadStat.uploadstat(mainActivityAlbum, "4", "00S002000_2", "00S002000_1", "-", "-", "-", "-", "-");
-    }
+        vid = sb.toString();
+        if(!TextUtils.isEmpty(vid)) {
+            vid = vid.substring(0, vid.length() - 1);
+            MainActivityAlbum mainActivityAlbum = mAlbumLists.get(beginposition - 1);
+            mainActivityAlbum.getVideos().get(0).setGvid(vid);
+            //Object object,String acode,String pageid,String ref,String rank,String rid_topcid,String sa,String pn,String input
+            UploadStat.uploadstat(mainActivityAlbum, "4", "00S002000_2", "00S002000_1", "-", "-", "-", "-", "-");
+        }
     }
     public void uploadstatfirst(AbsListView absListView){
         int endposition = absListView.getLastVisiblePosition();
         int firstposition = absListView.getFirstVisiblePosition();
         String vid = "";
+        StringBuffer sb = new StringBuffer();
         for(int j=firstposition;j<=endposition-1;j++){
             if(j<mAlbumLists.size() && !alreadyupgvid.contains(mAlbumLists.get(j).getVideos().get(0).getGvid())){
                 if(j < 0){
                     j=0;
                 }
                 LogUtil.e("wulianshu", "上报的位置first:" + j);
-                alreadyupgvid.add(mAlbumLists.get(j).getVideos().get(0).getGvid());
-                vid = vid + mAlbumLists.get(j).getVideos().get(0).getGvid()+",";
+                String tmp = mAlbumLists.get(j).getVideos().get(0).getGvid();
+                alreadyupgvid.add(tmp);
+                sb.append(tmp).append(",");
 //                UploadStat.uploadstat(mAlbumLists.get(j), "4", "00S002000_2", "00S002000_1", j + "", "-", "-", "-", "-");
             }
         }
-
+        vid = sb.toString();
         if(vid == null || vid.length()<= 1){
             return ;
         }

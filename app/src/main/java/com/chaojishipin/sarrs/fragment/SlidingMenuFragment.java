@@ -333,7 +333,7 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
     }
 
     public void showSlidingMenu(SarrsArrayList slidingMenuList) {
-        mLeftAdapter.isSelectedList = new ArrayList(Collections.nCopies(slidingMenuList.size(), new Boolean(false)));
+        mLeftAdapter.isSelectedList = new ArrayList(Collections.nCopies(slidingMenuList.size(), Boolean.valueOf(false)));
         mLeftAdapter.isSelectedList.set(1, true);
         //进行展现的相关操作
         if (null != slidingMenuList && slidingMenuList.size() > 0) {

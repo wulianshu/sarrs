@@ -349,6 +349,7 @@ public class StoragePathsManager {
         final HashSet<String> out = new HashSet<String>();
         String reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*";
         String s = "";
+        StringBuffer sb = new StringBuffer();
         try {
             final Process process = new ProcessBuilder().command("mount")
                     .redirectErrorStream(true).start();
@@ -356,10 +357,9 @@ public class StoragePathsManager {
             final InputStream is = process.getInputStream();
             final byte[] buffer = new byte[1024];
             while (is.read(buffer) != -1) {
-                s = s + new String(buffer);
-
+                sb.append(buffer);
             }
-
+            s = sb.toString();
             LogUtil.e(LOG_TAG,""+s);
             is.close();
         } catch (final Exception e) {

@@ -20,7 +20,7 @@ public class EqualRatioImageView extends ImageView {
 	    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EqualRatioImageView);
 	    Integer height = a.getInteger(R.styleable.EqualRatioImageView_imageHeight, 1);
 	    Integer width = a.getInteger(R.styleable.EqualRatioImageView_imageWidth, 1);
-	    ratio=new Float(height.floatValue()/width.floatValue());
+	    ratio=Float.valueOf(height.floatValue()/width.floatValue());
 	    a.recycle();
 	}
 
