@@ -117,23 +117,30 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     VideoDetailItem detail=null;
     int mparentId=0;
 
+    private View mView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
-        SarrsMainMenuView.listviewItemHeight=350;
-        SarrsMainMenuView.mode=ConstantUtils.SarrsMenuInitMode.MODE_DELETE_SAVE_SHARE;
-        activity = (ChaoJiShiPinMainActivity) getActivity();
-        initView(view);
+        if(mView == null){
+            mView = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
+            SarrsMainMenuView.listviewItemHeight=350;
+            SarrsMainMenuView.mode=ConstantUtils.SarrsMenuInitMode.MODE_DELETE_SAVE_SHARE;
+            activity = (ChaoJiShiPinMainActivity) getActivity();
+            initView(mView);
 
-        slidingMenuLeft = ((ChaoJiShiPinMainActivity)getActivity()).getSlidingMenuLeft();
-        if (slidingMenuLeft != null) {
-            getNetData(slidingMenuLeft);
-        }else{
-            slidingMenuLeft = new SlidingMenuLeft();
-            slidingMenuLeft.setCid("0");
-            mCid = "0";
+            slidingMenuLeft = ((ChaoJiShiPinMainActivity)getActivity()).getSlidingMenuLeft();
+            if (slidingMenuLeft != null) {
+                getNetData(slidingMenuLeft);
+            }else{
+                slidingMenuLeft = new SlidingMenuLeft();
+                slidingMenuLeft.setCid("0");
+                mCid = "0";
+            }
+        }else if(mView.getParent() != null){
+            ((ViewGroup)mView.getParent()).removeView(mView);
         }
-        return view;
+
+        return mView;
     }
 
     @Override

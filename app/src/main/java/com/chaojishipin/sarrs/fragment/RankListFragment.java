@@ -49,15 +49,21 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
     private com.chaojishipin.sarrs.widget.SarrsToast topToast;
     // mode ==0下拉刷新// mode==1 上拉刷新 // mode==2
     private ImageView mSearchIcon;
+    private View mView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
-        initView(view);
-        getNetData();
-        return view;
+        if(mView == null) {
+            // Inflate the layout for this fragment
+            mView = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
+            initView(mView);
+            getNetData();
+        }else if(mView.getParent() != null){
+            ((ViewGroup)mView.getParent()).removeView(mView);
+        }
+
+        return mView;
     }
 
     @Override

@@ -48,14 +48,21 @@ public class TopiclistFragment extends ChaoJiShiPinBaseFragment implements PullT
     // mode ==0下拉刷新// mode==1 上拉刷新 // mode==2
     private ImageView mSearchIcon;
 
+    private View mView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
-        initView(view);
-        getNetData();
-        return view;
+        if(mView == null){
+            // Inflate the layout for this fragment
+            mView = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
+            initView(mView);
+            getNetData();
+        }else if(mView.getParent() != null){
+            ((ViewGroup)mView.getParent()).removeView(mView);
+        }
+
+        return mView;
     }
 
     @Override
@@ -135,6 +142,9 @@ public class TopiclistFragment extends ChaoJiShiPinBaseFragment implements PullT
         mXListView.setVisibility(View.GONE);
         listview = (ListView) view.findViewById(R.id.mainchannle_fragment_commentlistview);
         listview.setVisibility(View.VISIBLE);
+        listview.setVerticalFadingEdgeEnabled(false);
+        listview.setHorizontalFadingEdgeEnabled(false);
+        listview.setOverScrollMode(View.OVER_SCROLL_NEVER);
         topicListViewAdapter = new TopicListViewAdapter(getActivity(), null);
         listview.setAdapter(topicListViewAdapter);
         mXListView.setSwipeable(false);
@@ -151,6 +161,24 @@ public class TopiclistFragment extends ChaoJiShiPinBaseFragment implements PullT
      */
     public void buildDrawingCacheAndIntent() {
         SearchActivity.launch(getActivity());
+//        View view = getActivity().getWindow().getDecorView();
+//        view.destroyDrawingCache();
+//        view.setDrawingCacheEnabled(true);
+//        view.buildDrawingCache(true);
+//        /**
+//         * 获取当前窗口快照，相当于截屏
+//         */
+//        Bitmap bitmap = view.getDrawingCache();
+//        /**
+//         * 压缩图片大小
+//         */
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 1, stream);
+//        byte[] bytes = stream.toByteArray();
+//
+//        Intent intent = new Intent(getActivity(), SearchActivity.class);
+//        intent.putExtra("bitmap", bytes);
+//        startActivity(intent);
     }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {

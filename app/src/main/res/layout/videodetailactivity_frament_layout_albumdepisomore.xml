@@ -32,7 +32,7 @@
             android:background="@drawable/selector_videodetail_menu_close"
             />
         </RelativeLayout>
-        <ListView
+        <com.chaojishipin.sarrs.widget.MyListView
             android:id="@+id/video_detail_anim_bottom_showlist"
             android:layout_width="fill_parent"
             android:dividerHeight="1dp"
@@ -40,8 +40,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="3dp"
             android:background="@color/color_ffffff"
-            android:visibility="visible">
-        </ListView>
+            android:visibility="visible"/>
 
     </LinearLayout>
 </FrameLayout>

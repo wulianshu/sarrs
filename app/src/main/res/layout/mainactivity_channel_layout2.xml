@@ -26,13 +26,13 @@
             android:divider="@null"
             android:visibility="visible">
         </com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView>
-        <ListView
+        <com.chaojishipin.sarrs.widget.MyListView
             android:id="@+id/mainchannle_fragment_commentlistview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="#00000000"
             android:divider="@null"
-            android:visibility="gone"></ListView>
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/search_icon"

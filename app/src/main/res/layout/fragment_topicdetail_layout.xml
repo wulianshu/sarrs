@@ -15,14 +15,13 @@
         android:layout_height="@dimen/sarrs_dimen_0.5dp"
        >
     </View>
-    <ListView
+    <com.chaojishipin.sarrs.widget.MyListView
         android:layout_below="@id/black_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="@dimen/sarrs_dimen_0.5dp"
         android:divider="@color/color_F3F3F3"
-        android:id="@+id/topicdetailactivity_listview">
-    </ListView>
+        android:id="@+id/topicdetailactivity_listview"/>
 
     <com.chaojishipin.sarrs.widget.NetStateView
         android:id="@+id/mainchannle_fragment_netview"
