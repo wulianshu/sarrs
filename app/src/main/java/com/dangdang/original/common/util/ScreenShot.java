@@ -32,7 +32,7 @@ public class ScreenShot {
 			//statusBarHeight += UiUtil.dip2px(activity, 50);
 			printLog("w=" + b1.getWidth() + "h=" + b1.getHeight());
 			Matrix matrix = new Matrix(); 
-			matrix.postScale(0.1f, 0.1f);
+			matrix.postScale(0.2f, 0.2f);
 			  
 			Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, b1.getWidth(), b1.getHeight() - statusBarHeight, matrix, true);
 			view.destroyDrawingCache();

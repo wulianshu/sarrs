@@ -148,6 +148,7 @@ public class StoragePathsManager {
         else if("xiaomi".equalsIgnoreCase(s1) && s2.toLowerCase().contains("hm note")){
             isHM = true;
         }
+//        isHM = true;
         reset();
         getExternalSDpath();
     }
@@ -265,14 +266,14 @@ public class StoragePathsManager {
                 }
             }
         }else{
-            LogUtil.e(LOG_TAG,"ext path not exsits ");
+            LogUtil.e(LOG_TAG, "ext path not exsits ");
         }
     }
 
     private String getExternalPath(){
         LongSparseArray<String> array = getExterPath();
         if(array.size() == 0)
-            finalExterpath = "";
+            finalExterpath = Environment.getExternalStorageDirectory().getAbsolutePath();
         else {
             finalExterpath = array.valueAt(array.size() - 1);
             record();
@@ -330,27 +331,42 @@ public class StoragePathsManager {
         return path;
     }
 
+    private File mkDirs(String path, boolean child){
+        try{
+            MediaFile tmp;
+            if (child) {
+                if(isHM)
+                    tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path, NEW_DIR));
+                else
+                    tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path, DIR));
+            }else
+                tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path));
+
+            if(!tmp.mkdir()){
+                File f = tmp.getFile();
+                if(f.exists())
+                    return f;
+                if(f.mkdirs())
+                    return f;
+            }
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private long useful(String path, boolean child) {
         try {
-            if(TextUtils.isEmpty(path) || !path.startsWith("/") || path.contains(" "))
+            if(TextUtils.isEmpty(path) || !path.startsWith("/"))
                 return -1;
             File file = new File(path);
             MediaFile f = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), file);
             if (file.canWrite() && file.canRead()) {
                 try {
-                    MediaFile tmp;
-                    if (child) {
-                        if(isHM)
-                            tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path, NEW_DIR));
-                        else
-                            tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path, DIR));
-                    }else
-                        tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path));
-
-                    if(!tmp.mkdir()){
+                    file = mkDirs(path, child);
+                    if(file == null)
                         return -1;
-                    }
-                    file = new File(tmp.getFile(), System.currentTimeMillis() + "");
+                    file = new File(file, System.currentTimeMillis() + "");
                     FileOutputStream fout = new FileOutputStream(file);
                     fout.write("a".getBytes());
                     fout.close();
