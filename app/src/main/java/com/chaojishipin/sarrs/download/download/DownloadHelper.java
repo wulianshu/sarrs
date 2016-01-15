@@ -57,7 +57,9 @@ public class DownloadHelper {
 	 * 
 	 */
 	public static String getDownloadPath(){
-     return SPUtil.getInstance().getString("sdcard","");
+		String str = StoragePathsManager.getInstanse().getExternalSDpath();
+		return str;
+//     return SPUtil.getInstance().getString("sdcard","");
 	}
 	
 	/**

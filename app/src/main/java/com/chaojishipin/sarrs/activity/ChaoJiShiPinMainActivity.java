@@ -120,7 +120,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     private void initData() {
 
-        StoragePathsManager.getInstanse(this).getExternalSDpath();
+        StoragePathsManager.getInstanse().getExternalSDpath();
         LogUtil.e("xll_storage", "sdcard path init ok ");
         mUpgradeHelper = new UpgradeHelper(mContext);
         // 获取升级信息
@@ -198,8 +198,6 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 mUpgradeHelper.doNewVersionForceUpdate();
             }
         }
-
-
     }
 
     private void setListener() {
