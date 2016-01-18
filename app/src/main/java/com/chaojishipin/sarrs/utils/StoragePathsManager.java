@@ -333,22 +333,23 @@ public class StoragePathsManager {
 
     private File mkDirs(String path, boolean child){
         try{
-            MediaFile tmp;
-            if (child) {
+            File f;
+            if(child){
                 if(isHM)
-                    tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path, NEW_DIR));
+                    f = new File(path, NEW_DIR);
                 else
-                    tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path, DIR));
+                    f = new File(path, DIR);
             }else
-                tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), new File(path));
+                f = new File(path);
+            if(f.exists())
+                return f;
+            if(f.mkdirs())
+                return f;
 
-            if(!tmp.mkdir()){
-                File f = tmp.getFile();
-                if(f.exists())
-                    return f;
-                if(f.mkdirs())
-                    return f;
-            }
+            MediaFile tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), f);
+            if(tmp.mkdir())
+                return tmp.getFile();
+
         }catch(Throwable e){
             e.printStackTrace();
         }
