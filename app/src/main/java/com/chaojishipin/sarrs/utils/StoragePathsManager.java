@@ -361,7 +361,6 @@ public class StoragePathsManager {
             if(TextUtils.isEmpty(path) || !path.startsWith("/"))
                 return -1;
             File file = new File(path);
-            MediaFile f = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), file);
             if (file.canWrite() && file.canRead()) {
                 try {
                     file = mkDirs(path, child);
@@ -371,7 +370,7 @@ public class StoragePathsManager {
                     FileOutputStream fout = new FileOutputStream(file);
                     fout.write("a".getBytes());
                     fout.close();
-                    f.delete();
+                    file.delete();
                 } catch (Throwable e) {
                     e.printStackTrace();
                     return -1;
