@@ -37,11 +37,18 @@ public abstract class MainBaseFragment extends ChaoJiShiPinBaseFragment implemen
             initView(mView);
             init();
 
-        }else if(mView.getParent() != null){
-            ((ViewGroup)mView.getParent()).removeView(mView);
+        }else{
+            if(mView.getParent() != null){
+                ((ViewGroup)mView.getParent()).removeView(mView);
+            }
+            reuse();
         }
 
         return mView;
+    }
+
+    protected void reuse(){
+
     }
 
     @Override

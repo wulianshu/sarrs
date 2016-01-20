@@ -528,6 +528,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     public void destroy(){
         Utils.destroyWebView(mWebView);
+        if(mPlayerView != null && mPlayerView.getParent() != null)
+            ((ViewGroup)mPlayerView.getParent()).removeView(mPlayerView);
     }
 
     private void initView() {

@@ -67,7 +67,7 @@ public class VideoViewH264m3u8 extends GLSurfaceView implements LetvMediaPlayerC
 	private final int REWIND_TIME = 15000 ;
 	
 	private SurfaceHolder mSurfaceHolder = null;
-	static private FFMpegPlayer mMediaPlayer = null;
+	private FFMpegPlayer mMediaPlayer = null;
 	private Context mContext;
 	private int mVideoWidth;
 	private int mVideoHeight;

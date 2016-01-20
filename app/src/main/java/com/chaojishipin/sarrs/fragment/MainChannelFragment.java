@@ -235,6 +235,12 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
                 .start(new RequestChannelListener(), ConstantUtils.REQUEST_MAINACTIVITY_DATA);
     }
 
+    @Override
+    protected void reuse(){
+        slidingMenuLeft = ((ChaoJiShiPinMainActivity)getActivity()).getSlidingMenuLeft();
+        if(slidingMenuLeft != null)
+            onEventMainThread(slidingMenuLeft);
+    }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {
         alreadyupgvid.clear();
