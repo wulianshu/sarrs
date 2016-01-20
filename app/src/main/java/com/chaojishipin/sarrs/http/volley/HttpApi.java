@@ -92,6 +92,7 @@ import com.chaojishipin.sarrs.thirdparty.BaseUserInfo;
 import com.chaojishipin.sarrs.thirdparty.ShareConstants;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
 import com.chaojishipin.sarrs.thirdparty.WeiXinToken;
+import com.chaojishipin.sarrs.utils.ChannelUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.MD5Utils;
@@ -126,7 +127,9 @@ public class HttpApi extends SarrsBaseHttpApi {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_2);
         sb.append("/sarrs/channellist");
-        return createRequest(SarrsRequest.Method.GET, sb.toString(), new SlidingMenuLeftParser(), null, null);
+        HashMap<String, String> params = getBaseParams();
+        addVer(params);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(), new SlidingMenuLeftParser(), params, null);
     }
 
     public static SarrsRequest<MainActivityData> getMainActivityDataRequest(Context context, String cid, String area) {
@@ -180,7 +183,7 @@ public class HttpApi extends SarrsBaseHttpApi {
     static void addVer(Map<String, String> params) {
         params.put("pl", "1000011");
         params.put("appv", Utils.getClientVersionName());
-        params.put("appfrom", "0");
+        params.put("appfrom", ConstantUtils.CHANNEL_NAME);
         params.put("pl1", "0");
         params.put("pl2", "00");
         params.put("appid", "0");
@@ -404,12 +407,13 @@ public class HttpApi extends SarrsBaseHttpApi {
      *
      * @return SarrsRequest
      */
-    public static SarrsRequest<UpgradeInfo> getUpgradeRequest() {
+    public static SarrsRequest<UpgradeInfo> getUpgradeRequest(String appfrom) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_2);
         sb.append("/sarrs/upgrade");
         HashMap<String, String> params = new HashMap<>();
         addVer(params);
+        params.put("appfrom", appfrom);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new UpgradeParser(), params, null);
     }
 
@@ -931,7 +935,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         }, new UploadFileParser());
     }
 
-    public SarrsRequest<SarrsArrayList> getUpgradinfo(String appfrom){
+    public static SarrsRequest<SarrsArrayList> getUpgradinfo(String appfrom){
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_2);
         sb.append("/sarrs/upgrade");
@@ -940,7 +944,17 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("appfrom",appfrom);
         return createRequest(SarrsRequest.Method.GET, sb.toString(),new UpgradinfoParser(), params, null);
     }
-
+    public static SarrsRequest<SarrsArrayList> streamUpload(String playurl,String stream,String format){
+        StringBuilder sb = new StringBuilder();
+        sb.append(ConstantUtils.HOST.DOMON_6);
+        sb.append("/sarrs/streamupload");
+        HashMap<String, String> params = getBaseParams();
+        addVer(params);
+        params.put("playurl", playurl);
+        params.put("stream",stream);
+        params.put("format",format);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(),null, params, null);
+    }
 
     /**
      *

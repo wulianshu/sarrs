@@ -22,6 +22,7 @@
             android:id="@+id/btn_play_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/sarrs_pic_videoplayer_next"
             android:visibility="gone"/>
 
         <RelativeLayout
@@ -72,6 +73,7 @@
             android:gravity="center"
             android:textColor="@color/color_ffffff"
             android:textSize="@dimen/sarrs_text_15sp"
+            android:background="@color/color_00000000"
             android:text="@string/videodetail_episode"
             android:visibility="gone"/>
 

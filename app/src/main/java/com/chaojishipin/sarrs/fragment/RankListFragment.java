@@ -32,6 +32,7 @@ import com.chaojishipin.sarrs.widget.NetStateView;
 import com.chaojishipin.sarrs.widget.PullToRefreshSwipeListView;
 import com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView;
 import com.chaojishipin.sarrs.widget.SarrsToast;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.io.ByteArrayOutputStream;
 
@@ -41,7 +42,7 @@ import java.io.ByteArrayOutputStream;
 public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener, View.OnClickListener,
         AdapterView.OnItemClickListener, onRetryListener {
     // TODO: Rename parameter arguments, choose names that match
-    private PullToRefreshSwipeMenuListView mXListView;
+    private PullToRefreshListView mXListView;
     private ListView listview;
     private NetStateView mNetView;
     private RelativeLayout mPullLayout;
@@ -135,7 +136,7 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
         mNetView = (NetStateView) view.findViewById(R.id.mainchannle_fragment_netview);
         mNetView.setOnRetryLisener(this);
         mPullLayout = (RelativeLayout) view.findViewById(R.id.mainactivity_pull_layout);
-        mXListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.mainchannle_fragment_listview2);
+        mXListView = (PullToRefreshListView) view.findViewById(R.id.mainchannle_fragment_listview2);
         mXListView.setVisibility(View.GONE);
         listview = (ListView) view.findViewById(R.id.mainchannle_fragment_commentlistview);
         listview.setVisibility(View.VISIBLE);
@@ -144,7 +145,7 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
         mSearchIcon = (ImageView) view.findViewById(R.id.search_icon);
         mSearchIcon.setOnClickListener(this);
         listview.setOnItemClickListener(this);
-        mXListView.setSwipeable(false);
+//        mXListView.setSwipeable(false);
     }
 
     /**

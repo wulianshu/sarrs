@@ -8,6 +8,7 @@
     <string name="startWatch">开始观影</string>
     <string name="excuteWatch">进入观影</string>
     <string name="guide_title">请选择感兴趣的内容:</string>
+    <string name="local_tag">[本地]</string>
 
     <string name="recommend">精彩推荐</string>
     <string name="app_name">超级视频</string>
@@ -213,6 +214,8 @@
     <string name="sd_change_message_after">重新下载影片？</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
+    <string name="video_cannot_play">该视频暂时不能播放</string>
+
     <string name="complete">完成</string>
     <string name="sdcard_nospace">手机内存不足，暂时无法下载视频</string>
     <string name="download_faile">缓存失败</string>

@@ -19,8 +19,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -173,7 +175,6 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		if (null == imageDrawable) {
 			imageDrawable = context.getResources().getDrawable(getDefaultDrawableResId());
 		}
-
 		// Set Drawable, and save width/height
 		setLoadingDrawable(imageDrawable);
 

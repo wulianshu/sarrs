@@ -411,9 +411,18 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                 videoDetailItem.setSource(item.getSource());
                 videoDetailItem.setFromMainContentType(item.getContent_type());
                 videoDetailItem.setDetailImage(item.getImage());
-                intent.putExtra("ref",pageid);
-                intent.putExtra("videoDetailItem", videoDetailItem);
-                startActivity(intent);
+                if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+                    intent.putExtra("ref", pageid);
+                    intent.putExtra("videoDetailItem", videoDetailItem);
+                    startActivity(intent);
+                }else{
+                    Intent webintent = new Intent(this,PlayActivityFroWebView.class);
+                    webintent.putExtra("url", item.getUrl());
+                    webintent.putExtra("title", videoDetailItem.getVideoItems().get(0).getTitle());
+                    webintent.putExtra("site", videoDetailItem.getSource());
+                    webintent.putExtra("videoDetailItem", videoDetailItem);
+                    startActivity(webintent);
+                }
             }
         }
 

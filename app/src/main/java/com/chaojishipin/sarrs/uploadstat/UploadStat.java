@@ -32,22 +32,20 @@ public class UploadStat {
         }
         HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_UPLOAD_STAT+ac);
         HttpApi.
-                play_stat( object,token , ac,  ut,  retry,  play_type,  code_rate,  ref,timing,vlen,seid,peid);
+                play_stat(object, token, ac, ut, retry, play_type, code_rate, ref, timing, vlen, seid, peid);
     }
-//    /**
-//     * 大数据上报
-//     *
-//     * @paramcid
-//     */
-//    public static void query(Object object,String acode,String pageid,String ref,String rank,String rid_topcid) {
-//        //请求频道页数据
-//        String token ="-";
-//        if( UserLoginState.getInstance().isLogin()) {
-//            token = UserLoginState.getInstance().getUserInfo().getToken();
-//        }
-//        HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_UPLOAD_STAT);
-//        HttpApi.
-//                click_stat(token, object, acode, pageid, ref, rank, rid_topcid);
-//        //.start(null, ConstantUtils.REQUEST_UPLOAD_STAT);
-//    }
+
+    /**
+     * 截流成功的上报
+     *
+     * @param
+     *
+     */
+    public static void streamupload(String playurl,String stream,String format) {
+        //请求频道页数据
+        HttpManager.getInstance().cancelByTag(ConstantUtils.JSCUT_SUCCESS_UPLOAD);
+        HttpApi.
+                streamUpload( playurl, stream, format)
+                .start(null, ConstantUtils.JSCUT_SUCCESS_UPLOAD);
+    }
 }

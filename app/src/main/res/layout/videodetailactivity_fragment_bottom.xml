@@ -133,7 +133,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         android:background="@color/color_f3f3f3" />
-                    <com.chaojishipin.sarrs.widget.MyListView
+                <com.chaojishipin.sarrs.widget.NoScrollListView
                         android:id="@+id/hot_comment_lv"
                         android:layout_width="fill_parent"
                         android:dividerHeight="0.5dp"
@@ -166,7 +166,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         android:background="@color/color_f3f3f3" />
-                    <com.chaojishipin.sarrs.widget.MyListView
+                    <com.chaojishipin.sarrs.widget.NoScrollListView
                         android:id="@+id/new_comment_lv"
                         android:layout_width="fill_parent"
                         android:dividerHeight="0.5dp"

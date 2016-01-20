@@ -56,6 +56,7 @@ public class TopicDetailParser extends ResponseBaseParser<Topic>{
                         System.out.print("json:" + json);
                         videoBean.setTitle(json.optString("title"));
                         videoBean.setGvid(json.optString("gvid"));
+                        videoBean.setUrl(json.optString("url"));
                         videoBean.setSource(topic.getSource());
                         videoList.add(videoBean);
                     }

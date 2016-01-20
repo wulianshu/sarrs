@@ -39,6 +39,8 @@ public class SearchResultParser extends ResponseBaseParser<SearchResultInfos> {
              */
             resultStr = resultStr.replace("\\u0001", "");
             resultStr = resultStr.replace("\\u0002", "");
+
+
             SearchResultInfos infos = JsonUtil.parseObject(resultStr, SearchResultInfos.class);
 
             if (null == mInfos){

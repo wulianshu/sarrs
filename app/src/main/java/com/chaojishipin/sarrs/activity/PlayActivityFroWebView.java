@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -30,8 +31,21 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.bean.HistoryRecord;
+import com.chaojishipin.sarrs.bean.HistoryRecordResponseData;
+import com.chaojishipin.sarrs.bean.UploadRecord;
+import com.chaojishipin.sarrs.bean.VideoDetailItem;
+import com.chaojishipin.sarrs.dao.HistoryRecordDao;
+import com.chaojishipin.sarrs.feedback.DataReporter;
+import com.chaojishipin.sarrs.http.volley.HttpApi;
+import com.chaojishipin.sarrs.http.volley.HttpManager;
+import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.listener.MyOnClickListener;
 import com.chaojishipin.sarrs.thirdparty.UIs;
+import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.LogUtil;
+import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.widget.VideoEnabledWebChromeClient;
 import com.chaojishipin.sarrs.widget.VideoEnabledWebView;
@@ -58,10 +72,8 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 	private FrameLayout videoLayout;
 	public CustomViewCallback mCallback;
 	public RelativeLayout videoLoading;
-
+	private VideoDetailItem videoDetailItem;
 	public View mView;
-
-
 	private boolean isFulllScreen=false;
 
 	@Override
@@ -74,11 +86,14 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 		url = bundle.getString("url");
 		title = bundle.getString("title");
 		site = bundle.getString("site");
+		videoDetailItem = (VideoDetailItem) bundle.get("videoDetailItem");
 		initView();
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			topbar.setVisibility(View.GONE);
 		}
 		playWeb.loadUrl(url);
+//		ToastUtil.showShortToast(this,url);
+		save2LocalandServe();
 	}
 
 	private void initView() {
@@ -146,8 +161,10 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 //			if(url.startsWith("letvdisk")){
 //				return false;
 //			}
-			view.loadUrl(url);
-			return true;
+//			view.loadUrl(url);
+//			return true;
+
+			return false;
 		}
 
 		@Override
@@ -279,5 +296,113 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 		config.setToDefaults();
 		res.updateConfiguration(config, res.getDisplayMetrics());
 		return res;
+	}
+
+
+	public void save2LocalandServe() {
+		if (UserLoginState.getInstance().isLogin()&& NetWorkUtils.isNetAvailable() && videoDetailItem!=null) {
+			String token = UserLoginState.getInstance().getUserInfo().getToken();
+			if (videoDetailItem != null && videoDetailItem.getVideoItems() != null && videoDetailItem.getVideoItems().get(0) != null && videoDetailItem.getVideoItems().get(0).getGvid() != null) {
+				UploadRecord uploadRecord = new UploadRecord();
+				//TODO  吴联暑检查下 有没有类似问题 ?
+				if (!TextUtils.isEmpty(videoDetailItem.getCategory_id())) {
+					uploadRecord.setCid(Integer.parseInt(videoDetailItem.getCategory_id()));
+				}
+				uploadRecord.setAction(0);
+				uploadRecord.setDurationTime(0);
+				uploadRecord.setPid(videoDetailItem.getId());
+				uploadRecord.setPlayTime(0);
+				uploadRecord.setUpdateTime(System.currentTimeMillis());
+				uploadRecord.setSource(videoDetailItem.getSource());
+				uploadRecord.setVid(videoDetailItem.getVideoItems().get(0).getGvid());
+				uploadHistoryRecordOneRecord(token, uploadRecord);
+				//上报到推荐
+			}
+		}
+		saveOnline();
+	}
+	/**
+	 *   本地播放剧集bean localVideoEpiso
+	 *   在线是videoItem
+	 *   TODO 下载本地剧集信息替换成VideoItem 字段统一
+	 *   播放记录在线
+	 * */
+	public HistoryRecord saveOnline() {
+		if (videoDetailItem.getVideoItems() != null && videoDetailItem.getVideoItems().get(0) != null && videoDetailItem.getVideoItems().get(0).getGvid() != null) {
+			DataReporter.reportPlayRecord(videoDetailItem.getVideoItems().get(0).getGvid(),
+					videoDetailItem.getId(),
+					videoDetailItem.getSource(),
+					videoDetailItem.getCategory_id(),
+					0,
+					UserLoginState.getInstance().getUserInfo().getToken(),
+					NetWorkUtils.getNetInfo(),
+					videoDetailItem.getBucket(),
+					videoDetailItem.getReid());
+
+			LogUtil.e("xll", "record save db");
+			HistoryRecord historyRecord = new HistoryRecord();
+			historyRecord.setImage(videoDetailItem.getDetailImage());
+			historyRecord.setSource(videoDetailItem.getSource());
+			historyRecord.setCategory_id(videoDetailItem.getCategory_id());
+			historyRecord.setTimestamp(System.currentTimeMillis() + "");
+			historyRecord.setDurationTime(0);
+			String stitle = "";
+			if(!TextUtils.isEmpty(videoDetailItem.getCategory_id())){
+				if (videoDetailItem.getCategory_id().equals(ConstantUtils.CARTOON_CATEGORYID)) {
+					historyRecord.setCategory_name(this.getString(R.string.CARTOON));
+				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.TV_SERISE_CATEGORYID)) {
+					historyRecord.setCategory_name(this.getString(R.string.TV_SERIES));
+				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.MOVIES_CATEGORYID)) {
+					historyRecord.setCategory_name(this.getString(R.string.MOVIES));
+				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.DOCUMENTARY_CATEGORYID)) {
+					historyRecord.setCategory_name(this.getString(R.string.DOCUMENTARY));
+				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.VARIETY_CATEGORYID)) {
+					historyRecord.setCategory_name(this.getString(R.string.VARIETY));
+				} else {
+					historyRecord.setCategory_name(this.getString(R.string.OTHER));
+				}
+				historyRecord.setPlay_time("0");
+				String title = videoDetailItem.getTitle();
+			}
+			historyRecord.setTitle(stitle);
+			historyRecord.setContent_type(videoDetailItem.getContent_type());
+			historyRecord.setId(videoDetailItem.getId());
+			historyRecord.setGvid(videoDetailItem.getVideoItems().get(0).getGvid());
+			historyRecord.setUrl(url);
+			historyRecord.setTitle(videoDetailItem.getVideoItems().get(0).getTitle());
+			new HistoryRecordDao(this).save(historyRecord);
+			return historyRecord;
+		}
+		return null;
+	}
+
+	/**
+	 * 上报历史记录
+	 *
+	 * @paramcid
+	 */
+	private void uploadHistoryRecordOneRecord(String token, UploadRecord historyRecord) {
+		//请求频道页数据
+		HttpManager.getInstance().cancelByTag(ConstantUtils.UPLOAD_HISTORY_RECORD_ONE_RECORD);
+		HttpApi.
+				uploadHistoryRecordoneRecord(token, historyRecord)
+				.start(new UploadHistoryRecordListener(), ConstantUtils.UPLOAD_HISTORY_RECORD_ONE_RECORD);
+	}
+
+	private class UploadHistoryRecordListener implements RequestListener<HistoryRecordResponseData> {
+
+		@Override
+		public void onResponse(HistoryRecordResponseData result, boolean isCachedData) {
+		}
+
+		@Override
+		public void netErr(int errorCode) {
+			System.out.print(errorCode);
+		}
+
+		@Override
+		public void dataErr(int errorCode) {
+			System.out.print(errorCode);
+		}
 	}
 }

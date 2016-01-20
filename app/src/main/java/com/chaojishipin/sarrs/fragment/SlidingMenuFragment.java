@@ -1,7 +1,9 @@
 package com.chaojishipin.sarrs.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,9 +25,13 @@ import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinMainActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinModifyUserInfoActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinRegisterActivity;
+import com.chaojishipin.sarrs.activity.HistoryRecordActivity;
+import com.chaojishipin.sarrs.activity.SaveActivity;
+import com.chaojishipin.sarrs.adapter.SlidingMenuGVAdapter;
 import com.chaojishipin.sarrs.adapter.SlidingMenuLeftAdapter;
 import com.chaojishipin.sarrs.bean.SarrsArrayList;
 import com.chaojishipin.sarrs.bean.SlidingMenuLeft;
+import com.chaojishipin.sarrs.download.activity.DownloadActivity;
 import com.chaojishipin.sarrs.http.parser.SlidingMenuLeftParser;
 import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
@@ -31,11 +39,15 @@ import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.FileCacheManager;
+import com.chaojishipin.sarrs.utils.JsonUtil;
+import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
+import com.chaojishipin.sarrs.widget.NoScrollGridViewNodivider;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -51,21 +63,23 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
     private ListView mLeftMenuListView;
 
+    public NoScrollGridViewNodivider mLeftMenuGridView;
     /**
      * 左侧用于显示数据列表的Adapter)
      */
     public SlidingMenuLeftAdapter mLeftAdapter;
+    public SlidingMenuGVAdapter mLeftGVAdapter;
     SlidingMenu mSlideMenu;
     private ImageView mIcon;
     private TextView mName;
-
     public Button msetBtn;
-    public Button mDownBtn;
-    public Button mSaveBtn;
 
-    private Context context;
+//    public Button mDownBtn;
+//    public Button mSaveBtn;
 
+    private ChaoJiShiPinMainActivity context;
 
+    public static final String CHANNEL_LIST = "channel_list";
     public SlidingMenuLeftAdapter getmLeftAdapter() {
         return mLeftAdapter;
     }
@@ -88,22 +102,29 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
     }
 
     private void initView(View view) {
-        context = getActivity();
+        context = (ChaoJiShiPinMainActivity) getActivity();
 
         mLeftMenuListView = (ListView) view.findViewById(R.id.slidingmenu_fragment_layout_channle_list);
+        mLeftMenuGridView = (NoScrollGridViewNodivider) view.findViewById(R.id.slidingmenu_gv_menu);
+
         mLeftAdapter = new SlidingMenuLeftAdapter(context, null);
+        mLeftGVAdapter = new SlidingMenuGVAdapter(context,null);
         mLeftMenuListView.setAdapter(mLeftAdapter);
+        mLeftMenuGridView.setAdapter(mLeftGVAdapter);
         mLeftMenuListView.setOnItemClickListener(this);
-        mDownBtn = (Button) view.findViewById(R.id.main_fragment_user_download_btn);
-        mSaveBtn = (Button) view.findViewById(R.id.main_fragment_user_save_btn);
+        mLeftMenuGridView.setOnItemClickListener(this);
+//        mDownBtn = (Button) view.findViewById(R.id.main_fragment_user_download_btn);
+//        mSaveBtn = (Button) view.findViewById(R.id.main_fragment_user_save_btn);
+
         mIcon = (ImageView) view.findViewById(R.id.main_fragment_user_icon);
         mName = (TextView) view.findViewById(R.id.main_fragment_user_name);
         msetBtn = (Button) view.findViewById(R.id.main_fragment_user_setting);
         mIcon.setOnClickListener(this);
         mName.setOnClickListener(this);
+
         msetBtn.setOnClickListener((ChaoJiShiPinMainActivity) getActivity());
-        mDownBtn.setOnClickListener((ChaoJiShiPinMainActivity) getActivity());
-        mSaveBtn.setOnClickListener((ChaoJiShiPinMainActivity) getActivity());
+//        mDownBtn.setOnClickListener((ChaoJiShiPinMainActivity) getActivity());
+//        mSaveBtn.setOnClickListener((ChaoJiShiPinMainActivity) getActivity());
 
         boolean isLogin = UserLoginState.getInstance().isLogin();
         if (isLogin) {
@@ -174,26 +195,54 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
             if (NetWorkUtils.isNetAvailable()) {
                 //加载完成后再进行网络请求
-                requestSlidingMenuLeftData();
+                 requestSlidingMenuLeftData();
             } else {
                 //获取本地缓存的侧边栏数据
                   loadLocalmenuData();
-//                JSONObject dataObj = getLocalSlidingMenuData();
-//                SlidingMenuLeftParser slidingMenuLeftParser = new SlidingMenuLeftParser();
-//                SarrsArrayList result = slidingMenuLeftParser.parse(dataObj);
-//                showSlidingMenu(result);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void loadLocalmenuData(){
+    public void loadLocalmenuData(){
+        slidings_gv.clear();
         try {
-            JSONObject dataObj = getLocalSlidingMenuData();
+            LogUtil.e("wulianshu","load local menu data");
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            String data =sharedPreferences.getString(CHANNEL_LIST,"");
+            LogUtil.e("wulianshu","data:"+data);
+            if(TextUtils.isEmpty(data)){
+                return;
+            }
+            JSONArray array = new JSONArray(data);
+            JSONObject dataObj = new JSONObject();
+            dataObj.put("status",ConstantUtils.REQUEST_SUCCESS);
+            dataObj.put("items",array);
             SlidingMenuLeftParser slidingMenuLeftParser = new SlidingMenuLeftParser();
             SarrsArrayList result = slidingMenuLeftParser.parse(dataObj);
-            showSlidingMenu(result);
+            slidings_lv = result;
+
+            for (int i = 0;i<slidings_lv.size();i++){
+                if( ((SlidingMenuLeft)slidings_lv.get(i)).getContent_type().equals("10") ){
+                    break;
+                }else{
+                    slidings_gv.add((SlidingMenuLeft)slidings_lv.get(i));
+                }
+            }
+            for(int i=0;i<slidings_gv.size();i++){
+                slidings_lv.remove(0);
+            }
+            if(slidings_gv.size()>0) {
+                mLeftMenuGridView.setVisibility(View.VISIBLE);
+                showSlidingGVMenu(slidings_gv);
+            }else{
+                mLeftMenuGridView.setVisibility(View.GONE);
+            }
+            if(slidings_lv.size()>0) {
+                showSlidingMenu(slidings_lv);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -218,6 +267,12 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
      */
     public void requestSlidingMenuLeftData() {
         //执行请求首页侧边栏
+        SharedPreferences sharedPreferences = context.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+        String data =sharedPreferences.getString(SlidingMenuFragment.CHANNEL_LIST,"");
+        if("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck) &&"1".equals(ChaoJiShiPinMainActivity.isCheck)  && !TextUtils.isEmpty(data)){
+            loadLocalmenuData();
+            return;
+        }
         HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_SLDINGMENU_LETF_TAG);
         HttpApi.getSlidingMenuLeftRequest().start(new RequestSlidingMenuLeftListener(), ConstantUtils.REQUEST_SLDINGMENU_LETF_TAG);
     }
@@ -225,26 +280,48 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Adapter adapter = parent.getAdapter();
-        mDownBtn.setBackgroundResource(R.drawable.slinding_down_normal);
-//        mSaveBtn.setBackgroundResource(R.drawable.slinding_save_normal);
-        msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
-        mDownBtn.setTextColor(Color.WHITE);
-//        mSaveBtn.setTextColor(Color.WHITE);
-        msetBtn.setTextColor(Color.WHITE);
-        if (null != adapter && adapter instanceof SlidingMenuLeftAdapter) {
-            SlidingMenuLeftAdapter leftMenuAdapter = (SlidingMenuLeftAdapter) adapter;
-            SlidingMenuLeft menuLeft = (SlidingMenuLeft) leftMenuAdapter.getItem(position);
-            //如果当前类型不是分隔线则将相应的左侧侧边栏数据传送给首页
-            //设置选中状态
-            //refreshView();
-            if (!menuLeft.getContent_type().equals(ConstantUtils.SLIDINGMENU_LINE)) {
-                EventBus.getDefault().post(menuLeft);
-                if (mSlideMenu != null) {
-                    mSlideMenu.showContent(true);
+        switch(parent.getId()) {
+            case R.id.slidingmenu_fragment_layout_channle_list:
+            Adapter adapter = parent.getAdapter();
+            msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
+//        mDownBtn.setTextColor(Color.WHITE);
+            msetBtn.setTextColor(Color.WHITE);
+            if (null != adapter && adapter instanceof SlidingMenuLeftAdapter) {
+                SlidingMenuLeftAdapter leftMenuAdapter = (SlidingMenuLeftAdapter) adapter;
+                SlidingMenuLeft menuLeft = (SlidingMenuLeft) leftMenuAdapter.getItem(position);
+                //如果当前类型不是分隔线则将相应的左侧侧边栏数据传送给首页
+                //设置选中状态
+                //refreshView();
+                if (!menuLeft.getContent_type().equals(ConstantUtils.SLIDINGMENU_LINE)) {
+                    EventBus.getDefault().post(menuLeft);
+                    if (mSlideMenu != null) {
+                        mSlideMenu.showContent(true);
+                    }
+                    leftMenuAdapter.setSelectItem(position, view);
                 }
-                leftMenuAdapter.setSelectItem(position, view);
             }
+                break;
+            case R.id.slidingmenu_gv_menu:
+                String content_type = ((SlidingMenuLeft)slidings_gv.get(position)).getContent_type();
+                if("11".equals( content_type )){
+
+                    Intent intent = new Intent(getActivity(),DownloadActivity.class);
+                    startActivity(intent);
+
+                }else if("12".equals( content_type )){
+
+                    if (UserLoginState.getInstance().isLogin()) {
+                        startActivity(new Intent(getActivity(), SaveActivity.class));
+                    } else {
+                        startActivity(new Intent(getActivity(), ChaojishipinRegisterActivity.class));
+                    }
+
+
+                }else if("14".equals( content_type )){
+                Intent intent = new Intent(getActivity(), HistoryRecordActivity.class);
+                startActivity(intent);
+                }
+                break;
         }
     }
 
@@ -258,11 +335,12 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 //    }
 
 
-    SarrsArrayList slidings;
-
-    public SarrsArrayList getSlidings() {
-        return slidings;
-    }
+//    SarrsArrayList slidings;
+    SarrsArrayList slidings_gv = new SarrsArrayList<SlidingMenuLeft>();
+    SarrsArrayList slidings_lv = new SarrsArrayList<SlidingMenuLeft>();
+//    public SarrsArrayList getSlidings() {
+//        return slidings;
+//    }
 //    public void refreshView() {
 //        if ((boolean) mLeftAdapter.isSelectedList.get(10)) {
 //            msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_press);
@@ -295,15 +373,31 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
         @Override
         public void onResponse(SarrsArrayList result, boolean isCachedData) {
-            slidings = result;
-            ImageView imageView = new ImageView(getActivity());
-//            for(int i=0;i<result.size();i++) {
-//                if (!((SlidingMenuLeft) result.get(i)).getContent_type().equals("10") && !"".equals(((SlidingMenuLeft) result.get(i)).getIcon_select())){
-//                ImageLoader.getInstance().loadImageSync(((SlidingMenuLeft) result.get(i)).getIcon());
-//                    ImageLoader.getInstance().loadImageSync(((SlidingMenuLeft) result.get(i)).getIcon_select());
-//            }
-//            }
-            showSlidingMenu(result);
+            SharedPreferences sharedPreferences = SlidingMenuFragment.this.getActivity().getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String channel_list = JsonUtil.toJSONString(result);
+            editor.putString(CHANNEL_LIST,channel_list);
+            editor.commit();
+            slidings_lv = result;
+            for (int i = 0;i<slidings_lv.size();i++){
+                if( ((SlidingMenuLeft)slidings_lv.get(i)).getContent_type().equals("10") ){
+                    break;
+                }else{
+                    slidings_gv.add((SlidingMenuLeft)slidings_lv.get(i));
+                }
+            }
+            for(int i=0;i<slidings_gv.size();i++){
+                slidings_lv.remove(0);
+            }
+            if(slidings_gv.size()>0) {
+                mLeftMenuGridView.setVisibility(View.VISIBLE);
+                showSlidingGVMenu(slidings_gv);
+            }else{
+                mLeftMenuGridView.setVisibility(View.GONE);
+            }
+            if(slidings_lv.size()>0) {
+                showSlidingMenu(slidings_lv);
+            }
             SlidingMenuLeft leftDefault = getSlidingItemByTitle(ConstantUtils.TITLE_SUGGEST, result);
             if (null != leftDefault) {
                 EventBus.getDefault().post(leftDefault);
@@ -333,7 +427,7 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
     }
 
     public void showSlidingMenu(SarrsArrayList slidingMenuList) {
-        mLeftAdapter.isSelectedList = new ArrayList(Collections.nCopies(slidingMenuList.size(), Boolean.valueOf(false)));
+        mLeftAdapter.isSelectedList = new ArrayList(Collections.nCopies(slidingMenuList.size(), new Boolean(false)));
         mLeftAdapter.isSelectedList.set(1, true);
         //进行展现的相关操作
         if (null != slidingMenuList && slidingMenuList.size() > 0) {
@@ -347,6 +441,16 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
         }
     }
-
-
+    public void showSlidingGVMenu(SarrsArrayList slidingMenuList) {
+        //进行展现的相关操作
+        if (null != slidingMenuList && slidingMenuList.size() > 0) {
+            if (null != mLeftGVAdapter) {
+                mLeftGVAdapter.setmDatas(slidingMenuList);
+                mLeftGVAdapter.notifyDataSetChanged();
+            } else {
+                mLeftGVAdapter = new SlidingMenuGVAdapter(context, slidingMenuList);
+                mLeftMenuGridView.setAdapter(mLeftGVAdapter);
+            }
+        }
+    }
 }

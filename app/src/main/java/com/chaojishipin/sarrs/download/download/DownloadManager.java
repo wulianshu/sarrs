@@ -432,54 +432,6 @@ public class DownloadManager {
                 playData = (PlayData) params[1];
             }
 
-//            PlayRecord playRecord = null;
-//            String aid = playData.getAid();
-//
-//            if (!TextUtils.isEmpty(aid)) {
-//                if (playData.getIsLocalVideo()) {
-//                    DownLoadPlayRecordDao downloadPlayRecord =
-//                            DownLoadPlayRecordDao.getInstance(context);
-//                    playRecord = downloadPlayRecord.getByAid(aid);
-//                } else {
-//                    PlayRecordDao playRecordDao = new PlayRecordDao(context);
-//                    playRecord = playRecordDao.getByAid(aid);
-//                }
-//            }
-//
-//            if (null == playRecord) {
-//                playRecord = new PlayRecord();
-//            }
-//
-//            if (!TextUtils.isEmpty(playRecord.getPorder())
-//                    && !TextUtils.isEmpty(playData.getPorder())
-//                    && !TextUtils.isEmpty(playRecord.getPorder())
-//                    && !playData.getPorder().equals(playRecord.getPorder())) {
-//                // 如果当前播放的剧集与播放历史不一致则归零
-//                playRecord.setSeekHistory(0);
-//            }
-//            playData.setmPlayRecord(playRecord);
-            // PlayHistoryDao localPlayDao = PlayHistoryDao.getInstance(context);
-            // if (downInfo.getMid() == null || "".equals(downInfo.getMid())) {
-            // isSendLocalHistory = false;
-            // } else {
-            // isSendLocalHistory = true;
-            // // 通过mid获取播放历史数据库中的数据
-            // historyInfo = localPlayDao.queryByHashid(downInfo.getMid());
-            // // 如果当前的类型为电影
-            // // 判断之前是否有过播放历史
-            // if (historyInfo == null) {
-            // historyInfo = new PlayHistoryInfo();
-            // } else {
-            // if (!TextUtils.isEmpty(historyInfo.getHashid()) &&
-            // !TextUtils.isEmpty(downInfo.getId())
-            // && !historyInfo.getHashid().equals(downInfo.getId())) {
-            // historyInfo.setPosition(0);
-            // } else {
-            // downInfo.setPosition(historyInfo.getPosition());
-            // }
-            // }
-            // }
-
             return null;
         }
 
@@ -508,13 +460,7 @@ public class DownloadManager {
      */
 
     private void jumpToSelfPlayer(Context context, PlayData playData) {
-        //
-
-    /*    Intent finishIntent = new Intent();
-        finishIntent.setAction("com.chaojishipin.mediaplayer.page.finish");
-        context.sendBroadcast(finishIntent);*/
         playData.setIsLocalVideo(true);
-        // ToastUtil.showShortToast(context,"playData is "+playData.toString());
         Intent intent = new Intent(context, ChaoJiShiPinVideoDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Utils.PLAY_DATA, playData);
@@ -536,7 +482,7 @@ public class DownloadManager {
        // videoDetailItem.setDetailImage(item.getImage());
         intent.putExtra("videoDetailItem", videoDetailItem);
         intent.putExtra("ref", DownloadJobActivity.pageid);
-        bundle.putString(Utils.Medea_Mode, ConstantUtils.MediaMode.LOCAL);
+        intent.putExtra(Utils.Medea_Mode, ConstantUtils.MediaMode.LOCAL);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // 发送数据

@@ -33,12 +33,34 @@ public class VideoItem extends VideoDetailItem {
     private boolean isLocal;
 
     private String play_url;
+    private String name;
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+
+        this.url = url;
+        this.play_url = url;
+    }
+
+    private String url;
+     public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
     /**
      * 从首页或者搜索页进入播放器，的标识，用来给详情页传递gvid
      */
     private String from;
 
     private boolean isPlay;
+    private String downLoadType;
 
     @Override
     public String getBucket() {
@@ -147,6 +169,14 @@ public class VideoItem extends VideoDetailItem {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getDownLoadType() {
+        return downLoadType;
+    }
+
+    public void setDownLoadType(String downLoadType) {
+        this.downLoadType = downLoadType;
     }
 
 

@@ -8,7 +8,7 @@ import com.chaojishipin.sarrs.utils.LogUtil;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME = "sarrs.db";
-	private static final int VERSION = 1;
+	private static final int VERSION = 2;
 	private String TAG="DBHelper";
 ;
 	public DBHelper(Context context) {
@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(dropSql);
 		String sql="CREATE TABLE IF NOT EXISTS favorite (id integer primary key autoincrement,type text ,cid text,img text ,aid text unique, gvid text unique,title text,totalepisode text,latestepisode text, history text,isend integer default 0,totaltime text,totalspecial text,tid text unique,createtime text ,createdate text)";
 		db.execSQL(sql);
-		db.execSQL("CREATE TABLE IF NOT EXISTS history_record (id text, timestamp text,title text,source text,category_name text,play_time text,gvid text,image text,category_id text,content_type text,durationtime text)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS history_record (id text, timestamp text,title text,source text,category_name text,play_time text,gvid text,image text,category_id text,content_type text,durationtime text,url text)");
 		LogUtil.e(TAG,""+sql);
 	}
 
@@ -33,6 +33,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch (oldVersion) {
+			case 1:
+				db.execSQL("ALTER TABLE history_record ADD COLUMN url text");
+				break;
 		default:
 //			db.execSQL("DROP TABLE IF EXISTS search_record;");
 //			onCreate(db);

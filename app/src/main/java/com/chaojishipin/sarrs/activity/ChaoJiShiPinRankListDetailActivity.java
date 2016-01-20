@@ -243,13 +243,8 @@ public class ChaoJiShiPinRankListDetailActivity extends ChaoJiShiPinBaseActivity
         } else {
             arankListDetail = (RankListDetail) rankListDetailListViewAdapter.getItem(i - 1);
         }
-        UploadStat.uploadstat(arankListDetail,"0","00S002002_1","00S002002",i+"",getRankId(),"-","-","-");
-        //播放
-        //Log.e("RankListDetailActivity",arankListDetail.getTitle()+"##"+arankListDetail.getGaid()+"##"+arankListDetail.getSource());
-        playData=new PlayData(arankListDetail.getTitle(),arankListDetail.getVideos().get(0).getGvid(),ConstantUtils.PLAYER_FROM_RANKLIST,arankListDetail.getSource());
+        UploadStat.uploadstat(arankListDetail, "0", "00S002002_1", "00S002002", i + "", getRankId(), "-", "-", "-");
 
-        intent.putExtra("ref",pageid);
-        intent.putExtra("playData", playData);
         VideoDetailItem videoDetailItem = new VideoDetailItem();
         videoDetailItem.setTitle(arankListDetail.getTitle());
         LogUtil.e("xll", "source rankList " + arankListDetail.getSource());
@@ -261,8 +256,24 @@ public class ChaoJiShiPinRankListDetailActivity extends ChaoJiShiPinBaseActivity
         videoDetailItem.setVideoItems(arankListDetail.getVideos());
         videoDetailItem.setFromMainContentType(ConstantUtils.RANKLIST_CONTENT_TYPE);
         videoDetailItem.setDetailImage(arankListDetail.getImage());
-        intent.putExtra("videoDetailItem", videoDetailItem);
-        startActivity(intent);
+        if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+            //播放
+            //Log.e("RankListDetailActivity",arankListDetail.getTitle()+"##"+arankListDetail.getGaid()+"##"+arankListDetail.getSource());
+            playData = new PlayData(arankListDetail.getTitle(), arankListDetail.getVideos().get(0).getGvid(), ConstantUtils.PLAYER_FROM_RANKLIST, arankListDetail.getSource());
+            intent.putExtra("ref", pageid);
+            intent.putExtra("playData", playData);
+            intent.putExtra("videoDetailItem", videoDetailItem);
+            startActivity(intent);
+        }else{
+            //提神状态  视频要在webview里面播放并且需要有播放记录  记录时间为0
+
+            Intent webintent = new Intent(this, PlayActivityFroWebView.class);
+            webintent.putExtra("url", arankListDetail.getVideos().get(0).getPlay_url());
+            webintent.putExtra("title", arankListDetail.getVideos().get(0).getTitle());
+            webintent.putExtra("site", arankListDetail.getSource());
+            webintent.putExtra("videoDetailItem", videoDetailItem);
+            startActivity(webintent);
+        }
     }
 
 

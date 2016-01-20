@@ -207,8 +207,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		return proxy;
 	}
 
-	protected ListView createListView(Context context, AttributeSet attrs) {
-		final ListView lv;
+	protected MyListView createListView(Context context, AttributeSet attrs) {
+		final MyListView lv;
 		if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
 			lv = new InternalListViewSDK9(context, attrs);
 		} else {
@@ -217,9 +217,10 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		return lv;
 	}
 
+	@TargetApi(VERSION_CODES.GINGERBREAD)
 	@Override
 	protected ListView createRefreshableView(Context context, AttributeSet attrs) {
-		ListView lv = createListView(context, attrs);
+		MyListView lv = createListView(context, attrs);
 		//save memory
 		lv.setVerticalFadingEdgeEnabled(false);
 		lv.setHorizontalFadingEdgeEnabled(false);
@@ -282,7 +283,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		}
 	}
 
-	protected class InternalListView extends ListView implements EmptyViewMethodAccessor {
+	protected class InternalListView extends MyListView implements EmptyViewMethodAccessor {
 
 		private boolean mAddedLvFooter = false;
 

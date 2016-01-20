@@ -50,7 +50,7 @@ public class PlayData implements LetvBaseBean {
 
 
 
-
+    // 当且仅当剧集中只有本地剧集时才返回true
     private boolean isLocalVideo;
     // source 播放源
     private String  source;

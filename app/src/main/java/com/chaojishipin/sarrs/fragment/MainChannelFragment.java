@@ -26,6 +26,7 @@ import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinMainActivity;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinRegisterActivity;
+import com.chaojishipin.sarrs.activity.PlayActivityFroWebView;
 import com.chaojishipin.sarrs.activity.SearchActivity;
 import com.chaojishipin.sarrs.adapter.MainActivityChannelAdapter2;
 import com.chaojishipin.sarrs.bean.AddFavorite;
@@ -65,8 +66,10 @@ import com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView;
 import com.chaojishipin.sarrs.widget.SarrsMainMenuView;
 import com.chaojishipin.sarrs.widget.SarrsToast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ibest.thirdparty.share.model.ShareData;
 import com.ibest.thirdparty.share.view.ShareDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -80,7 +83,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     //    PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener,
     public final String pageid = "00S002000_2";
     //"00S002000_1"
-    private PullToRefreshSwipeMenuListView mXListView;
+//    private PullToRefreshSwipeMenuListView mXListView;
+    private PullToRefreshListView mXListView;
 
     private NetStateView mNetView;
     private RelativeLayout mPullLayout;
@@ -168,13 +172,13 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
         mNetView = (NetStateView) view.findViewById(R.id.mainchannle_fragment_netview);
         mNetView.setOnRetryLisener(this);
         mPullLayout = (RelativeLayout) view.findViewById(R.id.mainactivity_pull_layout);
-        mXListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.mainchannle_fragment_listview2);
+        mXListView = (PullToRefreshListView) view.findViewById(R.id.mainchannle_fragment_listview2);
         mainActivityChannelAdapter = new MainActivityChannelAdapter2(getActivity());
         mXListView.setAdapter(mainActivityChannelAdapter);
 //      set creator
 //      mXListView.setMenuCreator(creator);
-        mXListView.setSwipeable(false);
-        mXListView.setOnMenuItemClickListener(this);
+//        mXListView.setSwipeable(false);
+//        mXListView.setOnMenuItemClickListener(this);
         //  mXListView.setOnSwipeListener(this);
         // mXListView.setOnMenuItemClick(this);
         mSearchIcon = (ImageView) view.findViewById(R.id.search_icon);
@@ -229,6 +233,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
             mXListView.setOnlyShowRefreshingHeader(false);
             reQMode = 0;
             requestChannelData(getActivity(), mCid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
+            //Umeng上拉刷新上报
+            MobclickAgent.onEvent(getActivity(), ConstantUtils.FEED_UP_LOAD);
         }
 
         @Override
@@ -236,6 +242,7 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
             mXListView.setOnlyShowRefreshingHeader(false);
             reQMode = 1;
             requestChannelData(getActivity(), mCid, ConstantUtils.MAINACTIVITY_LOAD_AREA);
+            MobclickAgent.onEvent(getActivity(), ConstantUtils.FEED_DOWN_LOAD);
         }
     };
 
@@ -378,10 +385,9 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_icon:
-
+                MobclickAgent.onEvent(getActivity(),ConstantUtils.SEARCH_BTN);
                 buildDrawingCacheAndIntent();
                 break;
-
             default:
                 break;
 
@@ -558,11 +564,12 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
                     } else {
                         mXListView.getRefreshableView().setSelection(0);
                     }
-                    if(mXListView.isHeadShowed()){
-                        firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1-1;
-                    }else{
-                        firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1;
-                    }
+                    mXListView.onRefreshComplete();
+                    firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1;
+//                    if(mXListView.isHeadShowed()){
+//                        firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1;
+//                    }else{
+//                    }
                     LogUtil.e("wls","firstvisiblecount:"+firstvisiblecount);
 
                 }else{
@@ -618,7 +625,11 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
         }
     }
 
-    public PullToRefreshSwipeMenuListView getPullSwiteView() {
+//    public PullToRefreshSwipeMenuListView getPullSwiteView() {
+//        return mXListView;
+//    }
+
+    public PullToRefreshListView getPullSwiteView(){
         return mXListView;
     }
 
@@ -626,9 +637,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         LogUtil.e("onItemClick", "position0 " + position);
         if (mAlbumLists != null && mAlbumLists.size() > 0) {
-            Intent intent = new Intent(getActivity(), ChaoJiShiPinVideoDetailActivity.class);
             MainActivityAlbum item = mAlbumLists.get(position - 1);
-            UploadStat.uploadstat(item, "0", "00S002000_2", "00S002000_1", position + "", "-","-","-", "-");
+            UploadStat.uploadstat(item, "0", "00S002000_2", "00S002000_1", position + "", "-", "-", "-", "-");
             LogUtil.e("wulianshu", "=====页面点击上报=====");
             VideoDetailItem videoDetailItem = new VideoDetailItem();
             videoDetailItem.setTitle(item.getTitle());
@@ -643,11 +653,23 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
             videoDetailItem.setSource(item.getSource());
             videoDetailItem.setFromMainContentType(item.getContentType());
             videoDetailItem.setDetailImage(item.getImgage());
-            intent.putExtra("videoDetailItem", videoDetailItem);
-            intent.putExtra("ref",pageid);
-            intent.putExtra("seid",seid);
-            //点击上报
-            startActivity(intent);
+
+            if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+                Intent intent = new Intent(getActivity(), ChaoJiShiPinVideoDetailActivity.class);
+
+                intent.putExtra("videoDetailItem", videoDetailItem);
+                intent.putExtra("ref", pageid);
+                intent.putExtra("seid", seid);
+                //点击上报
+                startActivity(intent);
+            }else{
+                Intent webintent = new Intent(getActivity(),PlayActivityFroWebView.class);
+                webintent.putExtra("url", item.getVideos().get(0).getPlay_url());
+                webintent.putExtra("title", item.getVideos().get(0).getTitle());
+                webintent.putExtra("site", item.getSource());
+                webintent.putExtra("videoDetailItem", videoDetailItem);
+                startActivity(webintent);
+            }
         }
     }
 

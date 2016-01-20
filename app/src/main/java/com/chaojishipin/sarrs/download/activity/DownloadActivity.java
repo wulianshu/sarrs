@@ -133,11 +133,13 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
 //    }
 
     public void updateDeleteIcon() {
-        mTitleActionBar.setmRightButtonVisibility(false);
-        if (ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads().size() > 0) {
-            mTitleActionBar.setRightEditButtonVisibility(true);
-        } else {
-            mTitleActionBar.setRightEditButtonVisibility(false);
+        if(mTitleActionBar!=null){
+            mTitleActionBar.setmRightButtonVisibility(false);
+            if (ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads().size() > 0) {
+                mTitleActionBar.setRightEditButtonVisibility(true);
+            } else {
+                mTitleActionBar.setRightEditButtonVisibility(false);
+            }
         }
     }
 }

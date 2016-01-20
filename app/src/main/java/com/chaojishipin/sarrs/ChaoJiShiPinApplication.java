@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -17,6 +18,8 @@ import com.chaojishipin.sarrs.download.service.DownloadService;
 import com.chaojishipin.sarrs.manager.NetworkManager;
 import com.chaojishipin.sarrs.thirdparty.ShareConstants;
 import com.chaojishipin.sarrs.thirdparty.umeng.UMengAnalysis;
+import com.chaojishipin.sarrs.utils.ChannelUtil;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogoImageLoader;
 import com.chaojishipin.sarrs.utils.SarrsManager;
 import com.chaojishipin.sarrs.utils.Utils;
@@ -77,6 +80,8 @@ public class
     @Override
     public void onCreate() {
         super.onCreate();
+        String channelname = ChannelUtil.getCurrentChannel(this);
+        ConstantUtils.CHANNEL_NAME = channelname;
         UMengAnalysis.setCatchUncaughtExceptions(true);
         //这么做是为了解决APP中多个独立进程或多个Service导致Application不断重启
         //http://www.cnblogs.com/0616--ataozhijia/p/4203433.html
@@ -249,5 +254,11 @@ public class
     private void startNetworkObserveService(){
         NetworkManager networkManager = NetworkManager.getInstance();
         networkManager.registerReceiver(getApplicationContext());
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

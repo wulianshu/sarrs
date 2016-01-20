@@ -20,6 +20,16 @@ public class HistoryRecord implements LetvBaseBean {
     private String category_id;
     private String content_type;
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    private String url;
+
     public boolean isCheck() {
         return isCheck;
     }

@@ -1,7 +1,9 @@
 package com.chaojishipin.sarrs.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -78,6 +80,10 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     private String mUpgradeType;
     private boolean isExist = false;
     private String channelname;
+    public static String lasttimeCheck = "1";
+    //是否为提审状态 默认为提审状态
+    public static String isCheck = "1";
+    public boolean isfirst;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +131,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         mUpgradeHelper = new UpgradeHelper(mContext);
         // 获取升级信息
         mUpgradeData = (UpgradeInfo) mIntent.getExtras().get(UpgradeHelper.UPGRADE_DATA);
+        isfirst =  mIntent.getBooleanExtra(UpgradeHelper.IS_FIRST,true);
+//      mUpgradeData.setIscheck("1");
         Log.d("upgrade", " get " + mUpgradeData);
         // 再次请求
         if (mUpgradeData == null && NetWorkUtils.isNetAvailable())
@@ -141,6 +149,11 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         @Override
         public void onResponse(UpgradeInfo result, boolean isCachedData) {
             mUpgradeData = result;
+            if(mUpgradeData!=null) {
+                isCheck = mUpgradeData.getIscheck();
+            }else{
+                isCheck = "1";
+            }
         }
 
         @Override
@@ -206,9 +219,9 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     @Override
     protected void onResume() {
-        if(!TextUtils.isEmpty(channelname)){
-            //HttpApi.getUpgradinfo(channelname);
-        }
+//        if(!TextUtils.isEmpty(channelname)){
+//            requestUpgradinfo(channelname);
+//        }
         super.onResume();
 
     }
@@ -268,12 +281,38 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
         }
     }
-
+    SarrsArrayList slidings_gv = new SarrsArrayList<SlidingMenuLeft>();
+    SarrsArrayList slidings_lv = new SarrsArrayList<SlidingMenuLeft>();
     private class RequestSlidingMenuLeftListener implements RequestListener<SarrsArrayList> {
 
         @Override
         public void onResponse(SarrsArrayList result, boolean isCachedData) {
             if(slidingMenuFragment!=null){
+                slidings_lv = result;
+                SharedPreferences sharedPreferences = ChaoJiShiPinMainActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String channel_list = JsonUtil.toJSONString(result);
+                editor.putString(SlidingMenuFragment.CHANNEL_LIST,channel_list);
+                editor.commit();
+                for (int i = 0;i<slidings_lv.size();i++){
+                    if( ((SlidingMenuLeft)slidings_lv.get(i)).getContent_type().equals("10") ){
+                        break;
+                    }else{
+                        slidings_gv.add((SlidingMenuLeft)slidings_lv.get(i));
+                    }
+                }
+                for(int i=0;i<slidings_gv.size();i++){
+                    slidings_lv.remove(0);
+                }
+                if(slidings_gv.size()>0) {
+                    slidingMenuFragment.mLeftMenuGridView.setVisibility(View.VISIBLE);
+                    slidingMenuFragment.showSlidingGVMenu(slidings_gv);
+                }else{
+                    slidingMenuFragment.mLeftMenuGridView.setVisibility(View.GONE);
+                }
+                if(slidings_lv.size()>0) {
+                    slidingMenuFragment.showSlidingMenu(slidings_lv);
+                }
                 slidingMenuFragment.showSlidingMenu(result);
                 SPUtil.getInstance().putBoolean(ConstantUtils.SliddingMenuInit, true);
 
@@ -295,6 +334,13 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     @Override
     public void onTitleLeftClick(View v) {
         //用户点击了菜单栏按钮
+        SharedPreferences sharedPreferences = this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+        String data =sharedPreferences.getString(SlidingMenuFragment.CHANNEL_LIST,"");
+        if("0".equals(lasttimeCheck) &&"1".equals(isCheck) && null != mSlidingMenu && !TextUtils.isEmpty(data) || !NetWorkUtils.isNetAvailable()){
+            slidingMenuFragment.loadLocalmenuData();
+            mSlidingMenu.toggle();
+            return;
+        }
         if (null != mSlidingMenu) {
             boolean isInit=   SPUtil.getInstance().getBoolean(ConstantUtils.SliddingMenuInit,false);
             if(slidingMenuFragment!=null&&!isInit&&NetWorkUtils.isNetAvailable()){
@@ -372,58 +418,23 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_fragment_user_setting:
-//                slidingMenuFragment.mDownBtn.setBackgroundResource(R.drawable.slinding_down_normal);
-//                slidingMenuFragment.mSaveBtn.setBackgroundResource(R.drawable.slinding_save_normal);
-//                slidingMenuFragment.msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_press);
-//                slidingMenuFragment.mDownBtn.setTextColor(Color.WHITE);
-//                slidingMenuFragment.mSaveBtn.setTextColor(Color.WHITE);
-//                slidingMenuFragment.msetBtn.setTextColor(Color.RED);
-//                slidingMenuFragment.getmLeftAdapter().setSelectItem(-1,null);
-//                title = getResources().getString(R.string.sarrs_str_setting);
-//                mTitleActionBar.setTitle(title);
                 mTitleActionBar.setRightEditButtonVisibility(false);
-//                mTitleActionBar.setmRightButtonVisibility(false);
-
-//                SettingFragment settingFragment = new SettingFragment();
-//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                transaction.replace(R.id.content, settingFragment);
-//                transaction.commitAllowingStateLoss();
                 Intent intent = new Intent(this,SettingActivity.class);
                 startActivity(intent);
-//                if (mSlidingMenu != null) {
-//                    mSlidingMenu.showContent(true);
-//                }
-//                slidingMenuFragment.setSelectedStatus(10);
                 break;
-            case R.id.main_fragment_user_download_btn:
-//                slidingMenuFragment.mDownBtn.setBackgroundResource(R.drawable.slinding_down_focus);
-//                slidingMenuFragment.msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
-//                slidingMenuFragment.getmLeftAdapter().setSelectItem(-1, null);
-//                slidingMenuFragment.mDownBtn.setTextColor(Color.RED);
-//                slidingMenuFragment.mSaveBtn.setTextColor(Color.WHITE);
-//                slidingMenuFragment.msetBtn.setTextColor(Color.WHITE);
-                gotoDownload();
-                break;
-            case R.id.main_fragment_user_save_btn:
-                //  replaceSaveFragment();
-//                slidingMenuFragment.mDownBtn.setBackgroundResource(R.drawable.slinding_down_normal);
-//                slidingMenuFragment.mSaveBtn.setBackgroundResource(R.drawable.slinding_save_focus);
-//                slidingMenuFragment.msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
-//                slidingMenuFragment.mDownBtn.setTextColor(Color.WHITE);
-//                slidingMenuFragment.msetBtn.setTextColor(Color.WHITE);
-//                slidingMenuFragment.mSaveBtn.setTextColor(Color.RED);
-//                slidingMenuFragment.getmLeftAdapter().setSelectItem(-1,null);
 
-                if (UserLoginState.getInstance().isLogin()) {
-                    startActivity(new Intent(this, SaveActivity.class));
-//                    slidingMenuFragment.setSelectedStatus(12);
-                } else {
-                    startActivity(new Intent(this, ChaojishipinRegisterActivity.class));
-                }
-                break;
+//            case R.id.main_fragment_user_download_btn:
+//                gotoDownload();
+//                break;
+//            case R.id.main_fragment_user_save_btn:
+//
+//                if (UserLoginState.getInstance().isLogin()) {
+//                    startActivity(new Intent(this, SaveActivity.class));
+//                } else {
+//                    startActivity(new Intent(this, ChaojishipinRegisterActivity.class));
+//                }
+//                break;
         }
-//        slidingMenuFragment.getmLeftAdapter().notifyDataSetInvalidated();
-//        slidingMenuFragment.refreshView();
     }
 
 

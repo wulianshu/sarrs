@@ -161,6 +161,7 @@ public class ConstantUtils {
     public final static String REQUEST_TOPIC_DETAIL = "request_topic_detail";
     public final static String REQUEST_RANKLIST_DETAIL = "request_ranklist_detail";
     public final static String REQUEST_HISTORYRECORD_DETAIL = "request_ranklist_detail";
+    public final static String JSCUT_SUCCESS_UPLOAD = "jscut_success_upload";
     public final static String REQUEST_VIDEODETAIL_HALF_PLAY_TAG = "request_videodetail_half_play";
     public final static String REQUEST_VIDEODETAIL_VIDEO_INDEX_TAG = "request_videodetail_video_index";
     public final static String REQUEST_SEARCHRESULT_TAG = "request_searchresult";
@@ -231,6 +232,34 @@ public class ConstantUtils {
     // 下载剧集面板来源
     public static final int From_HalfPlayer_Down = 0;
     public static final int From_More_Down = 1;
+
+    /*
+     *Umeng数据统计上报
+     * */
+    public static final String FEED_UP_LOAD = "feed_up_load";
+    public static final String FEED_DOWN_LOAD = "feed_down_load";
+    public static final String FEED_SHARE_BTN = "feed_share_btn";
+    public static final String FEED_FAV_BTN = "feed_fav_btn";
+    public static final String FEED_DEL_BTN = "feed_del_btn";
+    public static final String HALFSCREEN_SWITCH = "halfscreen_switch";
+    public static final String HALFSCREEN_SHARE_BTN = "halfscreen_share_btn";
+    public static final String HALFSCREEN_DOWNLOAD_BTN = "halfscreen_download_btn";
+    public static final String HALFSCREEN_COLLECTION_BTN = "halfscreen_collection_btn";
+    public static final String HALFSCREEN_COMMENT = "halfscreen_comment";
+    public static final String FULLSCREEN_NEXT = "fullscreen_next";
+    public static final String FULLSCREEN_BACK = "fullscreen_back";
+    public static final String FULLSCREEN_SWITCH = "fullscreen_switch";
+    public static final String FULLSCREEN_DOWNLOAD = "fullscreen_download";
+    public static final String FULLSCREEN_COLLECTION = "fullscreen_collection";
+    public static final String FULLSCREEN_SHARE = "fullscreen_share";
+    public static final String FULLSCREEN_EPISODE = "fullscreen_episode";
+    public static final String SEARCH_BTN = "search_btn";
+    public static final String SEARCH_KEYBOARD = "search_keyboard";
+    public static final String SEARCH_VOICE = "search_voice";
+    //渠道名称启动的时候赋值
+    public static String CHANNEL_NAME = "0";
+
+
 
 
     public interface ThirdpartySecret{
@@ -326,11 +355,6 @@ public class ConstantUtils {
         public static final int HIGH_MP4=8;
         public static final int NORMAL_M3U8=9;
         public static final int NORMAL_MP4=10;
-
-
-
-
-
     }
 
 

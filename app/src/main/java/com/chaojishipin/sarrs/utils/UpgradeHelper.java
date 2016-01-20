@@ -39,7 +39,7 @@ public class UpgradeHelper {
     public static final String TAG="UpgradeHelper";
     public static final String UPGRADE_DATA = "upgrade_data";
     public static final String FROM_SPLASH = "from_splash";
-
+    public static final String IS_FIRST = "is_first";
     public static final String APP_NAME = "chaojishipin.apk";
 
     //upgrade
@@ -368,9 +368,10 @@ public class UpgradeHelper {
 
     public static void requestUpgradeData(RequestListener<UpgradeInfo> listener) {
         //请求版本号数据
+
         HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_UPGRADE);
         HttpApi.
-                getUpgradeRequest()
+                getUpgradeRequest(ConstantUtils.CHANNEL_NAME)
                 .start(listener, ConstantUtils.REQUEST_UPGRADE);
     }
 }

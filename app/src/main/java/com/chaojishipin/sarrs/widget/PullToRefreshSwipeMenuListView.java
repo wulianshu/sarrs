@@ -244,8 +244,8 @@ public class PullToRefreshSwipeMenuListView extends PullToRefreshAdapterViewBase
 		return proxy;
 	}
 
-	protected ListView createListView(Context context, AttributeSet attrs) {
-		final ListView lv;
+	protected MyListView createListView(Context context, AttributeSet attrs) {
+		final MyListView lv;
 		if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
 			lv = new InternalListViewSDK9(context, attrs);
 		} else {
@@ -256,7 +256,7 @@ public class PullToRefreshSwipeMenuListView extends PullToRefreshAdapterViewBase
 
 	@Override
 	protected ListView createRefreshableView(Context context, AttributeSet attrs) {
-		ListView lv = createListView(context, attrs);
+		MyListView lv = createListView(context, attrs);
 		lv.setVerticalFadingEdgeEnabled(false);
 		lv.setHorizontalFadingEdgeEnabled(false);
 		lv.setOverScrollMode(OVER_SCROLL_NEVER);
@@ -328,7 +328,7 @@ public class PullToRefreshSwipeMenuListView extends PullToRefreshAdapterViewBase
 		}
 	}
 
-	public class InternalListView extends ListView implements EmptyViewMethodAccessor {
+	public class InternalListView extends MyListView implements EmptyViewMethodAccessor {
 
 		private boolean mAddedLvFooter = false;
 

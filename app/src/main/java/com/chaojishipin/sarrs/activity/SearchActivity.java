@@ -3,9 +3,11 @@ package com.chaojishipin.sarrs.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -73,6 +76,7 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -200,13 +204,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         mEt_search_delete_icon = (ImageView) findViewById(R.id.et_search_delete_icon);
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.searchactivity_result_layout_PullToRefreshListView);
         mSearchactivity_suggest_layout_listView = (ListView) findViewById(R.id.searchactivity_suggest_layout_listView);
-        mSearchactivity_suggest_layout_listView.setVerticalFadingEdgeEnabled(false);
-        mSearchactivity_suggest_layout_listView.setHorizontalFadingEdgeEnabled(false);
-        mSearchactivity_suggest_layout_listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mSearchactivity_history_layout_listView = (ListView) findViewById(R.id.searchactivity_history_layout_listView);
-        mSearchactivity_history_layout_listView.setVerticalFadingEdgeEnabled(false);
-        mSearchactivity_history_layout_listView.setHorizontalFadingEdgeEnabled(false);
-        mSearchactivity_history_layout_listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mSearchactivity_result_layout = (RelativeLayout) findViewById(R.id.searchactivity_result_layout);
         mSearchactivity_layout_mohu = (RelativeLayout) findViewById(R.id.searchactivity_layout_mohu);
         mSearchactivity_main_layout = (RelativeLayout) findViewById(R.id.searchactivity_main_layout);
@@ -421,6 +419,15 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 return false;
             }
         });
+        mAutoCompleteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              String search_key = mAutoCompleteTextView.getText().toString();
+                if(!TextUtils.isEmpty(search_key)){
+                    getSuggest(search_key);
+                }
+            }
+        });
         //搜索框文本变化监听
         mAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -486,8 +493,9 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
             LogUtil.e("onItemClick", "position " + (position - 1));
             if (resultDataLists != null && resultDataLists.size() > 0) {
 
+
+
                 Intent intent = new Intent(this, ChaoJiShiPinVideoDetailActivity.class);
-                //
                 SearchResultDataList item = (SearchResultDataList) resultDataLists.get(position - 1);
                 //Object object,String acode,String pageid,String ref,String rank,String rid_topcid,String sa,String pn,String input
                 int mypos = position -1;
@@ -495,7 +503,6 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 List<VideoItem> videoItems = item.getVideos();
                 LogUtil.e("onItemClick", "videoItem is " + videoItems.get(0));
                 VideoItem videoItem = videoItems.get(0);
-
                 PlayData playData = null;
                 if (videoItems != null && videoItems.size() > 0) {
                     playData = new PlayData(item.getTitle(), videoItem.getGvid(), ConstantUtils.PLAYER_FROM_SEARCH, item.getSource());
@@ -514,10 +521,21 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 videoDetailItem.setSource(item.getSource());
                 videoDetailItem.setFromMainContentType(item.getContent_type());
                 videoDetailItem.setDetailImage(item.getImage());
-                intent.putExtra("ref", pageid);
-                intent.putExtra("seid",mResult.getReid());
-                intent.putExtra("videoDetailItem", videoDetailItem);
-                startActivity(intent);
+
+                if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+                    intent.putExtra("ref", pageid);
+                    intent.putExtra("seid",mResult.getReid());
+                    intent.putExtra("videoDetailItem", videoDetailItem);
+                    startActivity(intent);
+                }else{
+                    Intent webintent = new Intent(this,PlayActivityFroWebView.class);
+                    webintent.putExtra("url", item.getVideos().get(0).getPlay_url());
+                    webintent.putExtra("title", item.getVideos().get(0).getTitle());
+                    webintent.putExtra("site", item.getSource());
+                    webintent.putExtra("videoDetailItem", videoDetailItem);
+                    startActivity(webintent);
+                }
+
             }
         }
     }
@@ -570,6 +588,8 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     mAutoCompleteTextView.setText("");
                     showSoftKeyboard();
                     mSearchactivity_main_icon_layout_textsearch.setImageResource(R.drawable.selector_search_voicesearch);
+                    //Umeng上报
+                    MobclickAgent.onEvent(this, ConstantUtils.SEARCH_KEYBOARD);
                 } else {
                     //切换至语言搜索
                     mSearchKey = null;
@@ -579,6 +599,8 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     executeTipTextShow();
 
                     setSearchResultGone();
+                    //Umeng上报
+                    MobclickAgent.onEvent(this, ConstantUtils.SEARCH_VOICE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

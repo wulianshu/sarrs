@@ -235,7 +235,11 @@ public class VideoDetailFuScreeenExpandListAdapter extends BaseAdapter{
         }else{
             holder = (EpisodesTagHolder) convertView.getTag();
         }
-        holder.tag.setText(tagList.get(position));
+        if(tagList==null||tagList.size()==0){
+            holder.tag.setVisibility(View.GONE);
+        }else{
+            holder.tag.setText(tagList.get(position));
+        }
         boolean isInLoadingState = getInStatePosition(STATE_LOADING)== position;
         holder.progressBar.setVisibility(isInLoadingState ? View.VISIBLE : View.GONE);
         // 如果是处在展开状态 则展开gridView，并显示数据

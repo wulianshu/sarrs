@@ -19,6 +19,7 @@ import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinMainActivity;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinRegisterActivity;
+import com.chaojishipin.sarrs.activity.PlayActivityFroWebView;
 import com.chaojishipin.sarrs.adapter.TopicDetailListViewAdapter;
 import com.chaojishipin.sarrs.bean.AddFavorite;
 import com.chaojishipin.sarrs.bean.CancelFavorite;
@@ -318,13 +319,6 @@ public class TopicDetailFragment extends ChaoJiShiPinBaseFragment implements  Pu
             TopicDetail item = (TopicDetail) topicDetailListViewAdapter.getItem(i - 1);
             UploadStat.uploadstat(item,"0","00S002003_1","00S002003",(i-1)+"",topic.getTid(),"-","-","-");
             List<VideoItem> videoItems = item.getVideos();
-
-            PlayData playData = null;
-            if (videoItems != null && videoItems.size() > 0) {
-                playData = new PlayData(videoItems.get(0).getTitle(), videoItems.get(0).getGvid(), ConstantUtils.PLAYER_FROM_SPECAIL,item.getSource());
-            }
-            intent.putExtra("playData", playData);
-            intent.putExtra("ref",pageid);
             VideoDetailItem videoDetailItem = new VideoDetailItem();
             videoDetailItem.setTitle(item.getTitle());
             LogUtil.e("xll", "source rankList " + item.getSource());
@@ -336,10 +330,24 @@ public class TopicDetailFragment extends ChaoJiShiPinBaseFragment implements  Pu
             videoDetailItem.setVideoItems(item.getVideos());
             videoDetailItem.setFromMainContentType(ConstantUtils.TOPIC_CONTENT_TYPE);
             videoDetailItem.setDetailImage(item.getImage());
-            intent.putExtra("videoDetailItem", videoDetailItem);
-            startActivity(intent);
+            if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+                PlayData playData = null;
+                if (videoItems != null && videoItems.size() > 0) {
+                    playData = new PlayData(videoItems.get(0).getTitle(), videoItems.get(0).getGvid(), ConstantUtils.PLAYER_FROM_SPECAIL, item.getSource());
+                }
+                intent.putExtra("playData", playData);
+                intent.putExtra("ref", pageid);
+                intent.putExtra("videoDetailItem", videoDetailItem);
+                startActivity(intent);
+            }else{
+                Intent webintent = new Intent(getActivity(),PlayActivityFroWebView.class);
+                webintent.putExtra("url", item.getVideos().get(0).getPlay_url());
+                webintent.putExtra("title", item.getVideos().get(0).getTitle());
+                webintent.putExtra("site", item.getSource());
+                webintent.putExtra("videoDetailItem", videoDetailItem);
+                startActivity(webintent);
+            }
         }
-
     }
 
     @Override

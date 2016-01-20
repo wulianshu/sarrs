@@ -1,5 +1,6 @@
 package com.chaojishipin.sarrs.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -111,6 +112,7 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         intent.putExtra(UpgradeHelper.UPGRADE_DATA, mUpdateData);
         intent.putExtra(UpgradeHelper.FROM_SPLASH, true);
         LogUtil.e(TAG, " put " + mUpdateData);
+        intent.putExtra(UpgradeHelper.IS_FIRST, isFrist);
         startActivity(intent);
         finish();
         this.overridePendingTransition(0, R.anim.activity_finish_alpha);
@@ -154,10 +156,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
 
         setting = getSharedPreferences(ConstantUtils.SHARE_APP_TAG, 0);
         isFrist = setting.getBoolean("FIRST", true);
-//        if (isFrist) {
-//            setting.edit().putBoolean("FIRST", false).commit();
-//        }
-
         if (isFrist) {
             mInterestGuide = (RelativeLayout) findViewById(R.id.interest_guide);
             mStartWatchBtn = (RelativeLayout) findViewById(R.id.startWatchBtn);
@@ -281,6 +279,38 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         @Override
         public void onResponse(UpgradeInfo result, boolean isCachedData) {
             mUpdateData = result;
+            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            if(result !=null) {
+                if (isFrist) {
+
+                    edit.putString("ischeck", mUpdateData.getIscheck());
+                    edit.commit();
+                    ChaoJiShiPinMainActivity.isCheck = mUpdateData.getIscheck();
+                    ChaoJiShiPinMainActivity.lasttimeCheck = mUpdateData.getIscheck();
+                } else {
+                    //上次审核状态
+                    ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
+                    //本次审核状态
+                    ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                    //上次是非审核状态之后永远都是非审核状态  而且要保存侧滑菜单的状态
+                    if("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)){
+                        edit.putString("ischeck","0");
+                        edit.commit();
+                        ChaoJiShiPinMainActivity.isCheck = mUpdateData.getIscheck();;
+                    }else{
+                        edit.putString("ischeck",mUpdateData.getIscheck());
+                        ChaoJiShiPinMainActivity.isCheck = mUpdateData.getIscheck();
+                        edit.commit();
+                    }
+                }
+            }else{
+                //为空为审核状态
+                edit.putString("ischeck", "1");
+                edit.commit();
+                ChaoJiShiPinMainActivity.isCheck = "1";
+                ChaoJiShiPinMainActivity.lasttimeCheck = "1";
+            }
             LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData sucess!!!!!!!!!!");
             showDefaultLoadingAnima();
         }

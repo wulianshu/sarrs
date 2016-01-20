@@ -18,14 +18,13 @@
             android:visibility="visible"></com.chaojishipin.sarrs.widget.PullToRefreshSwipeListView>
 -->
 
-        <com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/mainchannle_fragment_listview2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="#00000000"
             android:divider="@null"
-            android:visibility="visible">
-        </com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView>
+            android:visibility="visible"/>
         <com.chaojishipin.sarrs.widget.MyListView
             android:id="@+id/mainchannle_fragment_commentlistview"
             android:layout_width="match_parent"

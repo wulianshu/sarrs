@@ -52,6 +52,7 @@ public class RankListDetailParser extends ResponseBaseParser<RankList> {
                         System.out.print("json:" + json);
                         videoBean.setTitle(json.optString("title"));
                         videoBean.setGvid(json.optString("gvid"));
+                        videoBean.setUrl(json.optString("url"));
                         videoBean.setSource(rankListDetail.getSource());
                         videoList.add(videoBean);
                     }

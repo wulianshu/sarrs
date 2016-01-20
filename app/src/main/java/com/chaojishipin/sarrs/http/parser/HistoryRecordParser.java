@@ -40,6 +40,7 @@ public class HistoryRecordParser extends ResponseBaseParser<SarrsArrayList> {
                 historyRecord.setCategory_id(topicObj.optString("category_id"));
                 historyRecord.setContent_type(topicObj.optString("content_type"));
                 historyRecord.setContent_type(topicObj.optString("durationtime"));
+                historyRecord.setUrl(topicObj.optString("url"));
                 list.add(historyRecord);
             }
             return list;

@@ -32,16 +32,13 @@ import java.util.ArrayList;
 /**
  * Created by xll on 2015/6/17.
  */
-public class MainActivityChannelAdapter2 extends BaseAdapter {
+public class MainActivityChannelAdapter2 extends MyBaseAdapter {
 
     public final static int TYPE_COUNT = 2;
 
     public final static String BIG = "1";
 
     public final static String SMALL = "4";
-
-    // 上下文对象
-    private Context mContext;
 
     public ArrayList<MainActivityAlbum> mAlbums;
 
@@ -52,9 +49,9 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
     public ArrayList<MainMenuItem> menuStates=new ArrayList<>();
 
     public MainActivityChannelAdapter2(Context context) {
-        mContext = context;
-
+        super(context);
     }
+
     public void setMenuStates(ArrayList<MainMenuItem> states){
         this.menuStates=states;
     }
@@ -83,11 +80,11 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
         ImageView main_small_more_icon;
         View divider;
 
-       public  DeleteRelativelayout menu_item;
+        public  DeleteRelativelayout menu_item;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         int posterType = 0;
 
         MainActivityAlbum mainActivityAlbum = mAlbums.get(position);
@@ -104,7 +101,7 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.mainactivity_fragment_listview_big_model2, null);
 
-           // LogUtil.e("xll","main convertView Height "+convertView.getHeight());
+            // LogUtil.e("xll","main convertView Height "+convertView.getHeight());
             holder = new ViewHolder();
             holder.divider = (View) convertView.findViewById(R.id.divider);
             holder.category = (TextView) convertView.findViewById(R.id.main_frontview_tag);
@@ -126,7 +123,7 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
             holder.smallPoster = (EqualRatioImageView) convertView.findViewById(R.id.main_feed_small_poster);
             holder.main_small_more_icon = (ImageView) convertView.findViewById(R.id.main_small_more_icon);
             holder.small_layout = (RelativeLayout) convertView.findViewById(R.id.small_layout);
-            holder.menu_item = (DeleteRelativelayout) convertView.findViewById(R.id.save_item);
+//            holder.menu_item = (DeleteRelativelayout) convertView.findViewById(R.id.save_item);
 
 
             convertView.setTag(holder);
@@ -134,37 +131,37 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
 
         }
-        SarrsMainMenuView mainMenuView=(SarrsMainMenuView)holder.menu_item.getChildAt(0);
-        FrameLayout root=(FrameLayout)mainMenuView.getChildAt(0);
-        LinearLayout ln=(LinearLayout)root.getChildAt(0);
+//        SarrsMainMenuView mainMenuView=(SarrsMainMenuView)holder.menu_item.getChildAt(0);
+//        FrameLayout root=(FrameLayout)mainMenuView.getChildAt(0);
+//        LinearLayout ln=(LinearLayout)root.getChildAt(0);
         if(menuStates.get(position).isDelete()){
-           // img.setBackgroundColor(mContext.getResources().getColor(R.color.color_c5242b));
+            // img.setBackgroundColor(mContext.getResources().getColor(R.color.color_c5242b));
         }
-        if(menuStates.get(position).isSave()){
-            if(ln!=null&&ln.getChildAt(1)!=null){
-                LinearLayout layout=(LinearLayout)ln.getChildAt(1);
-                if(layout!=null&&layout.getChildAt(0)!=null){
-                    ImageView img=(ImageView)layout.getChildAt(0);
-                    LogUtil.e("xll", "main adapter save img exute " + position);
-                    img.setImageResource(R.drawable.sarrs_pic_mainloving_press);
-                }
-            }
-
-        }else{
-            if(ln!=null&&ln.getChildAt(1) != null){
-                LinearLayout layout=(LinearLayout)ln.getChildAt(1);
-                if(layout!=null&&layout.getChildAt(0)!=null){
-                    ImageView img=(ImageView)layout.getChildAt(0);
-                    LogUtil.e("xll", "main adapter save img exute " + position);
-                    img.setImageResource(R.drawable.sarrs_pic_mainloving_normal);
-                }
-            }
-
-
-
-        }
+//        if(menuStates.get(position).isSave()){
+//            if(ln!=null&&ln.getChildAt(1)!=null){
+//                LinearLayout layout=(LinearLayout)ln.getChildAt(1);
+//                if(layout!=null&&layout.getChildAt(0)!=null){
+//                    ImageView img=(ImageView)layout.getChildAt(0);
+//                    LogUtil.e("xll", "main adapter save img exute " + position);
+//                    img.setImageResource(R.drawable.sarrs_pic_mainloving_press);
+//                }
+//            }
+//
+//        }else{
+//            if(ln!=null&&ln.getChildAt(1) != null){
+//                LinearLayout layout=(LinearLayout)ln.getChildAt(1);
+//                if(layout!=null&&layout.getChildAt(0)!=null){
+//                    ImageView img=(ImageView)layout.getChildAt(0);
+//                    LogUtil.e("xll", "main adapter save img exute " + position);
+//                    img.setImageResource(R.drawable.sarrs_pic_mainloving_normal);
+//                }
+//            }
+//
+//
+//
+//        }
         if(menuStates.get(position).isSare()){
-           // ln.getChildAt(2).setBackgroundColor(mContext.getResources().getColor(R.color.color_c5242b));
+            // ln.getChildAt(2).setBackgroundColor(mContext.getResources().getColor(R.color.color_c5242b));
         }
         holder.more_icon.setOnClickListener(new OnMoreTagClick());
         holder.main_small_more_icon.setOnClickListener(new OnMoreTagClick());
@@ -196,13 +193,7 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
                 holder.posterSubTitle2.setText(desc.substring(firstSize));
             }
             holder.posterWatchNumber.setText(mainActivityAlbum.getPlay_count() + "");
-            DisplayImageOptions options1= new DisplayImageOptions.Builder()
-                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.sarrs_main_default)
-                    .showImageForEmptyUri(R.drawable.sarrs_main_default)
-                    .showImageOnLoading(R.drawable.sarrs_main_default)
-                    .build();
-            ImageLoader.getInstance().displayImage(mainActivityAlbum.getImgage(), holder.poster,options1);
+            displayImage(mainActivityAlbum.getImgage(), holder.poster, R.drawable.sarrs_main_default);
         } else {
             holder.big_layout.setVisibility(View.GONE);
             holder.small_layout.setVisibility(View.VISIBLE);
@@ -228,13 +219,7 @@ public class MainActivityChannelAdapter2 extends BaseAdapter {
             }
 
             holder.smallWatchNumber.setText(mainActivityAlbum.getPlay_count() + "");
-            DisplayImageOptions options1= new DisplayImageOptions.Builder()
-                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.sarrs_main_default)
-                    .showImageForEmptyUri(R.drawable.sarrs_main_default)
-                    .showImageOnLoading(R.drawable.sarrs_main_default)
-                    .build();
-            ImageLoader.getInstance().displayImage(mainActivityAlbum.getImgage(), holder.smallPoster,options1);
+            displayImage(mainActivityAlbum.getImgage(), holder.smallPoster, R.drawable.sarrs_main_default);
         }
         if (position == 0) {
             holder.divider.setVisibility(View.GONE);

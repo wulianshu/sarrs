@@ -32,6 +32,7 @@ public class HistoryRecordDao extends BaseDao<HistoryRecord> {
 	private static final String FIELD_CATEGORY_ID = "category_id";
 	private static final String FIELD_CONTENT_TYPE = "content_type";
 	private static final String FIELD_DURATIONTIME = "durationtime";
+	private static final String FIELD_URL = "url";
 
 	public HistoryRecordDao(Context context) {
 		super(context);
@@ -103,6 +104,7 @@ public class HistoryRecordDao extends BaseDao<HistoryRecord> {
 				values.put(FIELD_CATEGORY_ID, bean.getCategory_id());
 				values.put(FIELD_CONTENT_TYPE, bean.getContent_type());
 				values.put(FIELD_DURATIONTIME, bean.getDurationTime());
+				values.put(FIELD_URL, bean.getUrl());
 				Log.e(TAG, "playtime" + bean.getPlay_time());
 				Log.e(TAG, "getDurationTime" + bean.getDurationTime());
 				db.insert(HistoryRecord.tablename, null, values);
@@ -128,6 +130,7 @@ public class HistoryRecordDao extends BaseDao<HistoryRecord> {
 			historyRecord.setCategory_id(cursor.getString(8));
 			historyRecord.setContent_type(cursor.getString(9));
 			historyRecord.setDurationTime(cursor.getInt(10));
+			historyRecord.setUrl(cursor.getString(11));
 //			historyRecord.setContent_type(cursor.getString(FIELD_CATEGORY_ID));
 //			list.add(cursor.getString(1));
 			list.add(historyRecord);
@@ -169,16 +172,12 @@ public class HistoryRecordDao extends BaseDao<HistoryRecord> {
 	}
 
 	public void update(final HistoryRecord bean){
-
 		doInBackground(new Runnable() {
-
 			@Override
 			public void run() {
-
 				SQLiteDatabase db = safelyGetDataBase();
 				ContentValues values = new ContentValues();
 				values.put(FIELD_TIMESTMAP, bean.getTimestamp());
-
 				values.put(FIELD_TITLE, bean.getTitle());
 				values.put(FIELD_SOURCE, bean.getSource());
 				values.put(FIELD_CATEGORY_NAME, bean.getCategory_name());
@@ -188,14 +187,7 @@ public class HistoryRecordDao extends BaseDao<HistoryRecord> {
 				values.put(FIELD_CATEGORY_ID, bean.getCategory_id());
 				values.put(FIELD_CONTENT_TYPE, bean.getContent_type());
 				values.put(FIELD_DURATIONTIME, bean.getDurationTime());
-//				values.put(FIELD_TOTALEPISODE, now.getTotalepisode());
-//				values.put(FIELD_ISEND, now.getIsend());
-//				values.put(FIELD_LATESTEPISODE, now.getLatestepisode());
-//				values.put(FIELD_HISTORY, now.getHistory());
-//				values.put(FIELD_ISEND, now.getIsend());
-//				values.put(FIELD_TOTALTIME, now.getTotaltime());
-//				values.put(FIELD_TOTALSPECIAL, now.getTotalspecail());
-//				values.put(FIELD_TID, now.getTid());
+				values.put(FIELD_URL, bean.getUrl());
 				String[] where = {	bean.getId()};
 				db.update(HistoryRecord.tablename, values, FIELD_ID+"=?", where);
 				Log.e(TAG, "playtime" + bean.getPlay_time());
@@ -222,8 +214,9 @@ public class HistoryRecordDao extends BaseDao<HistoryRecord> {
 				values.put(FIELD_CATEGORY_ID, bean.getCategory_id());
 				values.put(FIELD_CONTENT_TYPE, bean.getContent_type());
 				values.put(FIELD_DURATIONTIME, bean.getDurationTime());
+				values.put(FIELD_URL, bean.getUrl());
 				String[] where = {	bean.getGvid()};
-				db.update(HistoryRecord.tablename, values, FIELD_GVID+"=?", where);
+				db.update(HistoryRecord.tablename, values, FIELD_GVID + "=?", where);
 				Log.e(TAG, "playtime" + bean.getPlay_time());
 				Log.e(TAG, "getDurationTime" + bean.getDurationTime());
 				safelyCloseDataBase();

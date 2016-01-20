@@ -25,6 +25,7 @@ import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.thread.ThreadPoolManager;
+import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.FileUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
@@ -355,11 +356,6 @@ public class DownloadJob {
                     } else {
                         mDownloadTask.execute();
                     }
-//                    if (Utils.getAPILevel() >= 11) {
-//                        mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                    } else {
-//                        mDownloadTask.execute();
-//                    }
                 }
                 mStatus = DOWNLOADING;
                 mDownloadManager.setStatus(mEntity, mStatus);
@@ -866,11 +862,8 @@ public class DownloadJob {
                     isjscut = true;
                     mDownloadTask.setOutsidedownloadPath(stream);
                     executeDownload();
-//                    if (Utils.getAPILevel() >= 11) {
-//                        mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                    } else {
-//                        mDownloadTask.execute();
-//                    }
+                    //截流成功的上报
+                    UploadStat.streamupload(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getUrl(), stream,outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getRequest_format());
                 } else {
                     LogUtil.e("wulianshuaddUrl", "截流结果为空");
                     //继续解析下一条
@@ -1069,7 +1062,6 @@ public class DownloadJob {
                             }
                         }
                     } else {
-
                         if (currentdownloadpositon < outSiteDataInfo.getOutSiteDatas().size() - 1) {
                             LogUtil.e("wulianshu", "stream 和 截流 数据都为空  试 下一个OutSiteData");
                             currentdownloadpositon++;

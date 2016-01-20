@@ -36,7 +36,8 @@ public class MainActivityDataParser extends ResponseBaseParser<MainActivityData>
                 album.setReId(data.optString("reid"));
                 album.setTitle(albumItem.optString("title"));
                 album.setPlay_count(albumItem.optString("play_count"));
-                album.setImgage(albumItem.optString("image"));
+                String image = albumItem.optString("image");
+                album.setImgage(image);
                 album.setLable(albumItem.optString("label"));
                 album.setContentType(albumItem.optString("content_type"));
                 album.setId(albumItem.optString("id"));
@@ -54,9 +55,11 @@ public class MainActivityDataParser extends ResponseBaseParser<MainActivityData>
                     if (TextUtils.isEmpty(videoItem.optString("title"))) {
                         videoBean.setTitle(albumItem.optString("title"));
                     } else
-                        videoBean.setTitle(videoItem.optString("title"));
+                    videoBean.setTitle(videoItem.optString("title"));
                     videoBean.setGvid(videoItem.optString("gvid"));
                     videoBean.setSource(albumItem.optString("source"));
+                    String url = videoItem.optString("url");
+                    videoBean.setPlay_url(url);
                     videoList.add(videoBean);
                 }
                 album.setVideos(videoList);
