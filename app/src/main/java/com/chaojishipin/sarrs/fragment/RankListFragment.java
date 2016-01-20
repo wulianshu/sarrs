@@ -32,6 +32,7 @@ import com.chaojishipin.sarrs.widget.NetStateView;
 import com.chaojishipin.sarrs.widget.PullToRefreshSwipeListView;
 import com.chaojishipin.sarrs.widget.PullToRefreshSwipeMenuListView;
 import com.chaojishipin.sarrs.widget.SarrsToast;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.io.ByteArrayOutputStream;
@@ -39,33 +40,10 @@ import java.io.ByteArrayOutputStream;
 /**
  * create by wulianshu
  */
-public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener, View.OnClickListener,
-        AdapterView.OnItemClickListener, onRetryListener {
+public class RankListFragment extends MainBaseFragment implements PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener, View.OnClickListener,
+        AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
-    private PullToRefreshListView mXListView;
-    private ListView listview;
-    private NetStateView mNetView;
-    private RelativeLayout mPullLayout;
     private RankListListViewAdapter rankListViewAdapter;
-    private com.chaojishipin.sarrs.widget.SarrsToast topToast;
-    // mode ==0下拉刷新// mode==1 上拉刷新 // mode==2
-    private ImageView mSearchIcon;
-    private View mView;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if(mView == null) {
-            // Inflate the layout for this fragment
-            mView = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
-            initView(mView);
-            getNetData();
-        }else if(mView.getParent() != null){
-            ((ViewGroup)mView.getParent()).removeView(mView);
-        }
-
-        return mView;
-    }
 
     @Override
     protected void handleInfo(Message msg) {
@@ -78,7 +56,6 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
             case R.id.search_icon:
                 buildDrawingCacheAndIntent();
                 break;
-
             default:
                 break;
         }
@@ -106,11 +83,6 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
     }
 
     @Override
-    public void onRetry() {
-          getNetData();
-    }
-
-    @Override
     public void onMenuItemClick(int position, SwipeMenu menu, int index) {
 
     }
@@ -130,22 +102,15 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
         public void onFragmentInteraction(Uri uri);
     }
 
-    private void initView(View view) {
-
-        topToast = (SarrsToast) view.findViewById(R.id.sarrs_top_toast);
-        mNetView = (NetStateView) view.findViewById(R.id.mainchannle_fragment_netview);
-        mNetView.setOnRetryLisener(this);
-        mPullLayout = (RelativeLayout) view.findViewById(R.id.mainactivity_pull_layout);
-        mXListView = (PullToRefreshListView) view.findViewById(R.id.mainchannle_fragment_listview2);
-        mXListView.setVisibility(View.GONE);
-        listview = (ListView) view.findViewById(R.id.mainchannle_fragment_commentlistview);
-        listview.setVisibility(View.VISIBLE);
+    @Override
+    protected void init(){
+        mXListView.setMode(PullToRefreshBase.Mode.DISABLED);
         rankListViewAdapter = new RankListListViewAdapter(getActivity(), null);
-        listview.setAdapter(rankListViewAdapter);
-        mSearchIcon = (ImageView) view.findViewById(R.id.search_icon);
+        mLv.setAdapter(rankListViewAdapter);
+        mLv.setOnItemClickListener(this);
         mSearchIcon.setOnClickListener(this);
-        listview.setOnItemClickListener(this);
-//        mXListView.setSwipeable(false);
+
+        getNetData();
     }
 
     /**
@@ -164,22 +129,11 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
     }
 
     /**
-     *  根据上啦下拉动作设置 刷新组件文案信息
-     * */
-
-    /**
      * 获取网络数据
      */
-    public void getNetData() {
-        if (NetWorkUtils.isNetAvailable()) {
-            mPullLayout.setVisibility(View.VISIBLE);
-            mNetView.setVisibility(View.GONE);
-            requestRankListData(getActivity());
-        } else {
-            mPullLayout.setVisibility(View.GONE);
-            mNetView.setVisibility(View.VISIBLE);
-
-        }
+    @Override
+    protected void requestData(){
+        requestRankListData(getActivity());
     }
 
     /**
@@ -205,12 +159,11 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
                     rankListViewAdapter.notifyDataSetChanged();
                 } else {
                     rankListViewAdapter = new RankListListViewAdapter(getActivity(), result);
-                    listview.setAdapter(rankListViewAdapter);
+                    mLv.setAdapter(rankListViewAdapter);
                 }
             }
-            mNetView.setVisibility(View.GONE);
-            mPullLayout.setVisibility(View.VISIBLE);
-            topToast.setVisibility(View.VISIBLE);
+            hideErrorView(mRootView);
+            mTopToast.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -223,6 +176,4 @@ public class RankListFragment extends ChaoJiShiPinBaseFragment implements PullTo
 
         }
     }
-
-
 }

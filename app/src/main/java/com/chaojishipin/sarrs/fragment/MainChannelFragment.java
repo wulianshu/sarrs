@@ -78,18 +78,11 @@ import java.util.List;
 /**
  * Created by xll on 2015/6/17.
  */
-public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  View.OnClickListener,
-        AdapterView.OnItemClickListener, onRetryListener, PullToRefreshSwipeMenuListView.OnMenuItemClickListener, PullToRefreshSwipeMenuListView.OnSwipeListener, SarrsMainMenuView.onSlideMenuItemClick {
+public class MainChannelFragment extends MainBaseFragment implements  View.OnClickListener,
+        AdapterView.OnItemClickListener {
     //    PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener,
     public final String pageid = "00S002000_2";
-    //"00S002000_1"
-//    private PullToRefreshSwipeMenuListView mXListView;
-    private PullToRefreshListView mXListView;
-
-    private NetStateView mNetView;
-    private RelativeLayout mPullLayout;
     public MainActivityChannelAdapter2 mainActivityChannelAdapter;
-    private com.chaojishipin.sarrs.widget.SarrsToast topToast;
     private String mCid;
     private int mSwipePosition = -1;
 
@@ -101,7 +94,6 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     private ArrayList<MainActivityAlbum> mAlbumLists=new ArrayList<MainActivityAlbum>();
     // mode ==0下拉刷新// mode==1 上拉刷新 // mode==2
     private int reQMode = 1;
-    private ImageView mSearchIcon;
     SlidingMenuLeft slidingMenuLeft;
     private List<String> alreadyupgvid = new ArrayList<String>();
     private ChaoJiShiPinMainActivity activity;
@@ -121,30 +113,57 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     VideoDetailItem detail=null;
     int mparentId=0;
 
-    private View mView;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(mView == null){
-            mView = inflater.inflate(R.layout.mainactivity_channel_layout2, container, false);
-            SarrsMainMenuView.listviewItemHeight=350;
-            SarrsMainMenuView.mode=ConstantUtils.SarrsMenuInitMode.MODE_DELETE_SAVE_SHARE;
-            activity = (ChaoJiShiPinMainActivity) getActivity();
-            initView(mView);
+    protected void init(){
+        SarrsMainMenuView.listviewItemHeight = 350;
+        SarrsMainMenuView.mode=ConstantUtils.SarrsMenuInitMode.MODE_DELETE_SAVE_SHARE;
+        activity = (ChaoJiShiPinMainActivity) getActivity();
 
-            slidingMenuLeft = ((ChaoJiShiPinMainActivity)getActivity()).getSlidingMenuLeft();
-            if (slidingMenuLeft != null) {
-                getNetData(slidingMenuLeft);
-            }else{
-                slidingMenuLeft = new SlidingMenuLeft();
-                slidingMenuLeft.setCid("0");
-                mCid = "0";
+        mainActivityChannelAdapter = new MainActivityChannelAdapter2(getActivity());
+        mXListView.setAdapter(mainActivityChannelAdapter);
+        mSearchIcon.setOnClickListener(this);
+        mXListView.setOnItemClickListener(this);
+        mXListView.setOnScrollListener(new AbsListView.OnScrollListener(){
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
             }
-        }else if(mView.getParent() != null){
-            ((ViewGroup)mView.getParent()).removeView(mView);
-        }
 
-        return mView;
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                int lastvisibleposition = view.getLastVisiblePosition();
+                if(lastvisibleposition>firstvisiblecount){
+                    activity.setmTitleActionBarTitle(activity.getResources().getString(R.string.double_click2top));
+                }else{
+                    activity.ResetmTitleActionBarTitle();
+                }
+            }
+        });
+
+        if (NetWorkUtils.isNetAvailable()) {
+            hideErrorView(mRootView);
+        } else {
+            showErrorView(mRootView);
+        }
+        mXListView.setMode(PullToRefreshSwipeListView.Mode.BOTH);
+
+        setListViewMode();
+        if (mAlbumLists != null) {
+            mAlbumLists.clear();
+        }
+        if(mainActivityChannelAdapter.menuStates!=null){
+            mainActivityChannelAdapter.menuStates.clear();
+        }
+        mXListView.setOnRefreshListener(refreshListener2);
+
+        slidingMenuLeft = ((ChaoJiShiPinMainActivity)getActivity()).getSlidingMenuLeft();
+        if (slidingMenuLeft != null) {
+            getNetData(slidingMenuLeft);
+        }else{
+            slidingMenuLeft = new SlidingMenuLeft();
+            slidingMenuLeft.setCid("0");
+            mCid = "0";
+        }
     }
 
     @Override
@@ -160,71 +179,13 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
     @Override
     public void onRetry() {
         LogUtil.e("main ", "reloading");
-        //TODO
-//        if (slidingMenuLeft != null)
-//            getNetData(slidingMenuLeft);
         reQMode = 0;
-        requestChannelData(getActivity(), mCid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
+        requestData();
     }
 
-    private void initView(View view) {
-        topToast = (SarrsToast) view.findViewById(R.id.sarrs_top_toast);
-        mNetView = (NetStateView) view.findViewById(R.id.mainchannle_fragment_netview);
-        mNetView.setOnRetryLisener(this);
-        mPullLayout = (RelativeLayout) view.findViewById(R.id.mainactivity_pull_layout);
-        mXListView = (PullToRefreshListView) view.findViewById(R.id.mainchannle_fragment_listview2);
-        mainActivityChannelAdapter = new MainActivityChannelAdapter2(getActivity());
-        mXListView.setAdapter(mainActivityChannelAdapter);
-//      set creator
-//      mXListView.setMenuCreator(creator);
-//        mXListView.setSwipeable(false);
-//        mXListView.setOnMenuItemClickListener(this);
-        //  mXListView.setOnSwipeListener(this);
-        // mXListView.setOnMenuItemClick(this);
-        mSearchIcon = (ImageView) view.findViewById(R.id.search_icon);
-        mSearchIcon.setOnClickListener(this);
-        mXListView.setOnItemClickListener(this);
-        mXListView.setOnScrollListener(new AbsListView.OnScrollListener(){
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-//                 if(i==AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
-//                     uploadstat(absListView);
-//                     if(absListView.getLastVisiblePosition() >= firstvisiblecount){
-//                         activity.setmTitleActionBarTitle(activity.getResources().getString(R.string.double_click2top));
-//                     }else{
-//                         activity.ResetmTitleActionBarTitle();
-//                     }
-//                 }
-            }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-                int lastvisibleposition = view.getLastVisiblePosition();
-                if(lastvisibleposition>firstvisiblecount){
-                    activity.setmTitleActionBarTitle(activity.getResources().getString(R.string.double_click2top));
-                }else{
-                    activity.ResetmTitleActionBarTitle();
-                }
-            }
-        });
-
-        if (NetWorkUtils.isNetAvailable()) {
-            mPullLayout.setVisibility(View.VISIBLE);
-            mNetView.setVisibility(View.GONE);
-        } else {
-            mPullLayout.setVisibility(View.GONE);
-            mNetView.setVisibility(View.VISIBLE);
-        }
-        mXListView.setMode(PullToRefreshSwipeListView.Mode.BOTH);
-
-        setListViewMode();
-        if (mAlbumLists != null) {
-            mAlbumLists.clear();
-        }
-        if(mainActivityChannelAdapter.menuStates!=null){
-            mainActivityChannelAdapter.menuStates.clear();
-        }
-        mXListView.setOnRefreshListener(refreshListener2);
+    @Override
+    protected void requestData(){
+        requestChannelData(getActivity(), mCid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
     }
 
     PullToRefreshBase.OnRefreshListener2 refreshListener2 = new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -308,11 +269,9 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
             mXListView.setRefreshing(true);
             requestChannelData(getActivity(), cid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
         } else {
-            mPullLayout.setVisibility(View.GONE);
-            mNetView.setVisibility(View.VISIBLE);
+            showErrorView(mRootView);
             mXListView.setRefreshing(true);
         }
-
     }
     /*
     *   swipe Menu
@@ -390,7 +349,6 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
                 break;
             default:
                 break;
-
         }
     }
 
@@ -404,86 +362,85 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
         SearchActivity.launch(getActivity());
     }
 
-    @Override
-    public void onMenuItemClick(int position, SwipeMenu menu, int index) {
-        switch (index) {
-            case 0:
-                //ToastUtil.showShortToast(getActivity(), "click 1");
-                break;
-
-            case 1:
-                //ToastUtil.showShortToast(getActivity(),"click 0");
-                break;
-
-            case 2:
-                // ToastUtil.showShortToast(getActivity(),"click 2");
-                break;
-
-
-        }
-
-
-    }
-
-
-    @Override
-    public void onSwipeStart(int position) {
-        mSwipePosition = position;
-    }
-
-    @Override
-    public void onSwipeEnd(int position) {
-        mSwipePosition = position;
-    }
-
-
-    public int getSwipePosition() {
-        return mSwipePosition;
-    }
-
-    @Override
-    public void onItemClick(int position, View view, int parentId,ListAdapter adapter) {
-        mparentId=parentId-1;
-        // 构造上报参数
-        buidlParam();
-        switch(position){
-            //不喜欢
-            case 0:
-                LogUtil.e("xll", "");
-                mAlbumLists.remove(mparentId);
-                mainActivityChannelAdapter.notifyDataSetChanged();
-                // 负反馈上报
-                DataReporter.reportDislike(id, source, cid, type, token, netType, bucket, seid);
-                break;
-            //收藏
-            case 1:
-                if(UserLoginState.getInstance().isLogin()){
-                    checkSave();
-                   /*  if(adapter!=null&&adapter instanceof HeaderViewListAdapter){
-                         mainActivityChannelAdapter=(MainActivityChannelAdapter2)((HeaderViewListAdapter) adapter).getWrappedAdapter();
-                     }
-*/
-                }else{
-                    startActivity(new Intent(getActivity(), ChaojishipinRegisterActivity.class));
-                }
-                break;
-            //分享
-            case 2:
-                share(parentId);
-                // 分享上报
-                DataReporter.reportAddShare(id, source, cid, type, token, netType, bucket, seid);
-                break;
-        }
-    }
+//    @Override
+//    public void onMenuItemClick(int position, SwipeMenu menu, int index) {
+//        switch (index) {
+//            case 0:
+//                //ToastUtil.showShortToast(getActivity(), "click 1");
+//                break;
+//
+//            case 1:
+//                //ToastUtil.showShortToast(getActivity(),"click 0");
+//                break;
+//
+//            case 2:
+//                // ToastUtil.showShortToast(getActivity(),"click 2");
+//                break;
+//
+//
+//        }
+//
+//
+//    }
+//
+//
+//    @Override
+//    public void onSwipeStart(int position) {
+//        mSwipePosition = position;
+//    }
+//
+//    @Override
+//    public void onSwipeEnd(int position) {
+//        mSwipePosition = position;
+//    }
+//
+//
+//    public int getSwipePosition() {
+//        return mSwipePosition;
+//    }
+//
+//    @Override
+//    public void onItemClick(int position, View view, int parentId,ListAdapter adapter) {
+//        mparentId=parentId-1;
+//        // 构造上报参数
+//        buidlParam();
+//        switch(position){
+//            //不喜欢
+//            case 0:
+//                LogUtil.e("xll", "");
+//                mAlbumLists.remove(mparentId);
+//                mainActivityChannelAdapter.notifyDataSetChanged();
+//                // 负反馈上报
+//                DataReporter.reportDislike(id, source, cid, type, token, netType, bucket, seid);
+//                break;
+//            //收藏
+//            case 1:
+//                if(UserLoginState.getInstance().isLogin()){
+//                    checkSave();
+//                   /*  if(adapter!=null&&adapter instanceof HeaderViewListAdapter){
+//                         mainActivityChannelAdapter=(MainActivityChannelAdapter2)((HeaderViewListAdapter) adapter).getWrappedAdapter();
+//                     }
+//*/
+//                }else{
+//                    startActivity(new Intent(getActivity(), ChaojishipinRegisterActivity.class));
+//                }
+//                break;
+//            //分享
+//            case 2:
+//                share(parentId);
+//                // 分享上报
+//                DataReporter.reportAddShare(id, source, cid, type, token, netType, bucket, seid);
+//                break;
+//        }
+//    }
 
     private class RequestChannelListener implements RequestListener<MainActivityData> {
 
         @Override
         public void onResponse(MainActivityData result, boolean isCachedData) {
             mXListView.onRefreshComplete();
-            mNetView.setVisibility(View.GONE);
-            mPullLayout.setVisibility(View.VISIBLE);
-            topToast.setVisibility(View.VISIBLE);
+            hideErrorView(mRootView);
+            mTopToast.setVisibility(View.VISIBLE);
             bucket = result.getBucket();
             seid = result.getReid();
             if (null != result) {
@@ -544,13 +501,13 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
 
                     if (albumsSize == 0 || beforeSize == endSize) {
                         if(isAdded()){
-                            topToast.setText(getString(R.string.sarrs_toast_notice_no_result));
-                            topToast.show(1000);
+                            mTopToast.setText(getString(R.string.sarrs_toast_notice_no_result));
+                            mTopToast.show(1000);
                         }
                     } else {
                         if(isAdded()){
-                            topToast.setText(getString(R.string.sarrs_toast_notice_normal_start) + albumsSize + getString(R.string.sarrs_toast_notice_normal_end));
-                            topToast.show(1000);
+                            mTopToast.setText(getString(R.string.sarrs_toast_notice_normal_start) + albumsSize + getString(R.string.sarrs_toast_notice_normal_end));
+                            mTopToast.show(1000);
                         }
 
                     }
@@ -574,8 +531,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
 
                 }else{
                     if (reQMode == 3 || reQMode == 4) {
-                        topToast.setText(getString(R.string.sarrs_toast_notice_nodata));
-                        topToast.show(1000);
+                        mTopToast.setText(getString(R.string.sarrs_toast_notice_nodata));
+                        mTopToast.show(1000);
                         if (null != mainActivityChannelAdapter) {
                             mAlbumLists.clear();
                             mainActivityChannelAdapter.setmAlbums(mAlbumLists);
@@ -595,8 +552,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
 
             }else {
                 if (reQMode == 3 || reQMode == 4) {
-                    topToast.setText(getString(R.string.sarrs_toast_notice_nodata));
-                    topToast.show(1000);
+                    mTopToast.setText(getString(R.string.sarrs_toast_notice_nodata));
+                    mTopToast.show(1000);
                     if (null != mainActivityChannelAdapter) {
                         mAlbumLists.clear();
                         mainActivityChannelAdapter.setmAlbums(mAlbumLists);
@@ -608,8 +565,7 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
 
         @Override
         public void netErr(int errorCode) {
-            mNetView.setVisibility(View.VISIBLE);
-            mPullLayout.setVisibility(View.GONE);
+            showErrorView(mRootView);
             mXListView.onRefreshComplete();
             LogUtil.e("error ", " net  error code " + errorCode);
 
@@ -618,8 +574,8 @@ public class MainChannelFragment extends ChaoJiShiPinBaseFragment implements  Vi
         @Override
         public void dataErr(int errorCode) {
             mXListView.onRefreshComplete();
-            topToast.setText(getString(R.string.sarrs_toast_notice_no_result));
-            topToast.show(1000);
+            mTopToast.setText(getString(R.string.sarrs_toast_notice_no_result));
+            mTopToast.show(1000);
             LogUtil.e("error ", " data null error code " + errorCode);
             LogUtil.e("error ", " net  error code " + errorCode);
         }

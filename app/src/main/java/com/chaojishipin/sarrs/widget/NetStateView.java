@@ -55,6 +55,11 @@ public class NetStateView extends FrameLayout implements View.OnClickListener {
         this.mContext=context;
     }
 
+    public NetStateView(Context context){
+        this(context, null, 0);
+        this.mContext = context;
+    }
+
     // 设置 error情况下view显示提示
     public void setErrorTitle(int resId){
         error_title.setText(resId);

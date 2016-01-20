@@ -59,7 +59,7 @@ import java.util.List;
 public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implements TitleActionBar.onActionBarClickListener, View.OnClickListener {
     private static final String TAG = "ChaoJiShiPinMainActivity";
     private SlidingMenu mSlidingMenu;
-    private int mSwipePostion = -1;
+//    private int mSwipePostion = -1;
     private TitleActionBar mTitleActionBar;
     private String title;
     private MainChannelFragment mainF = null;
@@ -196,7 +196,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         mainF = new MainChannelFragment();
         topiclistFragment = new TopiclistFragment();
         rankListfragment = new RankListFragment();
-        mSwipePostion = mainF.getSwipePosition();
+ //       mSwipePostion = mainF.getSwipePosition();
         //TODO
         title = this.getResources().getString(R.string.recommend);
         mTitleActionBar.setTitle(title);
