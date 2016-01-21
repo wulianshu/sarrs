@@ -19,6 +19,7 @@ import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
@@ -40,6 +41,7 @@ import com.chaojishipin.sarrs.download.download.DownloadHelper;
 import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.fragment.VideoDetailMediaBottomFragment;
+import com.chaojishipin.sarrs.fragment.videoplayer.VideoPlayerController;
 import com.chaojishipin.sarrs.fragment.videoplayer.VideoPlayerFragment;
 import com.chaojishipin.sarrs.fragment.videoplayer.httpd.M3u8Httpd;
 import com.chaojishipin.sarrs.receiver.NetWorkStateReceiver;
@@ -54,6 +56,7 @@ import com.ibest.thirdparty.share.view.ShareDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 详情页
@@ -153,7 +156,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
         }else{
             setSCREEN(SCREEN.HALF);
-            LogUtil.e("v1.1.2", "from online mode");
+            //LogUtil.e("v1.1.2", "from online mode");
             //mVideoPlayerFragment.hideEpisode();
         }
     }
@@ -321,12 +324,14 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     public void onStart() {
         super.onStart();
         try {
-             if(m3u8Httpd==null&&getMediaType()==MeDiaType.LOCAL){
+             if(m3u8Httpd==null){
                  m3u8Httpd = new M3u8Httpd(8084);
+                 LogUtil.e("v1.1.2","local engine init");
              }
-
-            if (m3u8Httpd!=null&&!m3u8Httpd.isAlive()) {
+            if (m3u8Httpd!=null) {
+                LogUtil.e("v1.1.2","local engine start");
                 m3u8Httpd.start();
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -376,7 +381,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
 
     public   ArrayList<LocalVideoEpisode> getLocalEpisodes(){
-        ArrayList<DownloadJob> jobs= ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads();
+        ArrayList<DownloadJob> jobs=ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads();
         String path;
         if(jobs==null){
             LogUtil.e("xll","v1_1_2  local null");
@@ -534,6 +539,9 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
             fragmentTransaciton.add(R.id.videodetail_medie_fragment_container, mVideoPlayerFragment);
             fragmentTransaciton.commit();
         }
+
+
+
     }
 
     /**
@@ -687,10 +695,10 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     public MeDiaType getMediaType() {
         String mode=getIntent().getStringExtra(Utils.Medea_Mode);
         String mode2= getIntent().getExtras().getString(Utils.Medea_Mode);
-        LogUtil.e("v1.1.2"," mode "+mode);
-        LogUtil.e("v1.1.2"," mode2 "+mode2);
+        //LogUtil.e("v1.1.2"," mode "+mode);
+        //LogUtil.e("v1.1.2"," mode2 "+mode2);
         if(mode!=null&&mode.equalsIgnoreCase(ConstantUtils.MediaMode.LOCAL)){
-            LogUtil.e("v1.1.2","from local");
+           // LogUtil.e("v1.1.2","from local");
             return MeDiaType.LOCAL;
         } else{
             return MeDiaType.ONLINE;

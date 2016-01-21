@@ -6,6 +6,7 @@ import com.chaojishipin.sarrs.bean.Episode;
 import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
+import com.chaojishipin.sarrs.utils.LogUtil;
 
 /**
  * Created by vicky on 15/8/31.
@@ -59,8 +60,21 @@ public class VideoInfoAdapter {
         }
         adapter.setName(item.getTitle());
         adapter.setSubName(videoItem.getTitle());
-        adapter.setSrc(item.getSource());
-        adapter.setCid(item.getCategory_id());
+        String mSite="";
+        if(!TextUtils.isEmpty(item.getSource())){
+            adapter.setSrc(item.getSource());
+        }
+        if(!TextUtils.isEmpty(videoItem.getSource())){
+            adapter.setSrc(item.getSource());
+
+        }
+        if(!TextUtils.isEmpty(item.getCategory_id())){
+            adapter.setCid(item.getCategory_id());
+        }
+
+        if(!TextUtils.isEmpty(videoItem.getCategory_id())){
+            adapter.setCid(videoItem.getCategory_id());
+        }
         if (videoItem.getImage() != null && videoItem.getImage().length() > 0)
         {
             adapter.setImage(videoItem.getImage());

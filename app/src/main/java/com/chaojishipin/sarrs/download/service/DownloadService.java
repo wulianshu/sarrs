@@ -85,7 +85,9 @@ public class DownloadService extends Service {
             if (action.equals(ACTION_ADD_TO_DOWNLOAD)) {
                 DownloadEntity entry = (DownloadEntity) intent.getSerializableExtra(EXTRA_MEDIAITEM_ENTRY);
                 //每次添加新的下载，都开启sd卡检查
+                LogUtil.e("v1.1.2","download service entity source "+entry.getSite());
                 ContainSizeManager.getInstance().checkSDCard();
+                LogUtil.e("v1.1.2","download check sd ");
                 addToDownloadQueue(entry, startId);
                 if (null != mTimer) {
                     mTimer.cancel();
@@ -99,7 +101,7 @@ public class DownloadService extends Service {
     public void addToDownloadQueue(DownloadEntity entry, int startId) {
 //         String downloadPath = StringUtil.isEmpty(entry.getPath()) ? DownloadHelper.getDownloadPath() : entry.getPath();
         String downloadPath =DownloadHelper.getDownloadPath();
-
+        LogUtil.e("v1.1.2","download path "+downloadPath);
         LogUtil.e("xll_storage"," service "+downloadPath);
          downloadJob = new DownloadJob(entry, downloadPath);
          downloadJob.setIndex(entry.getIndex());

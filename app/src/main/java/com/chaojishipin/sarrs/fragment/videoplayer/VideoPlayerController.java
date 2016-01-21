@@ -1442,10 +1442,12 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         isQuitSniff=false;
         hideTimeOutLayout();
         //保存播放记录
-          mIsPause=true;
+         mIsPause=true;
+         updatePlayBtnBg(false);
         // 设置下一集数据，发送数据给底部fragment更新剧集状态
             VideoItem episode = getNextEpisode();
             // 点击下一集 没有发送EventBus 不会接收回调
+            setNextState();
             if (null != episode) {
                 if(episode.isLocal()){
                     executeLocalPlayLogic(episode);
@@ -1458,7 +1460,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             }else {
                 return;
             }
-            setNextState();
+
         }
 
 
@@ -1489,18 +1491,6 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
                 mCanPlayNext = false;
                 mPlayNextBtn.setBackgroundResource(R.drawable.sarrs_pic_videoplayer_no_next);
-
-               /* // 如果点击下一集按钮&&并且本页剧集最后一集&&并且当前分页+1后小于分页总数
-                if(mPlayData!=null&&mPlayData.getPage_titles()!=null&&episodes!=null&&episodes.size()>0&&episodes.size()==mNotifyData.getPosition()+1&&mNotifyData.getKey()+1<mPlayData.getPage_titles().size()){
-                    LogUtil.e("xll","当前分页，点击下一集按钮到最后一集，请求分页数据");
-                    mCanPlayNext = true;
-                    mPlayNextBtn.setBackgroundResource(R.drawable.sarrs_pic_videoplayer_next);
-                }else{
-                    mCanPlayNext = false;
-                    mPlayNextBtn.setEnabled(false);
-                    mPlayNextBtn.setBackgroundResource(R.drawable.sarrs_pic_videoplayer_no_next);
-
-                }*/
             }
         } else {
             mCanPlayNext = false;
@@ -2637,7 +2627,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     @Override
     public void onPrepared(MediaPlayer mp) {
         LogUtil.e(TAG, "!!!!!!!!!onPrepared");
-        LogUtil.e("v1.1.2"," onprepare  start");
+        LogUtil.e("v1.1.2", " onprepare  start");
         //初始化上报
         if (mPlayContorl != null) {
             ac = "init";
@@ -2656,7 +2646,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
           isplayfromweb = false;
             if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.OFFLINE) {
                 LogUtil.e(TAG, "Media no net !");
-                LogUtil.e("v1.1.2"," onprepare net error");
+                LogUtil.e("v1.1.2", " onprepare net error");
                 executePrePare();
 
             } else if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.GSM && isForcePlay) {
@@ -2675,7 +2665,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 }
 
             }else{
-                LogUtil.e("v1.1.2"," onprepare unknown state !");
+                LogUtil.e("v1.1.2", " onprepare unknown state !");
             }
         /*}*/
 
@@ -2826,6 +2816,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     public void startPlayer() {
         if (null != mPlayContorl && mIsPrepared && mIsPause) {
+            LogUtil.e("v1.1.2"," onprepare excute start()");
             mPlayContorl.start();
             mIsPause = false;
             if (!isplayfromweb) {
@@ -2852,6 +2843,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 timer.schedule(task, 5000, 5000);
 
             }
+        }else{
+            LogUtil.e("v1.1.2"," block end  no start()");
         }
 
     }
@@ -3685,7 +3678,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 doPlay(PlayerUtils.DEFAULT_PLAYER_TYPE, stream);
                 UploadStat.streamupload(mOutSiteData.getUrl(), stream, mOutSiteData.getRequest_format());
             }else{
-                // 本次截流失败
+                //本次截流失败
                 isQuitSniff=false;
                 LogUtil.e("xll","NEW sniff finish result error");
                 handlerOutSiteError();

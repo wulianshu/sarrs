@@ -895,7 +895,7 @@ public class HttpApi extends SarrsBaseHttpApi {
     }
 
     /**
-     * 获取排行版详情列表接口
+     * 获取播放记录列表接口
      */
     public static SarrsRequest<SarrsArrayList> getHistoryRecordList(String token) {
         StringBuilder sb = new StringBuilder();

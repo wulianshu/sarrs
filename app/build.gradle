@@ -19,8 +19,8 @@ android {
         applicationId "com.chaojishipin.sarrs"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 12
-        versionName "1.1.1"
+        versionCode 13
+        versionName "1.1.2"
         // dex突破65535的限制
         multiDexEnabled true
         // 默认是官方的渠道

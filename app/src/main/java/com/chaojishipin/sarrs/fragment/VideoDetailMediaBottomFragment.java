@@ -57,6 +57,7 @@ import com.chaojishipin.sarrs.dao.HistoryRecordDao;
 import com.chaojishipin.sarrs.download.bean.LocalVideoEpisode;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.util.DownloadEvent;
+import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.feedback.DataReporter;
 import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
@@ -85,6 +86,9 @@ import com.umeng.analytics.MobclickAgent;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -2173,7 +2177,9 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
 
 
     private void  mergeDateServerandlocalDB(ArrayList<HistoryRecord> netlist){
-
+        if(totallist!=null){
+            totallist.clear();
+        }
         if (local_list != null) {
             if (local_list.size() == 0) {
                 totallist = netlist;
@@ -2189,6 +2195,24 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                                 if (local_list.get(i).getTimestamp().compareTo(netlist.get(j).getTimestamp()) > 0) {
                                     totallist.remove(netlist.get(j));
                                     totallist.add(local_list.get(i));
+                                }else{
+                                        totallist.remove(local_list.get(i));
+                                        totallist.add(netlist.get(j));
+                                }
+                                break;
+                            }
+                        }
+                        if(!TextUtils.isEmpty(local_list.get(i).getId())&&!TextUtils.isEmpty(netlist.get(j).getId())){
+                            LogUtil.e("v1.1.2","merge record(x,y) " +i+"_"+j);
+                            if (local_list.get(i).getId().equalsIgnoreCase(netlist.get(j).getId())) {
+                                if (local_list.get(i).getTimestamp().compareTo(netlist.get(j).getTimestamp()) > 0) {
+                                    totallist.remove(netlist.get(j));
+                                    totallist.add(local_list.get(i));
+                                    LogUtil.e("v1.1.2","merge records (r,a) remove net "+netlist.get(j).getTitle()+" add local "+local_list.get(i).getTitle());
+                                }else{
+                                    LogUtil.e("v1.1.2","merge records (r,a) remove local "+local_list.get(i).getTitle()+" add net "+netlist.get(j).getTitle());
+                                    totallist.remove(local_list.get(i));
+                                    totallist.add(netlist.get(j));
                                 }
                                 break;
                             }
@@ -2199,6 +2223,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                     }
                 }
             }
+            LogUtil.e("v1.1.2","merge records finish  ");
             preparePlay();
         }
     }
@@ -2342,12 +2367,15 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
             int cuKey=0;
             if(mVideoDetailItem!=null){
                 ArrayList<LocalVideoEpisode> locals=mVideoDetailItem.getLocalVideoEpisodes();
-                PlayData temPlaydata=activity.mergeOnlyLocal(locals);
+                PlayData temPlaydata=null;
+                if(locals!=null){
+                     temPlaydata=activity.mergeOnlyLocal(locals);
+                }
                 if(TextUtils.isEmpty(mVideoDetailItem.getPorder())){
                     currentPlay.setPorder("0");
                 }else{
                     currentPlay.setPorder(mVideoDetailItem.getPorder());
-                    if(temPlaydata.getmEpisodes()!=null&&temPlaydata.getmEpisodes().size()>0){
+                    if(temPlaydata!=null&&temPlaydata.getmEpisodes()!=null&&temPlaydata.getmEpisodes().size()>0){
 
                         for(int i=0;i<temPlaydata.getmEpisodes().size();i++){
 
@@ -2367,12 +2395,44 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
 
 
                 //fenyeList=temPlaydata.getmEpisodes();
-                currentPlay.setPage_titles(temPlaydata.getPage_titles());
+                if(temPlaydata!=null){
+                    currentPlay.setPage_titles(temPlaydata.getPage_titles());
+                }
+
                 currentPlay.setmLocalDataLists(locals);
                 currentPlay.setIndex(cuIndex);
                 currentPlay.setKey(cuKey);
-                LogUtil.e("v1.1.2","local play (k,v)= ("+cuKey+","+cuIndex+")");
-                currentPlay.setmEpisodes(temPlaydata.getmEpisodes());
+                LogUtil.e("v1.1.2", "local play (k,v)= (" + cuKey + "," + cuIndex + ")");
+                if(temPlaydata!=null){
+                    if(temPlaydata.getmEpisodes()!=null){
+
+                        if(!TextUtils.isEmpty(mCid)){
+                            // 电视剧动漫排序
+                            if(mCid.equalsIgnoreCase(ConstantUtils.CARTOON_CATEGORYID)||mCid.equalsIgnoreCase(ConstantUtils.TV_SERISE_CATEGORYID))
+                            {
+                               Collections.sort(temPlaydata.getmEpisodes().get(cuKey), new Comparator<VideoItem>() {
+                                   @Override
+                                   public int compare(VideoItem t1, VideoItem t2) {
+                                       if(!TextUtils.isEmpty(t1.getPorder())&&!TextUtils.isEmpty(t2.getPorder())){
+                                           return Integer.parseInt(t1.getPorder())-Integer.parseInt(t2.getPorder());
+
+                                       }
+                                       if(!TextUtils.isEmpty(t1.getOrder())&&!TextUtils.isEmpty(t2.getOrder())){
+                                           return Integer.parseInt(t1.getOrder())-Integer.parseInt(t2.getOrder());
+
+                                       }
+                                       return 0;
+
+                                   }
+                               });
+                            }
+                        }
+
+                        currentPlay.setmEpisodes(temPlaydata.getmEpisodes());
+                    }
+
+                }
+
             }else{
                 //TODO 确认默认剧集
                 currentPlay.setPorder("0");

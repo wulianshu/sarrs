@@ -19,8 +19,11 @@ public class VideoItem extends VideoDetailItem {
                 ", source='" + source + '\'' +
                 ", isLocal=" + isLocal +
                 ", play_url='" + play_url + '\'' +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
                 ", from='" + from + '\'' +
                 ", isPlay=" + isPlay +
+                ", downLoadType='" + downLoadType + '\'' +
                 ", key=" + key +
                 ", index=" + index +
                 '}';
@@ -178,6 +181,5 @@ public class VideoItem extends VideoDetailItem {
     public void setDownLoadType(String downLoadType) {
         this.downLoadType = downLoadType;
     }
-
 
 }

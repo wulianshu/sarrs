@@ -106,7 +106,7 @@ public class ConstantUtils {
 
 //        public static final String DOMON_3 = "http://10.154.252.65:8080";
 //        public static final String DOMON_4 = "http://10.154.252.65:8080";
-
+        //public static final String DOMON_5 = "http://10.154.252.65:8080";
         public static final String DOMON_5 = "http://user.chaojishipin.com";
         public static final String DOMON_6 = "http://play.chaojishipin.com";
         public static final String DOMON_7 = "http://share.chaojishipin.com";

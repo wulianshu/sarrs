@@ -164,6 +164,14 @@ public class DownloadEvent {
 
             if (mVideoDetailItem.getVideoItems() != null && mVideoDetailItem.getVideoItems().get(position) != null) {
                 VideoItem videoItem = mVideoDetailItem.getVideoItems().get(position);
+
+                if(!TextUtils.isEmpty(videoItem.getSource())){
+                    entity.setSite(videoItem.getSource());
+                    entity.setSrc(videoItem.getSource());
+                }
+                if(!TextUtils.isEmpty(videoItem.getCategory_id())){
+                    entity.setCid(videoItem.getSource());
+                }
                 if (videoItem.getTitle() != null && videoItem.getTitle().length() > 0)
                     entity.setMedianame(mVideoDetailItem.getVideoItems().get(position).getTitle());
                 else
@@ -171,8 +179,10 @@ public class DownloadEvent {
             } else {
                 entity.setMedianame(mVideoDetailItem.getTitle());
             }
+            if(!TextUtils.isEmpty(site)){
+                entity.setSite(site);
+            }
 
-            entity.setSite(site);
             entity.setLetvMid(episode.getMid());
             entity.setPath(DownloadHelper.getDownloadPath());
             entity.setAddTime(addTime);
@@ -180,7 +190,11 @@ public class DownloadEvent {
             entity.setFolderName(episode.getName());
 //            entity.setCurrClarity(mdefaultClarity);
             entity.setGlobaVid(episode.getGlobaVid());
-            entity.setSrc(mVideoDetailItem.getSource());
+            if(!TextUtils.isEmpty(mVideoDetailItem.getSource())){
+                entity.setSrc(mVideoDetailItem.getSource());
+                entity.setSite(mVideoDetailItem.getSource());
+            }
+
 //            if ("nets".equals(mVideoDetailItem.getSource())) {//云盘下载id
 //                entity.setCloudId(episode.getCloudId());
 //            }

@@ -31,6 +31,7 @@ public class HttpManager {
     }
 
     public void postToQueue(SarrsRequest<?> request) {
+        mQueue.getCache().clear();
         mQueue.add(request);
     }
 

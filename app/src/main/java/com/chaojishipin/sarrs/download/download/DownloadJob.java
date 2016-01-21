@@ -338,7 +338,10 @@ public class DownloadJob {
                 currentdownloadpositon = 0;
                 mDownloadTask = new DownloadTask(this);
                 //走外站源
+                LogUtil.e("v1.1.2","site "+this.getEntity().getSite());
+                LogUtil.e("v1.1.2","src "+this.getEntity().getSrc());
                 if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite())) {
+                    LogUtil.e("v1.1.2","download source outiste! ");
                     if (outSiteDataInfo == null) {
                         mRetryNum = 0;
                     }
@@ -349,6 +352,7 @@ public class DownloadJob {
                     HttpApi.requestOutSiteData(gvid, null, playid, mFormat).start(new OutSiteDataListener());
 
                 } else {
+                    LogUtil.e("v1.1.2","download source insite! ");
                     LogUtil.e("wulianshu","走乐视源下载。。。。。。。");
                     isjscut = false;
                     if (Utils.getAPILevel() >= 11) {
