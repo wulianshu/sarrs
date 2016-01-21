@@ -92,11 +92,14 @@ public class
                 mInstatnce = this;
                 SarrsManager.init(this);
                 SarrsManager.setHttpTest(true);
-                SarrsManager.setLogDebug(true);
                 //加载ImageLoader
                 initImageLoader();
                 // 注册微信授权认证
                 regToWx();
+
+                CrashHandler crashHandler = CrashHandler.getInstance();
+                // 注册crashHandler
+                crashHandler.init(getApplicationContext());
             }
         }
 //        mInstatnce = this;

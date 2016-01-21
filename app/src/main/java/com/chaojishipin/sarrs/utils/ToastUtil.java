@@ -1,77 +1,74 @@
 package com.chaojishipin.sarrs.utils;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ToastUtil {
 	private static Toast mToast = null;
-	
-	
-	public static void showLongToast(Context context,int id,int position){
-		if(null != context){
-			if(null == mToast){
-				mToast = Toast.makeText(context, id, Toast.LENGTH_SHORT);
-			}else{
-				String ss = (String) context.getText(id)+position;
-				mToast.setText(ss);
-			}	
-			mToast.show();
-		}
+
+	private synchronized static Toast getToast(Context context){
+		if(mToast == null)
+			mToast = new Toast(context.getApplicationContext());
+		return mToast;
 	}
-	
+
+	private static void setText(Context context, String str){
+		mToast = getToast(context);
+		TextView tv = new TextView(context.getApplicationContext());
+		tv.setTextColor(Color.WHITE);
+		tv.setText(str);
+		int p = Utils.dip2px(10);
+		tv.setPadding(p, p, p, p);
+		tv.setBackgroundColor(0xaa000000);
+		mToast.setView(tv);
+	}
+
+	public static void showLongToast(Context context,int id,int position){
+		if(context == null)
+			return;
+		String str = context.getString(id) + position;
+		showLongToast(context, str);
+	}
+
 	public static void showLongToast(Context context,int id){
-		if(null != context){
-			if(null == mToast){
-				mToast = Toast.makeText(context, id, Toast.LENGTH_LONG);
-			}else{
-				mToast.setText(id);
-			}	
-			mToast.show();
-		}
+		if(context == null)
+			return;
+		String str = context.getString(id);
+		showLongToast(context, str);
 	}
 	
 	public static void showLongToast(Context context,String content){
-		if(null != context){
-			if(null == mToast){
-				mToast = Toast.makeText(context,content,Toast.LENGTH_LONG);
-			}else{
-				mToast.setText(content);
-			}	
-			mToast.show();
-		}
+		if(context == null)
+			return;
+		setText(context, content);
+		getToast(context).setDuration(Toast.LENGTH_LONG);
+		getToast(context).show();
 	}
 	
 	public static void showShortToast(Context context,int id){
-		if(null != context){
-			if(null == mToast){
-				mToast = Toast.makeText(context, id, Toast.LENGTH_SHORT);
-			}else{
-				mToast.setText(id);
-			}	
-			mToast.show();
-		}
+		if(context == null)
+			return;
+		String str = context.getString(id);
+		showShortToast(context, str);
 	}
 	
 	public static void showShortToast(Context context,String content){
-		if(null != context){
-			if(null == mToast){
-				mToast = Toast.makeText(context,content,Toast.LENGTH_SHORT);
-			}else{
-				mToast.setText(content);
-			}	
-			mToast.show();
-		}
+		if(context == null)
+			return;
+		setText(context, content);
+		getToast(context).setDuration(Toast.LENGTH_SHORT);
+		getToast(context).show();
 	}
 	
 	public static void toastPrompt(Context context,int id,int time){
-		if(null != context){
-			if(null == mToast){
-				mToast = Toast.makeText(context, id, time);
-			}else{
-				mToast.setText(id);
-			}	
-			mToast.show();
-		}
+		if(context == null)
+			return;
+		String str = context.getString(id);
+		setText(context, str);
+		getToast(context).setDuration(time);
+		getToast(context).show();
 	}
 	
 	public static void cancelToast(){

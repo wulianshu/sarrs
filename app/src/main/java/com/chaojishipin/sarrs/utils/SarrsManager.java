@@ -2,6 +2,7 @@ package com.chaojishipin.sarrs.utils;
 
 import android.content.Context;
 
+import com.chaojishipin.sarrs.BuildConfig;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.dao.DBHelper;
 import com.chaojishipin.sarrs.dao.DatabaseManager;
@@ -14,7 +15,7 @@ import com.letv.component.player.core.LetvMediaPlayerManager;
  * @author daipei
  */
 public class SarrsManager {
-    private static boolean mLog_debug;
+    private final static boolean mLog_debug = BuildConfig.LOG_DEBUG;
     private static boolean mHttp_test;
 
     /**
@@ -56,12 +57,6 @@ public class SarrsManager {
         // 设置你申请的应用appid
         SpeechUtility.createUtility(context, "appid=" + context.getString(R.string.xunfei_app_id));
     }
-
-    /**
-     * log开关
-     * @param isDebug
-     */
-    public static void setLogDebug(boolean isDebug) { mLog_debug = isDebug; }
 
     public static boolean isLogDebug(){ return mLog_debug; }
 
