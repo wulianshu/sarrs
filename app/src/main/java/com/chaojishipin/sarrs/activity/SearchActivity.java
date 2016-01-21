@@ -413,7 +413,9 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     inputtype = "2";
                     mSearchKey = mAutoCompleteTextView.getText().toString();
                     requestSearchResultData(null);
+
                     hideSoftKeyboard();
+
                     return true;
                 }
                 return false;
@@ -492,9 +494,6 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
 
             LogUtil.e("onItemClick", "position " + (position - 1));
             if (resultDataLists != null && resultDataLists.size() > 0) {
-
-
-
                 Intent intent = new Intent(this, ChaoJiShiPinVideoDetailActivity.class);
                 SearchResultDataList item = (SearchResultDataList) resultDataLists.get(position - 1);
                 //Object object,String acode,String pageid,String ref,String rank,String rid_topcid,String sa,String pn,String input
@@ -597,7 +596,6 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     mVoiceText.setVisibility(View.VISIBLE);
                     mSearchactivity_main_layout_tipTest.setText(R.string.search_main_tip_before_start);
                     executeTipTextShow();
-
                     setSearchResultGone();
                     //Umeng上报
                     MobclickAgent.onEvent(this, ConstantUtils.SEARCH_VOICE);

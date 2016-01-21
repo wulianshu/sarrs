@@ -309,6 +309,34 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                 historyRecord.setGvid(videoItem.getGvid());
                 historyRecordDao.save(historyRecord);
             }
+
+            //上传服务端
+            if (UserLoginState.getInstance().isLogin()&&NetWorkUtils.isNetAvailable()) {
+                String token = UserLoginState.getInstance().getUserInfo().getToken();
+                if (videoItem != null &&  videoItem.getGvid()!=null ) {
+//                if (videoItem.getId() == null || "".equals(videoItem.getId())) {
+//                    Log.e("VideoPlayerFragment", "videoItem id is null");
+//                    return;
+//                }
+                    UploadRecord uploadRecord = new UploadRecord();
+                    //TODO  吴联暑检查下 有没有类似问题 ?
+                    if(!TextUtils.isEmpty(videoItem.getCategory_id())){
+                        uploadRecord.setCid(Integer.parseInt(videoItem.getCategory_id()));
+                    }
+                    uploadRecord.setAction(0);
+                    uploadRecord.setDurationTime(mVideoPlayerController.getmPlayContorl().getDuration());
+                    uploadRecord.setPid(videoItem.getId());
+                    uploadRecord.setPlayTime(mVideoPlayerController.getmPlayContorl().getCurrentPosition() / 1000);
+                    uploadRecord.setUpdateTime(System.currentTimeMillis());
+                    uploadRecord.setSource(videoItem.getSource());
+                    uploadRecord.setVid(videoItem.getGvid());
+                    uploadHistoryRecordOneRecord(token, uploadRecord);
+                }
+
+
+            }
+
+
         }
     }
 

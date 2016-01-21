@@ -401,6 +401,7 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                 aitem.setGvid(item.getGvid());
                 //TODO 播放记录source字段是空  add by xll
                 aitem.setSource(item.getSource());
+                aitem.setTitle(item.getTitle());
                 videoitems.add(aitem);
                 VideoDetailItem videoDetailItem = new VideoDetailItem();
                 videoDetailItem.setTitle(item.getTitle());
@@ -418,7 +419,7 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                 }else{
                     Intent webintent = new Intent(this,PlayActivityFroWebView.class);
                     webintent.putExtra("url", item.getUrl());
-                    webintent.putExtra("title", videoDetailItem.getVideoItems().get(0).getTitle());
+                    webintent.putExtra("title",item.getTitle());
                     webintent.putExtra("site", videoDetailItem.getSource());
                     webintent.putExtra("videoDetailItem", videoDetailItem);
                     startActivity(webintent);

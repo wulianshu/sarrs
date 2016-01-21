@@ -1,11 +1,13 @@
 package com.chaojishipin.sarrs.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -33,6 +35,8 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.bean.UpgradeInfo;
+import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.interfaces.INetWorkObServe;
 import com.chaojishipin.sarrs.manager.NetworkManager;
 import com.chaojishipin.sarrs.receiver.NetWorkStateReceiver;
@@ -41,6 +45,7 @@ import com.chaojishipin.sarrs.thirdparty.umeng.UMengAnalysis;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
+import com.chaojishipin.sarrs.utils.UpgradeHelper;
 import com.chaojishipin.sarrs.widget.NetStateView;
 import com.chaojishipin.sarrs.widget.PopupDialog;
 import com.chaojishipin.sarrs.widget.PublicLoadLayout;
@@ -288,9 +293,12 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
 
     @Override
     public void observeNetWork(String netName, int netType, boolean isHasNetWork) {
-        handleNetWork(netName,netType,isHasNetWork);
-        //TODO 整理代碼
-
+          LogUtil.e("wulianshu","observeNetWork 被调用");
+          handleNetWork(netName,netType,isHasNetWork);
+          //TODO 整理代碼
+//          if (netType!=-1){
+//              UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
+//           }
 //        if (netType == ConstantUtils.NET_TYPE_ERROR) {
 //        } else {
 //            if (netType == ConnectivityManager.TYPE_WIFI) {
@@ -309,6 +317,58 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
 //                //判断什么网络类型
 //        }
     }
+    class RequestUpgradeListener implements RequestListener<UpgradeInfo> {
+        @Override
+        public void onResponse(UpgradeInfo result, boolean isCachedData) {
+            SharedPreferences sharedPreferences = ChaoJiShiPinBaseActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            if(result !=null) {
+                if (ChaojishipinSplashActivity.isFrist) {
+                    edit.putString("ischeck", result.getIscheck());
+                    edit.commit();
+                    ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                    ChaoJiShiPinMainActivity.lasttimeCheck = result.getIscheck();
+                } else {
+                    //上次审核状态
+                    ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
+                    //本次审核状态
+                    ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                    //上次是非审核状态之后永远都是非审核状态  而且要保存侧滑菜单的状态
+                    if("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)){
+                        edit.putString("ischeck", "0");
+                        edit.commit();
+                        ChaoJiShiPinMainActivity.isCheck = result.getIscheck();;
+                    }else{
+                        edit.putString("ischeck",result.getIscheck());
+                        ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                        edit.commit();
+                    }
+                }
+            }else{
+                //为空为审核状态
+                edit.putString("ischeck", "1");
+                edit.commit();
+                ChaoJiShiPinMainActivity.isCheck = "1";
+                ChaoJiShiPinMainActivity.lasttimeCheck = "1";
+            }
+            LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData sucess!!!!!!!!!!");
+        }
+
+        @Override
+        public void netErr(int errorCode) {
+//            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+//            ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
+//            LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData net err!!!!!!!!!!");
+        }
+
+        @Override
+        public void dataErr(int errorCode) {
+//            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+//            ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
+//            LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData data err!!!!!!!!!!");
+        }
+    }
+
 
     public void onEventMainThread(Object obj) {
 
@@ -320,7 +380,6 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
 
     protected void onClickLeftButton() {
     }
-    ;
 
     protected void onClickRightButton() {
     }

@@ -104,7 +104,6 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         if (UserLoginState.getInstance().isLogin()) {
             requestHistoryRecordData(UserLoginState.getInstance().getUserInfo().getToken());
         }
-
 //        ExecutorService executorService = Executors.newSingleThreadExecutor();
 //        for (int i = 0; i < 100; ++i) {
 //            final int j = i;
@@ -135,8 +134,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 //      mUpgradeData.setIscheck("1");
         Log.d("upgrade", " get " + mUpgradeData);
         // 再次请求
-        if (mUpgradeData == null && NetWorkUtils.isNetAvailable())
-            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
+//        if (mUpgradeData == null && NetWorkUtils.isNetAvailable())
+//            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
 
         if (mUpgradeData != null) {
             mUpgradeHelper.setmSerVerName(mUpgradeData.getVersion());
@@ -145,15 +144,48 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         }
     }
 
+
     class RequestUpgradeListener implements RequestListener<UpgradeInfo> {
         @Override
         public void onResponse(UpgradeInfo result, boolean isCachedData) {
             mUpgradeData = result;
-            if(mUpgradeData!=null) {
-                isCheck = mUpgradeData.getIscheck();
+//            if(mUpgradeData!=null) {
+//                isCheck = mUpgradeData.getIscheck();
+//            }else{
+//                isCheck = "1";
+//            }
+            SharedPreferences sharedPreferences = ChaoJiShiPinMainActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            if(result !=null) {
+                if (ChaojishipinSplashActivity.isFrist) {
+                    edit.putString("ischeck", result.getIscheck());
+                    edit.commit();
+                    ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                    ChaoJiShiPinMainActivity.lasttimeCheck = result.getIscheck();
+                } else {
+                    //上次审核状态
+                    ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
+                    //本次审核状态
+                    ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                    //上次是非审核状态之后永远都是非审核状态  而且要保存侧滑菜单的状态
+                    if("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)){
+                        edit.putString("ischeck", "0");
+                        edit.commit();
+                        ChaoJiShiPinMainActivity.isCheck = result.getIscheck();;
+                    }else{
+                        edit.putString("ischeck",result.getIscheck());
+                        ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                        edit.commit();
+                    }
+                }
             }else{
-                isCheck = "1";
+                //为空为审核状态
+                edit.putString("ischeck", "1");
+                edit.commit();
+                ChaoJiShiPinMainActivity.isCheck = "1";
+                ChaoJiShiPinMainActivity.lasttimeCheck = "1";
             }
+            LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData sucess!!!!!!!!!!");
         }
 
         @Override
@@ -211,6 +243,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 mUpgradeHelper.doNewVersionForceUpdate();
             }
         }
+
+
     }
 
     private void setListener() {
@@ -273,11 +307,13 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     public void onTitleDoubleTap() {
         if (mainF.getPullSwiteView() != null && mainF.mainActivityChannelAdapter !=null) {
             mainF.getPullSwiteView().getRefreshableView().smoothScrollToPosition(0);
+
 //          new  Handler().postDelayed(new Runnable() {
 //              @Override
 //              public void run() {
 //                  mainF.getPullSwiteView().getRefreshableView().setSelection(0);              }
 //          },1500);
+
 
         }
     }
@@ -349,7 +385,6 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 HttpApi.getSlidingMenuLeftRequest().start(new RequestSlidingMenuLeftListener(), ConstantUtils.REQUEST_SLDINGMENU_LETF_TAG);
             }
             mSlidingMenu.toggle();
-
         }
     }
 
@@ -486,6 +521,9 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 .start(new RequestHistoryRecordListener(), ConstantUtils.REQUEST_HISTORYRECORD_DETAIL);
     }
 
+    /**
+     * 获取播放记录的的监听
+     */
     private class RequestHistoryRecordListener implements RequestListener<SarrsArrayList> {
         @Override
         public void onResponse(SarrsArrayList result, boolean isCachedData) {
@@ -562,8 +600,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
          LogUtil.e("xll", "MainActivity netType " + netType);
         if(netType!=-1){
-
-
+            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
         }
 
 

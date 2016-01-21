@@ -38,6 +38,7 @@ import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.utils.ChannelUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
@@ -64,7 +65,7 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
     private SharedPreferences setting;
     private Runnable mTask;
     private AsyncTask mInitTask;
-    private boolean isFrist = true;
+    public static  boolean isFrist = true;
 
     private GestureDetector gestureDetector;
     // 兴趣上报list
@@ -222,7 +223,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
 
     @Override
     protected void handleInfo(Message msg) {
-
     }
 
     private void initData() {
@@ -243,6 +243,7 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
                 showDefaultLoadingAnima();
             }
         }.execute(new Void[]{});*/
+
         if (isFrist)
             redirectToInterest();
         if (NetWorkUtils.isNetAvailable()) {
@@ -283,7 +284,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
             SharedPreferences.Editor edit = sharedPreferences.edit();
             if(result !=null) {
                 if (isFrist) {
-
                     edit.putString("ischeck", mUpdateData.getIscheck());
                     edit.commit();
                     ChaoJiShiPinMainActivity.isCheck = mUpdateData.getIscheck();
@@ -295,7 +295,7 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
                     ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
                     //上次是非审核状态之后永远都是非审核状态  而且要保存侧滑菜单的状态
                     if("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)){
-                        edit.putString("ischeck","0");
+                        edit.putString("ischeck", "0");
                         edit.commit();
                         ChaoJiShiPinMainActivity.isCheck = mUpdateData.getIscheck();;
                     }else{
@@ -317,12 +317,16 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
 
         @Override
         public void netErr(int errorCode) {
+            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
             LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData net err!!!!!!!!!!");
             showDefaultLoadingAnima();
         }
 
         @Override
         public void dataErr(int errorCode) {
+            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
             LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData data err!!!!!!!!!!");
             showDefaultLoadingAnima();
         }

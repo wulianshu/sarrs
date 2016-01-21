@@ -347,24 +347,24 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 			historyRecord.setTimestamp(System.currentTimeMillis() + "");
 			historyRecord.setDurationTime(0);
 			String stitle = "";
-			if(!TextUtils.isEmpty(videoDetailItem.getCategory_id())){
-				if (videoDetailItem.getCategory_id().equals(ConstantUtils.CARTOON_CATEGORYID)) {
-					historyRecord.setCategory_name(this.getString(R.string.CARTOON));
-				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.TV_SERISE_CATEGORYID)) {
-					historyRecord.setCategory_name(this.getString(R.string.TV_SERIES));
-				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.MOVIES_CATEGORYID)) {
-					historyRecord.setCategory_name(this.getString(R.string.MOVIES));
-				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.DOCUMENTARY_CATEGORYID)) {
-					historyRecord.setCategory_name(this.getString(R.string.DOCUMENTARY));
-				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.VARIETY_CATEGORYID)) {
-					historyRecord.setCategory_name(this.getString(R.string.VARIETY));
-				} else {
-					historyRecord.setCategory_name(this.getString(R.string.OTHER));
-				}
-				historyRecord.setPlay_time("0");
-				String title = videoDetailItem.getTitle();
-			}
-			historyRecord.setTitle(stitle);
+//			if(!TextUtils.isEmpty(videoDetailItem.getCategory_id())){
+//				if (videoDetailItem.getCategory_id().equals(ConstantUtils.CARTOON_CATEGORYID)) {
+//					historyRecord.setCategory_name(this.getString(R.string.CARTOON));
+//				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.TV_SERISE_CATEGORYID)) {
+//					historyRecord.setCategory_name(this.getString(R.string.TV_SERIES));
+//				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.MOVIES_CATEGORYID)) {
+//					historyRecord.setCategory_name(this.getString(R.string.MOVIES));
+//				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.DOCUMENTARY_CATEGORYID)) {
+//					historyRecord.setCategory_name(this.getString(R.string.DOCUMENTARY));
+//				} else if (videoDetailItem.getCategory_id().equals(ConstantUtils.VARIETY_CATEGORYID)) {
+//					historyRecord.setCategory_name(this.getString(R.string.VARIETY));
+//				} else {
+//					historyRecord.setCategory_name(this.getString(R.string.OTHER));
+//				}
+//				historyRecord.setPlay_time("0");
+//				String title = videoDetailItem.getTitle();
+//			}
+//			historyRecord.setTitle(stitle);
 			historyRecord.setContent_type(videoDetailItem.getContent_type());
 			historyRecord.setId(videoDetailItem.getId());
 			historyRecord.setGvid(videoDetailItem.getVideoItems().get(0).getGvid());

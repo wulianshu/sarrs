@@ -97,7 +97,8 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     SlidingMenuLeft slidingMenuLeft;
     private List<String> alreadyupgvid = new ArrayList<String>();
     private ChaoJiShiPinMainActivity activity;
-    public int firstvisiblecount = 2;
+//    public int firstvisiblecount = 2;
+    private int mini_visible_count = 10;
     /**
      * 构造 添加、是否存在、取消收藏统一参数
      */
@@ -131,8 +132,11 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+				if(visibleItemCount<mini_visible_count){
+                    mini_visible_count = visibleItemCount;
+                }
                 int lastvisibleposition = view.getLastVisiblePosition();
-                if(lastvisibleposition>firstvisiblecount){
+                if(lastvisibleposition>mini_visible_count){
                     activity.setmTitleActionBarTitle(activity.getResources().getString(R.string.double_click2top));
                 }else{
                     activity.ResetmTitleActionBarTitle();
@@ -528,12 +532,12 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
                         mXListView.getRefreshableView().setSelection(0);
                     }
                     mXListView.onRefreshComplete();
-                    firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1;
+//                    firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1;
 //                    if(mXListView.isHeadShowed()){
 //                        firstvisiblecount = mXListView.getRefreshableView().getLastVisiblePosition()- mXListView.getRefreshableView().getFirstVisiblePosition()+1;
 //                    }else{
 //                    }
-                    LogUtil.e("wls","firstvisiblecount:"+firstvisiblecount);
+//                    LogUtil.e("wls","firstvisiblecount:"+firstvisiblecount);
 
                 }else{
                     if (reQMode == 3 || reQMode == 4) {
