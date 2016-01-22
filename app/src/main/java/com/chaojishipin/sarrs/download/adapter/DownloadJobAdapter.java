@@ -21,8 +21,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import com.android.volley.VolleyError;
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.adapter.SparseArrayAdapter;
@@ -35,17 +33,13 @@ import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.download.DownloadUtils;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
-import com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuLayout;
-import com.chaojishipin.sarrs.utils.ImageCacheManager;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.chaojishipin.sarrs.widget.EqualRatioImageView;
-import com.mylib.download.DownloadUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.sina.weibo.sdk.call.Position;
 
 import java.util.ArrayList;
 
