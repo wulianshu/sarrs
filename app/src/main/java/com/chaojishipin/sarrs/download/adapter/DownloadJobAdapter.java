@@ -42,6 +42,7 @@ import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.chaojishipin.sarrs.widget.EqualRatioImageView;
+import com.mylib.download.DownloadUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sina.weibo.sdk.call.Position;

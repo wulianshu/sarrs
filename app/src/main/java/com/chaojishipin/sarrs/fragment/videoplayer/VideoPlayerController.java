@@ -80,6 +80,7 @@ import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.bean.VideoPlayerNotifytData;
 import com.chaojishipin.sarrs.dao.FavoriteDao;
 import com.chaojishipin.sarrs.download.bean.LocalVideoEpisode;
+import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.feedback.DataReporter;
 import com.chaojishipin.sarrs.fragment.ChaoJiShiPinBaseFragment;
 import com.chaojishipin.sarrs.http.parser.UpdateUrlParser;
@@ -3610,27 +3611,36 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
     public void setSelectVisibile(boolean isShow) {
 
-       if (null != mSelectBtn) {
-                if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
-                    //
-                    if(mPlayData!=null&&mPlayData.getmLocalDataLists()!=null&&mPlayData.getmLocalDataLists().size()>=1){
-                        mSelectBtn.setVisibility(View.VISIBLE);
-                        LogUtil.e("v1.1.2","play local size>=1 ");
-                    }else{
-                        mSelectBtn.setVisibility(View.GONE);
-                        LogUtil.e("v1.1.2", "play local size<1 ");
-                    }
-
+        if (null != mSelectBtn) {
+            if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+                //
+                if(isShow&&mPlayData!=null&&mPlayData.getmLocalDataLists()!=null&&mPlayData.getmLocalDataLists().size()>=1){
+                    mSelectBtn.setVisibility(View.VISIBLE);
+                    LogUtil.e("v1.1.2","play local size>=1 ");
                 }else{
-                    // 剧集数大于一展示剧集按钮
-                    if(isShow){
-                        if(mPlayData!=null&&mPlayData.getmEpisodes()!=null&&mPlayData.getmEpisodes().indexOfKey(mPlayData.getKey())>=0&&mPlayData.getmEpisodes().get(mPlayData.getKey()).size()>1){
-                            mSelectBtn.setVisibility(View.VISIBLE);
-                        }
+                    mSelectBtn.setVisibility(View.GONE);
+                    LogUtil.e("v1.1.2", "play local size<1 ");
+                }
+
+            }else{
+                // 剧集数大于一展示剧集按钮
+                if(isShow){
+                    // 从除缓存页进入断网&本地剧集>1
+                     if(mActivity.getIslocaEpisoSize()&&!NetworkUtil.isNetworkAvailable(mActivity)){
+
+                         mSelectBtn.setVisibility(View.VISIBLE);
+                         LogUtil.e("v1.1.2"," epsiso view init playdata undone logic");
+                         return;
+                     }
+                    if(mPlayData!=null&&mPlayData.getmEpisodes()!=null&&mPlayData.getmEpisodes().indexOfKey(mPlayData.getKey())>=0&&mPlayData.getmEpisodes().get(mPlayData.getKey()).size()>1){
+                        mSelectBtn.setVisibility(View.VISIBLE);
                     }else{
                         mSelectBtn.setVisibility(View.GONE);
-                        LogUtil.e("v1.1.2"," epsiso view gone");
                     }
+                }else{
+                    mSelectBtn.setVisibility(View.GONE);
+                    LogUtil.e("v1.1.2"," epsiso view gone");
+                }
 
                 }
         }
@@ -3764,6 +3774,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
 
     public void showAnimSelect() {
+        if(mPlayData==null){
+            LogUtil.e("v1.1.2","playdata is null not show AnimaSelect");
+            return;
+        }
         if (mPlayData != null && !TextUtils.isEmpty(mPlayData.getCid())) {
             if (mPlayData.getCid().equalsIgnoreCase(String.valueOf(ConstantUtils.MAIN_DATA_TYPE_2))) {
                 return;

@@ -37,9 +37,11 @@ import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.download.bean.LocalVideoEpisode;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
+import com.chaojishipin.sarrs.download.download.DownloadFolderJob;
 import com.chaojishipin.sarrs.download.download.DownloadHelper;
 import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
+import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.fragment.VideoDetailMediaBottomFragment;
 import com.chaojishipin.sarrs.fragment.videoplayer.VideoPlayerController;
 import com.chaojishipin.sarrs.fragment.videoplayer.VideoPlayerFragment;
@@ -56,7 +58,11 @@ import com.ibest.thirdparty.share.view.ShareDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 详情页
@@ -74,7 +80,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     // 播放器底部布局
     private LinearLayout mMediaBottomView;
     //  本地播放
-    private static M3u8Httpd m3u8Httpd =null;
+    private  M3u8Httpd m3u8Httpd =null;
     /**
      * 播放器大小屏幕状态.默认是半屏
      */
@@ -127,7 +133,6 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     private OrientationSensorListener2 listener1;
     //收藏状态:已收藏:true;未收藏:false
     private boolean isSave = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,8 +153,8 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-
-        if (getMediaType() == MeDiaType.LOCAL) {
+        isExistLocalEpiso();
+        if (getMediaType() == MeDiaType.LOCAL||!NetworkUtil.isNetworkAvailable(this) ) {
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
            // mVideoPlayerFragment.showEpisode();
@@ -160,6 +165,15 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
             //mVideoPlayerFragment.hideEpisode();
         }
     }
+
+
+
+
+
+
+
+
+
 
    public enum SCREEN{
         FULL, // 全屏
@@ -272,9 +286,15 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
 
         if (mVideoPlayerFragment != null) {
+            // 从除缓存界面进入播放页
             if(this.getMediaType()==MeDiaType.ONLINE){
-                mVideoPlayerFragment.setPlayerControllerBarState(netType);
-                mVideoBottomFragment.reLoadData();
+
+                    LogUtil.e("v1.1.2","has not local episo excute local play ");
+                    mVideoPlayerFragment.setPlayerControllerBarState(netType);
+                    mVideoBottomFragment.reLoadData();
+
+
+
             }
         }
         if (mVideoBottomFragment != null) {
@@ -298,7 +318,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         addDetailFragment();
         addVideoPlayerFragment();
         initData();
-        if(this.getMediaType()==MeDiaType.LOCAL){
+        if(this.getMediaType()==MeDiaType.LOCAL||!NetworkUtil.isNetworkAvailable(this)){
             // 点击下载管理跳回本地播放
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
@@ -317,6 +337,58 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         }
         LogUtil.e("wulianshu", " onNewIntent 被调用====== ");
     }
+
+   /**
+    *  判断本地剧集是否含有点播剧集
+    * */
+   private boolean isExits=false;
+   private boolean isLocalEpisoSize=false;
+    /**
+     *   本地剧集&本地剧集>1
+     * */
+   public boolean getIslocaEpisoSize(){
+       return isLocalEpisoSize;
+   }
+
+    public boolean getIsExitLocal(){
+        return isExits;
+    }
+   public boolean isExistLocalEpiso(){
+
+       String gvid=null;
+       String id=null;
+       mVideoDetailItem = (VideoDetailItem) getIntent().getExtras().get("videoDetailItem");
+       if(mVideoDetailItem!=null&&mVideoDetailItem.getVideoItems()!=null&&mVideoDetailItem.getVideoItems().size()>0){
+           gvid= mVideoDetailItem.getVideoItems().get(0).getGvid();
+           id=mVideoDetailItem.getId();
+           if(TextUtils.isEmpty(id)){
+               id=mVideoDetailItem.getVideoItems().get(0).getId();
+           }
+       }
+       if(!TextUtils.isEmpty(gvid)){
+          ArrayList<LocalVideoEpisode>locals=getLocalEpisoByFolderId(id);
+           for(LocalVideoEpisode local:locals){
+           if(local.getGvid().equalsIgnoreCase(gvid)){
+               isExits=true;
+               continue;
+           }
+         }
+
+         if(isExits&&locals!=null&&locals.size()>0){
+             isLocalEpisoSize=true;
+         }else{
+             isLocalEpisoSize=false;
+         }
+
+       }
+
+       return isExits;
+
+
+
+   }
+
+
 
 
 
@@ -375,12 +447,77 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         fragmentTransaciton.commitAllowingStateLoss();
     }
 
+  /**
+   *  根据下载文件夹获取一个专辑视频列表
+   *  @param id  : aid   id
+   *
+   * */
+  public ArrayList<LocalVideoEpisode> getLocalEpisoByFolderId(String id) {
+      String path;
+      SparseArray<DownloadFolderJob> folderJobs = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getDownloadFolderJobs();
+      DownloadJob job = null;
+      DownloadEntity entity = null;
+      ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>();
+      int key = 0;
+      for (int i = 0; i < folderJobs.size(); i++) {
+          SparseArray<DownloadJob> downloadJobs = folderJobs.get(i).getDownloadJobs();
+          int size = downloadJobs.size();
+          for (int j = 0; j < size; j++) {
+              job = downloadJobs.valueAt(j);
+              entity = job.getEntity();
+              //TODO 单视频逻辑
+              if (!TextUtils.isEmpty(entity.getMid()) && entity.getMid().equalsIgnoreCase(id)) {
+                  key = j;
+                  break;
+              }
+          }
+          job = downloadJobs.valueAt(key);
+          if (job == null) {
+              LogUtil.e("xll", "v1_1_2  local null");
+          }
+
+          if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
+              path =
+                      DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity().getPath())
+                              + "/" + job.getEntity().getSaveName() + ".m3u8";
+          } else {
+              path =
+                      "file://"
+                              + DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity()
+                              .getPath());
+          }
+
+
+
+          // 创建播放本地视频的类对象
+          LocalVideoEpisode localVideoEpisode = new LocalVideoEpisode();
+          // TODO 单视频时 mid=gvid
+          if (!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())) {
+              localVideoEpisode.setAid(entity.getMid());
+              localVideoEpisode.setId(entity.getId());
+          }
+          localVideoEpisode.setDownType(entity.getDownloadType());
+          localVideoEpisode.setPorder(entity.getPorder());
+          localVideoEpisode.setCid(entity.getCid());
+          localVideoEpisode.setName(entity.getMedianame());
+          localVideoEpisode.setPlay_url(path);
+          localVideoEpisode.setGvid(entity.getGlobaVid());
+          localVideoEpisode.setVt(entity.getVt());
+          localVideoEpisode.setSource(entity.getSite());
+          localVideoEpisodeList.add(localVideoEpisode);
+
+      }
+      return localVideoEpisodeList;
+  }
+
+
+
    /**
-    *  获取本地下载剧集信息列表
+    *  获取本地下载剧集信息列表 (所有剧集信息)
     * */
 
 
-    public   ArrayList<LocalVideoEpisode> getLocalEpisodes(){
+    public   ArrayList<LocalVideoEpisode> getAllLocalEpisodes(){
         ArrayList<DownloadJob> jobs=ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads();
         String path;
         if(jobs==null){
@@ -388,7 +525,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         }else{
             LogUtil.e("xll","v1_1_2  local job size "+jobs.size());
         }
-        ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>(1);
+        ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>();
         for(DownloadJob job:jobs){
             if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
                 path =
@@ -455,6 +592,11 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         }
         return onlineItems;
     }
+
+    /**
+     *    只有本地剧集&没有在线剧集 构造出播放器数据
+     *
+     * */
 
     public PlayData  mergeOnlyLocal(ArrayList<LocalVideoEpisode> localItems){
             //根据cid 计算分页数据
@@ -668,7 +810,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     }
 
    /**
-    *  剧集类型枚举
+    *  剧集类型枚举(当前播放剧集类型)
     *
     * */
 
@@ -689,6 +831,12 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     public EpisodeType getEpisodeType(){
         return eType;
     }
+
+
+    /**
+     *  是否有本地剧集信息
+     * */
+
 
 
 

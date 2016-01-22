@@ -330,7 +330,10 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                     uploadRecord.setUpdateTime(System.currentTimeMillis());
                     uploadRecord.setSource(videoItem.getSource());
                     uploadRecord.setVid(videoItem.getGvid());
-                    uploadHistoryRecordOneRecord(token, uploadRecord);
+                    if(!TextUtils.isEmpty(videoItem.getId())){
+                        uploadHistoryRecordOneRecord(token, uploadRecord);
+                    }
+
                 }
 
 
@@ -773,8 +776,13 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
                LogUtil.e("xll","播放本地断开网络！");
             }else{
-                if(mActivity.getEpisodeType()== ChaoJiShiPinVideoDetailActivity.EpisodeType.EPISO_LOCAL){
-                    LogUtil.e("v1.1.2"," local episode not show netview");
+                if(mActivity.isExistLocalEpiso()){
+                    // 展示剧集、下一集、更多按钮
+                    mVideoPlayerController.setSelectVisibile(true);
+                    showEpisode();
+                    showPlayNext();
+
+                    LogUtil.e("v1.1.2","has local episo excute local play ");
                 }else{
                     mVideoPlayerController.showNoNetView();
                     mVideoPlayerController.playerPause();

@@ -1,5 +1,7 @@
 package com.chaojishipin.sarrs.utils;
 
+import android.util.Log;
+
 public class LogUtil {
 	
 	public static final String TAG = "LogUtil";
@@ -54,5 +56,10 @@ public class LogUtil {
 	public static void e(String tag, String msg, Throwable t) {
 		if (DEBUG)
 			android.util.Log.e(tag, msg, t);
+	}
+
+	public static void l(String msg) {
+		if (DEBUG)
+			Log.e("tagg", msg);
 	}
 }

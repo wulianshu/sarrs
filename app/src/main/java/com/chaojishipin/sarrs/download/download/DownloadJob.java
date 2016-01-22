@@ -58,6 +58,15 @@ public class DownloadJob {
         this.outSiteDataInfo = outSiteDataInfo;
     }
 
+    public void setmOutSiteDownloadPath(String str){
+        mOutSiteDownloadPath = str;
+    }
+
+    public String getmOutSiteDownloadPath(){
+        return mOutSiteDownloadPath;
+    }
+
+    private String mOutSiteDownloadPath;
     private int mProgress;
     private long mTotalSize;
     private long mDownloadedSize;

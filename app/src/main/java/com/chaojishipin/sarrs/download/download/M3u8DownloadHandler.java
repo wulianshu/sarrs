@@ -231,16 +231,6 @@ public class M3u8DownloadHandler implements DownloadHandler {
 					temp_fw.close();
 					return downloadSegmentStatus;
 				}
-//				else if(i==lastCompleteIndex){
-//					if(job.getAutoSnifferRetry()){
-//						job.addReportState(PlayerUtils.M301);
-//					}else{
-//						job.addReportState(PlayerUtils.M311);
-//					}
-////					if(PlayerUtils.isOutSite(job.getEntity().getSite())){
-////						job.getmSnifferReport().startReportOnBackgroundThread();
-////					}
-//				}
 			} catch (IOException e) {
 				FileWriter temp_fw = new FileWriter(new File(dir,"temp"),false);
 				temp_fw.write(String.format("current_index=%d", i));
@@ -249,9 +239,7 @@ public class M3u8DownloadHandler implements DownloadHandler {
 				throw e;
 			}
 			job.setDownloadedSize(i + 1);
-//			LogUtils.d(TAG,"segment download done, the index is "+i );
 		}
-//		LogUtils.d(TAG,"all segments downloaded!" );
 		FileWriter temp_fw = new FileWriter(new File(dir,"temp"),false);
 		temp_fw.write(String.format("current_index=%d", segments.size()));
 		temp_fw.close();
@@ -269,21 +257,10 @@ public class M3u8DownloadHandler implements DownloadHandler {
 		int count = 0;
 		String parentUrl;
 		String hostUrl;
-		String fid = "";
-		String pno = "";
-//		LogUtils.d(TAG,"parse m3u8" );
 		try {
 			URI m3u8Uri = new URI(url);
 			parentUrl = m3u8Uri.resolve(".").toString();
 			String host = m3u8Uri.getHost();
-
-
-//			LogUtils.d(TAG,"parentUrl:"+parentUrl );
-
-
-
-//			LogUtils.d(TAG,"hostUrl:"+hostUrl );
-
 			if (redirectHost != null && redirectHost.length() > 0)
 			{
 				hostUrl = URIUtils.createURI(redirectScheme
@@ -320,10 +297,6 @@ public class M3u8DownloadHandler implements DownloadHandler {
 				}else if(!tempString.startsWith("http://")){
 					tempString = new StringBuilder(parentUrl).append(tempString).toString();
 				}
-//				if (downloadEntity.getSrc().equals(PlayerUtils.SITE_MANGGUO))
-//				{
-//					tempString = tempString + "&" + fid + "&" + pno;
-//				}
 				ret.add(tempString);
 				downloadSegments.append(tempString).append("\n");
 				targetContent.append(String.format("file:/%s/%s", dir.getAbsolutePath(), String.valueOf(count))).append("\n");
@@ -337,28 +310,22 @@ public class M3u8DownloadHandler implements DownloadHandler {
 		fw.close();
 		fr.close();
 		br.close();
-//		LogUtils.d(TAG,"parse complete" );
 		return ret;
 	}
 	private long initSize(File dir){
 		return 0L;
 	}
+
 	private int downloadFile(File output, String url, boolean m3u8OrSegment) throws IOException {
 		int downloadStatus = 0;
-//		LogUtils.d(TAG, "download :"+url);
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(params, 5 * 1000);
 		HttpConnectionParams.setSoTimeout(params, 15 * 1000);
 		HttpConnectionParams.setSocketBufferSize(params, 8192 * 5);
 		HttpGet httpGet = new HttpGet(url);
 		RandomAccessFile randomFile = new RandomAccessFile(output, "rw");
-		
-//		job.setRetryNum(0);
 		httpGet.addHeader("Range","bytes=" + randomFile.length() + "-");
 		String userAgent = PlayerUtils.getUserAgent(job.getEntity().getSite(), ConstantUtils.LeTvBitStreamParam.KEY_DOWNLOAD, DownloadInfo.M3U8);
-//		String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36";
-
-
 
 		if (!"letv".equals( job.getEntity().getSite()) && !"nets".equals(job.getEntity().getSite())) {
 			int downloadposition = 0;
@@ -446,7 +413,6 @@ public class M3u8DownloadHandler implements DownloadHandler {
 		}
 
 			if(job.isCancelled()){
-//				LogUtils.d(TAG,"downloaded cancelled" );
 				if(m3u8OrSegment){
 					randomFile.close();
 				}

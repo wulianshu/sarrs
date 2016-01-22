@@ -2,10 +2,6 @@ package com.chaojishipin.sarrs.activity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
-
-
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -328,7 +324,7 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 	 *   播放记录在线
 	 * */
 	public HistoryRecord saveOnline() {
-		if (videoDetailItem.getVideoItems() != null && videoDetailItem.getVideoItems().get(0) != null && videoDetailItem.getVideoItems().get(0).getGvid() != null) {
+		if (videoDetailItem!=null&&videoDetailItem.getVideoItems() != null && videoDetailItem.getVideoItems().get(0) != null && videoDetailItem.getVideoItems().get(0).getGvid() != null) {
 			DataReporter.reportPlayRecord(videoDetailItem.getVideoItems().get(0).getGvid(),
 					videoDetailItem.getId(),
 					videoDetailItem.getSource(),

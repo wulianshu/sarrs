@@ -259,7 +259,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
 
         }
         // 本地剧集
-        localEpisodes=  activity.getLocalEpisodes();
+        localEpisodes=  activity.getAllLocalEpisodes();
 
 
 
@@ -2244,7 +2244,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                         // 在线
                         // TODO review 有没有用 ！=null判断为空情况 都改为TextUtil
                         //综艺 推荐优先
-                        if(activity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.ONLINE){
+                        if(activity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.ONLINE&&NetworkUtil.isNetworkAvailable(activity)){
                             // 从首页跳转，综艺类型专辑走推荐一集
                             if(!TextUtils.isEmpty(mCid)&&mCid.equalsIgnoreCase(ConstantUtils.VARIETY_CATEGORYID)){
 
@@ -2361,6 +2361,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
             LogUtil.e("xll ","request index wifi "+NetWorkUtils.isWifi());
             requestVideoDetailIndex();
         }else{
+            LogUtil.e("v1.1.2","no net play local from not download");
             currentPlay=new PlayData();
             currentPlay.setIsLocalVideo(true);
             int cuIndex=0;
@@ -2410,21 +2411,21 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                             // 电视剧动漫排序
                             if(mCid.equalsIgnoreCase(ConstantUtils.CARTOON_CATEGORYID)||mCid.equalsIgnoreCase(ConstantUtils.TV_SERISE_CATEGORYID))
                             {
-                               Collections.sort(temPlaydata.getmEpisodes().get(cuKey), new Comparator<VideoItem>() {
-                                   @Override
-                                   public int compare(VideoItem t1, VideoItem t2) {
-                                       if(!TextUtils.isEmpty(t1.getPorder())&&!TextUtils.isEmpty(t2.getPorder())){
-                                           return Integer.parseInt(t1.getPorder())-Integer.parseInt(t2.getPorder());
+                                Collections.sort(temPlaydata.getmEpisodes().get(cuKey), new Comparator<VideoItem>() {
+                                    @Override
+                                    public int compare(VideoItem t1, VideoItem t2) {
+                                        if(!TextUtils.isEmpty(t1.getPorder())&&!TextUtils.isEmpty(t2.getPorder())){
+                                            return Integer.parseInt(t1.getPorder())-Integer.parseInt(t2.getPorder());
 
-                                       }
-                                       if(!TextUtils.isEmpty(t1.getOrder())&&!TextUtils.isEmpty(t2.getOrder())){
-                                           return Integer.parseInt(t1.getOrder())-Integer.parseInt(t2.getOrder());
+                                        }
+                                        if(!TextUtils.isEmpty(t1.getOrder())&&!TextUtils.isEmpty(t2.getOrder())){
+                                            return Integer.parseInt(t1.getOrder())-Integer.parseInt(t2.getOrder());
 
-                                       }
-                                       return 0;
+                                        }
+                                        return 0;
 
-                                   }
-                               });
+                                    }
+                                });
                             }
                         }
 
@@ -2446,6 +2447,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                 @Override
                 public void run() {
                     EventBus.getDefault().post(currentPlay);
+                    LogUtil.e("v1.1.2","no net merge only local");
                 }
             }, 0);
         }
