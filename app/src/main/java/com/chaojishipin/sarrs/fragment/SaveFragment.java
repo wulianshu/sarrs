@@ -522,7 +522,7 @@ public class SaveFragment extends ChaoJiShiPinBaseFragment implements View.OnCli
         if (adapter.deletecount < mainList.size()) {
             adapter.deletecount = mainList.size();
             save_all.setText(getString(R.string.deselect_all));
-            confirm_delete.setTextColor(getResources().getColor(R.color.color_c5242b));
+            confirm_delete.setTextColor(getResources().getColor(R.color.color_FF1E27));
             if (adapter != null) {
                 if (mainList != null) {
                     for (Favorite f : mainList) {
@@ -601,7 +601,7 @@ public class SaveFragment extends ChaoJiShiPinBaseFragment implements View.OnCli
                 if (mainList != null) {
                     mainList.get(mCurrentPositon).setIsCheck(!mainList.get(mCurrentPositon).isCheck());
                     if (mainList.get(mCurrentPositon).isCheck()) {
-                        confirm_delete.setTextColor(getResources().getColor(R.color.color_c5242b));
+                        confirm_delete.setTextColor(getResources().getColor(R.color.color_FF1E27));
                     }
                 }
                 for (Favorite favorite : mainList) {

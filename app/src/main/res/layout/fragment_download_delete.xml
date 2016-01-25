@@ -17,7 +17,7 @@
         android:layout_toLeftOf="@+id/confirm_delete"
         android:gravity="center"
         android:text="@string/check_all"
-        android:textColor="@color/color_c5242b"
+        android:textColor="@color/color_FF1E27"
         android:textSize="@dimen/sarrs_dimen_13dp" />
 
     <ImageView

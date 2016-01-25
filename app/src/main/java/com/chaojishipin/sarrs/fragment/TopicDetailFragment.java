@@ -317,7 +317,7 @@ public class TopicDetailFragment extends ChaoJiShiPinBaseFragment implements  Pu
         if(i>0) {
             Intent intent = new Intent(getActivity(), ChaoJiShiPinVideoDetailActivity.class);
             TopicDetail item = (TopicDetail) topicDetailListViewAdapter.getItem(i - 1);
-            UploadStat.uploadstat(item,"0","00S002003_1","00S002003",(i-1)+"",topic.getTid(),"-","-","-");
+            UploadStat.uploadstat(item,"0","00S002003_1","00S002003",(i-1)+"",topic.getTid(),"-","-","-","-");
             List<VideoItem> videoItems = item.getVideos();
             VideoDetailItem videoDetailItem = new VideoDetailItem();
             videoDetailItem.setTitle(item.getTitle());
@@ -330,7 +330,7 @@ public class TopicDetailFragment extends ChaoJiShiPinBaseFragment implements  Pu
             videoDetailItem.setVideoItems(item.getVideos());
             videoDetailItem.setFromMainContentType(ConstantUtils.TOPIC_CONTENT_TYPE);
             videoDetailItem.setDetailImage(item.getImage());
-            if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+            if("0".equals(ChaoJiShiPinMainActivity.isCheck) || "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
                 PlayData playData = null;
                 if (videoItems != null && videoItems.size() > 0) {
                     playData = new PlayData(videoItems.get(0).getTitle(), videoItems.get(0).getGvid(), ConstantUtils.PLAYER_FROM_SPECAIL, item.getSource());

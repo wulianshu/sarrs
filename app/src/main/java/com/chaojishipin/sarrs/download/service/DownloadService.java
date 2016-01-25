@@ -109,22 +109,7 @@ public class DownloadService extends Service {
             downloadJob.setListener(mDownloadJobListener);
             downloadJob.start();
          }
-
-//        if (mDownloadProvider.queueDownload(downloadJob)) {
-//            downloadJob.setListener(mDownloadJobListener);
-//            if (!"letv".equals(downloadJob.getEntity().getSite()) && !"nets".equals(downloadJob.getEntity().getSite())) {
-//                gvid = downloadJob.getEntity().getGlobaVid();
-//                LogUtil.e("wulianshu", "downloadservice gvid :" + gvid);
-//                HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_DOWNLOADURL_TAG);
-//                HttpApi.requestOutSiteData(gvid, null, playid, mFormat).start(new OutSiteDataListener());
-//            }else {
-//                downloadJob.start();
-//            }
-//        }
     }
-
-//    public void startCheckSDCard() {
-//    }
 
     /**
      * do some action

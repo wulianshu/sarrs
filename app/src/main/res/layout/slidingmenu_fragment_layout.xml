@@ -18,14 +18,33 @@
             android:layout_marginTop="25dp"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/main_fragment_user_icon"
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:layout_centerVertical="true"
+            <RelativeLayout
+                android:id="@+id/main_fragment_user_icon_bg"
                 android:layout_marginLeft="25dp"
-                android:src="@drawable/sarrs_pic_main_fragment_user_icon_default" />
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                >
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/main_fragment_user_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="@dimen/sarrs_dimen_30dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/sarrs_pic_main_fragment_user_icon_default" />
+             <ImageView
+                 android:id="@+id/user_head_bg"
+                 android:src="@drawable/user_header_bg3"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent">
+                 </ImageView>
 
+
+
+            </RelativeLayout>
             <TextView
                 android:id="@+id/main_fragment_user_name"
                 android:layout_width="wrap_content"
@@ -33,7 +52,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="65dp"
-                android:layout_toRightOf="@+id/main_fragment_user_icon"
+                android:layout_toRightOf="@+id/main_fragment_user_icon_bg"
                 android:ellipsize="end"
                 android:gravity="center|left"
                 android:singleLine="true"
@@ -43,8 +62,8 @@
 
             <Button
                 android:id="@+id/main_fragment_user_setting"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
                 android:layout_marginRight="@dimen/sarrs_dimen_10dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -111,6 +130,7 @@
         android:id="@+id/slidingmenu_fragment_layout_channle_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/sarrs_pic_fullscreen_bg"
         android:layout_below="@id/slidingmenu_fragment_layout_user_center"
         android:cacheColorHint="@color/color_00000000"
         android:divider="@null"

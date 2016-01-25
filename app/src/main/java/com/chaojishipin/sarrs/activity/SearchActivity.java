@@ -91,7 +91,8 @@ import java.util.Map;
 public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener, onRetryListener {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
-    public final String pageid = "00S002007";
+    public static String pageid = "00S002005";
+    private String ref = "";
     private Bitmap bitmap;//高斯模糊图片
     private TextView mVoiceText;//右上角文案显示
     private String mSearchKey;//搜索词
@@ -133,6 +134,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
 
     private TextView search_noresult;
 
+    private boolean is_key_from_xunfei;
     /**
      * 推荐热词
      */
@@ -162,7 +164,9 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ref = getIntent().getStringExtra("ref");
         setContentView(R.layout.searchactivity_layout);
+        is_key_from_xunfei = false;
         initView();
     }
 
@@ -439,7 +443,9 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                getSuggest(s);
+                if(!is_key_from_xunfei) {
+                    getSuggest(s);
+                }
                 LogUtil.e(TAG, "mAutoCompleteTextView changed ");
             }
 
@@ -498,7 +504,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 SearchResultDataList item = (SearchResultDataList) resultDataLists.get(position - 1);
                 //Object object,String acode,String pageid,String ref,String rank,String rid_topcid,String sa,String pn,String input
                 int mypos = position -1;
-                UploadStat.uploadstat(mResult,"-","00S002007","00S002001",(mypos)+"","-","1",mPageIndex+"",inputtype);
+                UploadStat.uploadstat(mResult,"-","00S002007","00S002001",(mypos)+"","-","1",mPageIndex+"",inputtype,"-");
                 List<VideoItem> videoItems = item.getVideos();
                 LogUtil.e("onItemClick", "videoItem is " + videoItems.get(0));
                 VideoItem videoItem = videoItems.get(0);
@@ -521,7 +527,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 videoDetailItem.setFromMainContentType(item.getContent_type());
                 videoDetailItem.setDetailImage(item.getImage());
 
-                if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+                if("0".equals(ChaoJiShiPinMainActivity.isCheck) || "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
                     intent.putExtra("ref", pageid);
                     intent.putExtra("seid",mResult.getReid());
                     intent.putExtra("videoDetailItem", videoDetailItem);
@@ -577,6 +583,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 break;
             case R.id.searchactivity_main_icon_layout_textsearch:
                 if (mSearchactivity_main_layout.isShown()) {
+                    pageid = "00S002006";
                     //切换至普通搜索
                     mIat.cancel();
                     mWaveView.stopWave();
@@ -590,6 +597,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     //Umeng上报
                     MobclickAgent.onEvent(this, ConstantUtils.SEARCH_KEYBOARD);
                 } else {
+                    pageid = "00S002005";
                     //切换至语言搜索
                     mSearchKey = null;
                     hideSoftKeyboard(mSearchactivity_main_icon_layout_textsearch);
@@ -780,13 +788,13 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
             // 关于解析Json的代码可参见MscDemo中JsonParser类；
             // isLast等于true时会话结束。
             LogUtil.d(TAG, results.getResultString());
-
-//            showTip("结果");
+//          showTip("结果");
             printResult(results);
 
             if (isLast) {
                 //TODO 直接请求 （解决语音搜索失败问题）
                 inputtype = "1";
+                is_key_from_xunfei = true;
                 executeSearchRequest();
                 // TODO 最后的结果
 //                mHandler.sendEmptyMessageDelayed(ConstantUtils.HANDLER_MESSAGEDELAYED_1000, 1000);//延迟，显示AutoCompleteTextView
@@ -850,6 +858,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     private void executeSearchRequest() {
         setSearchResultVisibility();
         mAutoCompleteTextView.setText(mSearchKey);
+        is_key_from_xunfei = false;
         Log.i("search_item_click", "executeSearchRequest-->" + mSearchKey);
         if (null != mSearchKey && mSearchKey.length() > 0) {
             mAutoCompleteTextView.setSelection(mSearchKey.length());
@@ -933,13 +942,13 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
 
         @Override
         public void onResponse(SearchResultInfos result, boolean isCachedData) {
-
+            pageid = "00S002007";
             saveToHistory(mSearchKey);
             mResult = result;
             if(mResult!=null && mResult.getItems()!=null && mResult.getItems().size()>0){
-                UploadStat.uploadstat(mResult, "-", "00S002007", "00S002001", "-", "-", "0", mPageIndex + "", inputtype);
+                UploadStat.uploadstat(mResult, "-", pageid, ref, "-", "-", "0", mPageIndex + "", inputtype,"-");
             }else{
-                UploadStat.uploadstat(mResult, "-", "00S002007", "00S002007_1", "-", "-", "0", mPageIndex + "", inputtype);
+                UploadStat.uploadstat(mResult, "-", pageid, ref, "-", "-", "0", mPageIndex + "", inputtype,"-");
             }
             if (null != mResult) {
                 resultDataLists = mResult.getItems();
@@ -962,6 +971,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     requestRecommendData();
             } else {
                 //结果为空，显示推荐
+                pageid = "00S002007_1";
                 requestRecommendData();
             }
 
@@ -976,6 +986,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         @Override
         public void dataErr(int errorCode) {
             //结果为空，显示推荐
+            pageid = "00S002007_1";
             requestRecommendData();
         }
     }
@@ -1221,6 +1232,8 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     //搜索结果界面显示
     private void setSearchResultVisibility() {
         mSearchactivity_result_layout.setVisibility(View.VISIBLE);
+        if(mSearchactivity_history_layout_listView!=null)
+        mSearchactivity_history_layout_listView.setVisibility(View.GONE);
         mSearchactivity_main_layout.setVisibility(View.GONE);
 
     }

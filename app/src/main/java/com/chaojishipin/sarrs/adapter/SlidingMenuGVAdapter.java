@@ -62,7 +62,31 @@ public class SlidingMenuGVAdapter<LetvBaseBean>  extends CommonAdapter<LetvBaseB
 //                    .showImageOnLoading(R.drawable.sarrs_main_default)
 //                    .build();
 //        }
-        ImageLoader.getInstance().displayImage(slidingMenuLeft.getIcon(), holder.icon);
+        DisplayImageOptions options1=null;
+        if("11".equals(slidingMenuLeft.getContent_type())) {
+                     options1 = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.slinding_down_normal)
+                    .showImageForEmptyUri(R.drawable.slinding_down_normal)
+                    .showImageOnLoading(R.drawable.slinding_down_normal)
+                    .build();
+        }else if("12".equals(slidingMenuLeft.getContent_type())){
+                     options1 = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.slinding_save_normal)
+                    .showImageForEmptyUri(R.drawable.slinding_save_normal)
+                    .showImageOnLoading(R.drawable.slinding_save_normal)
+                    .build();
+        }else{
+            options1 = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.history_normal)
+                    .showImageForEmptyUri(R.drawable.history_normal)
+                    .showImageOnLoading(R.drawable.history_normal)
+                    .build();
+        }
+
+        ImageLoader.getInstance().displayImage(slidingMenuLeft.getIcon(), holder.icon,options1);
         holder.title.setText(slidingMenuLeft.getTitle());
         holder.title.setTextColor(mContext.getResources().getColor(R.color.color_ffffff));
 //        holder.parentview.setOnTouchListener(new MyOnTouchLinserner(holder, slidingMenuLeft));

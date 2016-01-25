@@ -7,8 +7,8 @@
 
     <ToggleButton
         android:id="@+id/download_radiobtton"
-        android:layout_width="@dimen/sarrs_dimen_14dp"
-        android:layout_height="@dimen/sarrs_dimen_14dp"
+        android:layout_width="@dimen/sarrs_dimen_10dp"
+        android:layout_height="@dimen/sarrs_dimen_10dp"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
@@ -96,7 +96,6 @@
             android:layout_height="@dimen/sarrs_dimen_6dp"
             android:layout_centerVertical="true"
             android:max="100"
-            android:progress="10"
             android:layout_marginRight="@dimen/sarrs_dimen_10dp"
             android:progressDrawable="@drawable/progress_style_download" />
 

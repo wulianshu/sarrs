@@ -84,7 +84,7 @@ public class DownloadFolderAdapter extends
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();

@@ -27,16 +27,15 @@
         android:layout_alignParentRight="true"
         android:scaleType="centerCrop" />
 
-    <Button
+    <TextView
         android:id="@+id/right_edit_btn"
         android:layout_width="@dimen/right_menu_width"
         android:layout_height="@dimen/right_menu_height"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/sarrs_dimen_10dp"
-        android:background="@drawable/right_edit_button"
         android:text="编辑"
-        android:textColor="@color/color_666666"
+        android:textColor="@color/edit_tv_color"
         android:textSize="@dimen/menu_font_size"
         android:visibility="gone" />
 

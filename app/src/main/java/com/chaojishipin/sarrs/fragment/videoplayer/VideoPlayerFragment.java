@@ -24,12 +24,14 @@ import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.dao.HistoryRecordDao;
 import com.chaojishipin.sarrs.download.bean.LocalVideoEpisode;
+import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.feedback.DataReporter;
 import com.chaojishipin.sarrs.fragment.ChaoJiShiPinBaseFragment;
 import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
@@ -215,6 +217,15 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
            isactivityonresume = false;
            if(NetWorkUtils.isNetAvailable()){
                report();
+               if(videoItem!=null&&!TextUtils.isEmpty(videoItem.getSource()) && mVideoPlayerController.getmOutSiteData() !=null){
+                   if (mVideoPlayerController!=null && !"letv".equals(videoItem.getSource()) && !"nets".equals(videoItem.getSource()) && mVideoPlayerController.getmOutSiteData() !=null) {
+                       if (!mVideoPlayerController.isfeedbackalready()) {
+                           //退出上报
+                           int durantion = (int)(System.currentTimeMillis()/1000) -  mVideoPlayerController.getStarttime();
+                           UploadStat.playfeedback(mVideoPlayerController.getmOutSiteData().getUrl(), 4, 0, videoItem.getSource(), videoItem.getId(),durantion );
+                       }
+                   }
+               }
            }
         if (mVideoPlayerController != null&&mVideoPlayerController.getmPlayContorl()!=null) {
             recoderposition = mVideoPlayerController.getCurrPosition();
@@ -413,7 +424,6 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
     public void btBackClick(){
         if (ChaoJiShiPinVideoDetailActivity.isFullScreen) {
-          //  mActivity.getSm().unregisterListener(mActivity.getListener());
             mActivity.setSmallScreen();
             mActivity.statusBarShow(true);
             //切换成竖屏
@@ -432,7 +442,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
         if (mPlayData != null) {
                 String bucket="";
                 String reid="";
-            if(mActivity.getData()!=null) {
+            if(mActivity!=null&&mActivity.getData()!=null) {
                 bucket = mActivity.getData().getBucket();
                 reid = mActivity.getData().getReid();
 

@@ -412,7 +412,7 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                 videoDetailItem.setSource(item.getSource());
                 videoDetailItem.setFromMainContentType(item.getContent_type());
                 videoDetailItem.setDetailImage(item.getImage());
-                if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+                if("0".equals(ChaoJiShiPinMainActivity.isCheck) || "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
                     intent.putExtra("ref", pageid);
                     intent.putExtra("videoDetailItem", videoDetailItem);
                     startActivity(intent);
@@ -426,7 +426,6 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                 }
             }
         }
-
     }
 
     @Override
@@ -447,7 +446,11 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
         aupload.setUpdateTime(Long.parseLong(arecord.getTimestamp()));
         aupload.setVid(arecord.getGvid());
         aupload.setSource(arecord.getSource());
-        aupload.setPlayTime(Integer.parseInt(arecord.getPlay_time()));
+        if(!TextUtils.isEmpty(arecord.getPlay_time())) {
+            aupload.setPlayTime(Integer.parseInt(arecord.getPlay_time()));
+        }else{
+            aupload.setPlayTime(0);
+        }
         aupload.setAction(1);
         aupload.setCid(Integer.parseInt(arecord.getCategory_id()));
         aupload.setDurationTime(aupload.getDurationTime());

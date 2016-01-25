@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
@@ -24,7 +25,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
     private final static String TAG = "DownloadActivity";
 
     private TitleActionBar mTitleActionBar;
-    public Button mEditBtn;
+    public TextView mEditBtn;
     private DownloadFragment downloadFragment;
 
     @Override
@@ -53,7 +54,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
     private void initView() {
 
         mTitleActionBar = (TitleActionBar) findViewById(R.id.download_title);
-        mEditBtn = (Button) findViewById(R.id.right_edit_btn);
+        mEditBtn = (TextView) findViewById(R.id.right_edit_btn);
         mTitleActionBar.setTitle(getResources().getString(R.string.download_title));
         downloadFragment = new DownloadFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -88,6 +89,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
     protected void onResume() {
         super.onResume();
         initView();
+        mEditBtn.setText(getResources().getString(R.string.edit));
         mTitleActionBar.setOnActionBarClickListener(this);
     }
 

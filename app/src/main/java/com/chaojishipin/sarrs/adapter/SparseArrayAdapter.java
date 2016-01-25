@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-public abstract class SparseArrayAdapter<T> extends BaseAdapter {
+public abstract class SparseArrayAdapter<T> extends MyBaseAdapter {
 	
 	protected SparseArray<T> mList;
 	protected Activity mContext;
@@ -16,6 +16,7 @@ public abstract class SparseArrayAdapter<T> extends BaseAdapter {
 	
 
 	public SparseArrayAdapter(SparseArray<T> mList, Activity mContext) {
+		super(mContext);
 		this.mList = mList;
 		this.mContext = mContext;
 	}
@@ -54,8 +55,4 @@ public abstract class SparseArrayAdapter<T> extends BaseAdapter {
 	public void setListView(ListView listView){
 		mListView = listView;
 	}
-
-	@Override
-	public abstract View getView(int position, View convertView, ViewGroup parent);
-
 }

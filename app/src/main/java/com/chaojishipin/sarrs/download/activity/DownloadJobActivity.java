@@ -439,7 +439,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 return;
             } else if (jobs != null) {
 
-                adapter = new DownloadJobAdapter(jobs, this, index);
+//                adapter = new DownloadJobAdapter(jobs, this, index);
                 mListView.setAdapter(adapter);
                 //初始化 第一个和第二个按钮
                 updatebuttons();
@@ -743,6 +743,9 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 this.finish();
                 break;
             case R.id.tv_download_edit:
+                for(int i=0;i<adapter.mChecked.size();i++){
+                    adapter.mChecked.set(i,false);
+                }
                 SwipeMenuLayout mSwipe = null;
                 mSwipe = mListView.getSwipeMenuLayout();
                 if (mSwipe != null) {
@@ -1227,7 +1230,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                     mDownloadManager.registerDownloadObserver(DownloadJobActivity.this);
                     mDownloadManager.notifyObservers();
                 }
-                adapter = new DownloadJobAdapter(jobs, DownloadJobActivity.this, index);
+//                adapter = new DownloadJobAdapter(jobs, DownloadJobActivity.this, index);
                 mListView.setAdapter(adapter);
 
                 if (index == -1) {

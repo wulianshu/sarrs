@@ -2,12 +2,15 @@ package com.chaojishipin.sarrs.listener;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.adapter.VideoDetailChildrenEpisodeAdapter;
 import com.chaojishipin.sarrs.bean.PlayData;
 import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
+import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 
@@ -75,7 +78,22 @@ public class ExpandViewOnChildItemClick  implements AdapterView.OnItemClickListe
             }
                 LogUtil.e("wulianshu","视频被点了正要播放 parentId："+parentId+"   key:"+position);
                 PlayData p=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                EventBus.getDefault().post(p);
+
+                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())){
+                    EventBus.getDefault().post(p);
+                    LogUtil.e("v1.1.2","handle episo net ok logic");
+                }else{
+                    if(fenyeList.get(parentId).get(position).isLocal()){
+                        LogUtil.e("v1.1.2","handle episo net error logic send data");
+                    }else{
+                        Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
+                        LogUtil.e("v1.1.2","handle episo net error logic ");
+                    }
+
+
+                }
+
+
                 LogUtil.e("POST ", "expand position" + position);
                 LogUtil.e("POST "," expand key : "+parentId);
                 // 执行更新中间布局逻辑
@@ -103,7 +121,20 @@ public class ExpandViewOnChildItemClick  implements AdapterView.OnItemClickListe
                     childAdapter.notifyDataSetChanged();
                 }
                 PlayData p2=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                EventBus.getDefault().post(p2);
+
+                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())){
+                    EventBus.getDefault().post(p2);                    LogUtil.e("v1.1.2","handle episo net ok logic");
+                }else{
+                    if(fenyeList.get(parentId).get(position).isLocal()){
+                        LogUtil.e("v1.1.2","handle episo net error logic send data");
+                        EventBus.getDefault().post(p2);
+                    }else{
+                        Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
+                        LogUtil.e("v1.1.2","handle episo net error logic ");
+                    }
+
+
+                }
                 break;
         }
     }

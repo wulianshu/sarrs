@@ -35,7 +35,7 @@ public class TitleActionBar extends FrameLayout implements View.OnClickListener,
     private onActionBarClickListener mListener;
     private boolean mIsLeftButtonGone;
     private boolean mIsRightButtonGone;
-    private Button mRightMenuItem;
+    private TextView mRightMenuItem;
     private RelativeLayout mTitleActionBar;
     private GestureDetector mGesture;
     private Context mContext;
@@ -65,7 +65,7 @@ public class TitleActionBar extends FrameLayout implements View.OnClickListener,
         mLeftButton = (ImageView) findViewById(R.id.mainactivity_left_btn);
         mRightButton = (ImageView) findViewById(R.id.mainactivity_right_btn);
         mTitle = (TextView) findViewById(R.id.mainactivity_title);
-        mRightMenuItem = (Button) findViewById(R.id.right_edit_btn);
+        mRightMenuItem = (TextView) findViewById(R.id.right_edit_btn);
         mLeftButton.setBackgroundResource(leftButtonBackgroundResId);
         mRightButton.setBackgroundResource(rightButtonBackgroundResId);
         mTitleActionBar = (RelativeLayout) findViewById(R.id.title_action_bar);

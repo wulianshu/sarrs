@@ -288,7 +288,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".download.activity.DownloadJobActivity"
+            android:name="com.mylib.download.activity.DownloadJobActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:launchMode="standard"
             android:screenOrientation="portrait" />

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -344,10 +345,16 @@ public class ChaojishipinModifyUserInfoActivity extends ChaoJiShiPinBaseActivity
             LogUtil.i(TAG, "向服务器同步记录");
             for (HistoryRecord historyRecord : uploadlist) {
                 UploadRecord aupload = new UploadRecord();
-                aupload.setCid(Integer.parseInt(historyRecord.getCategory_id()));
+                if(!TextUtils.isEmpty(historyRecord.getCategory_id())) {
+                    aupload.setCid(Integer.parseInt(historyRecord.getCategory_id()));
+                }
                 aupload.setVid(historyRecord.getGvid());
                 aupload.setSource(historyRecord.getSource());
-                aupload.setPlayTime(Integer.parseInt(historyRecord.getPlay_time()));
+                if(!TextUtils.isEmpty(historyRecord.getPlay_time())) {
+                    aupload.setPlayTime(Integer.parseInt(historyRecord.getPlay_time()));
+                }else{
+                    aupload.setPlayTime(0);
+                }
                 aupload.setAction(0);
                 aupload.setDurationTime(historyRecord.getDurationTime());
                 aupload.setPid(historyRecord.getId());

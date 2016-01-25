@@ -30,4 +30,5 @@ public interface DownloadDao {
 	public boolean updateValue(DownloadEntity entity, String key, String newValue);
 	public boolean updateValue(DownloadEntity entity, String key, int newValue);
 
+	public boolean isDownloaded(String id);
 }

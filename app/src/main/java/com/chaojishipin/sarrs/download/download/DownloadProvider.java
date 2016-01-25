@@ -141,20 +141,11 @@ public class DownloadProvider {
 
     public boolean queueDownload(DownloadJob downloadJob) {
         // 判断是否是第一次下载
-        for (DownloadJob dJob : mCompletedJobs) {
-            if (dJob.getEntity().getId()
-                    .equals(downloadJob.getEntity().getId()))
-                return false;
-        }
+        if(mDownloadDao.isDownloaded(downloadJob.getEntity().getId()))
+            return false;
 
-        for (DownloadJob dJob : mQueuedJobs) {
-            if (downloadJob.getEntity().getId()
-                    .equals(dJob.getEntity().getId()))
-                return false;
-        }
         // 添加下载任务项到数据库中
         if (mDownloadDao.add(downloadJob.getEntity())) {
-//			SparseArrayUtils.put(downloadJob, folderJobs);
             if (ContainSizeManager.getInstance().getFreeSize() <= Utils.SDCARD_MINSIZE) {
                 downloadJob.setStatus(DownloadJob.PAUSE);
             }

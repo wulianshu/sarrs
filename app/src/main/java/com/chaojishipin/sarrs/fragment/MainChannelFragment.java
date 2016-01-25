@@ -26,6 +26,7 @@ import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinMainActivity;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinRegisterActivity;
+import com.chaojishipin.sarrs.activity.ChaojishipinSplashActivity;
 import com.chaojishipin.sarrs.activity.PlayActivityFroWebView;
 import com.chaojishipin.sarrs.activity.SearchActivity;
 import com.chaojishipin.sarrs.adapter.MainActivityChannelAdapter2;
@@ -81,7 +82,7 @@ import java.util.List;
 public class MainChannelFragment extends MainBaseFragment implements  View.OnClickListener,
         AdapterView.OnItemClickListener {
     //    PullToRefreshSwipeListView.OnSwipeListener, PullToRefreshSwipeListView.OnMenuItemClickListener,
-    public final String pageid = "00S002000_2";
+    public static String pageid = "00S002001";
     public MainActivityChannelAdapter2 mainActivityChannelAdapter;
     private String mCid;
     private int mSwipePosition = -1;
@@ -127,6 +128,9 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         mXListView.setOnScrollListener(new AbsListView.OnScrollListener(){
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
+				if(i==AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    uploadstat(absListView);
+                }
             }
 
             @Override
@@ -249,7 +253,29 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {
         alreadyupgvid.clear();
         this.slidingMenuLeft = slidingMenuLeft;
+        //精彩推荐
+        if("0".equals(slidingMenuLeft.getCid())){
+            pageid = "00S002001";
+        }else if("1".equals(slidingMenuLeft.getCid())){
+            pageid = "00S002001_2";
+        }else if("2".equals(slidingMenuLeft.getCid())){
+            pageid = "00S002001_1";
+        }else if("3".equals(slidingMenuLeft.getCid())){
+            pageid = "00S002001_3";
+        }else if("4".equals(slidingMenuLeft.getCid())){
+            pageid = "00S002001_4";
+        }
+//        else if("5".equals(slidingMenuLeft.getCid())){
+//            pageid = "00S002001_1";
+//        }
+        else if("16".equals(slidingMenuLeft.getCid())){
+            pageid = "00S002001_8";
+        }
+//        else{
+//            pageid = "00S002001";
+//        }
         getNetData(slidingMenuLeft);
+
     }
 
     public void getNetData(SlidingMenuLeft slidingMenuLeft) {
@@ -604,7 +630,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         LogUtil.e("onItemClick", "position0 " + position);
         if (mAlbumLists != null && mAlbumLists.size() > 0) {
             MainActivityAlbum item = mAlbumLists.get(position - 1);
-            UploadStat.uploadstat(item, "0", "00S002000_2", "00S002000_1", position + "", "-", "-", "-", "-");
+            UploadStat.uploadstat(item, "0", pageid, ChaojishipinSplashActivity.pageid, position + "", "-", "-", "-", "-","-");
             LogUtil.e("wulianshu", "=====页面点击上报=====");
             VideoDetailItem videoDetailItem = new VideoDetailItem();
             videoDetailItem.setTitle(item.getTitle());
@@ -620,7 +646,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
             videoDetailItem.setFromMainContentType(item.getContentType());
             videoDetailItem.setDetailImage(item.getImgage());
 
-            if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+            if("0".equals(ChaoJiShiPinMainActivity.isCheck) || "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
                 Intent intent = new Intent(getActivity(), ChaoJiShiPinVideoDetailActivity.class);
 
                 intent.putExtra("videoDetailItem", videoDetailItem);
@@ -823,54 +849,90 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         if(endposition>mAlbumLists.size()){
             endposition = mAlbumLists.size();
         }
-        StringBuffer sb = new StringBuffer();
         String vid = "";
+        String aid = "";
+        String cid = "";
         for(int j=beginposition-1;j<=endposition-1;j++){
             if(!alreadyupgvid.contains(mAlbumLists.get(j).getVideos().get(0).getGvid()) && j<mAlbumLists.size()){
                 if(j < 0){
                     j=0;
                 }
                 LogUtil.e("wulianshu", "上报的位置:" + j);
-                String tmp = mAlbumLists.get(j).getVideos().get(0).getGvid();
-                alreadyupgvid.add(tmp);
-                sb.append(tmp).append(",");
+                alreadyupgvid.add(mAlbumLists.get(j).getVideos().get(0).getGvid());
+                if(TextUtils.isEmpty(mAlbumLists.get(j).getVideos().get(0).getGvid())){
+                    vid +=  "-"+",";
+                    aid += "-"+",";
+                    cid += "-"+",";
+                }else{
+                    vid +=  mAlbumLists.get(j).getVideos().get(0).getGvid()+",";
+                    aid +=  mAlbumLists.get(j).getId()+",";
+                    cid +=  mAlbumLists.get(j).getCategory_id()+",";
+                }
             }
         }
-        vid = sb.toString();
-        if(!TextUtils.isEmpty(vid)) {
-            vid = vid.substring(0, vid.length() - 1);
-            MainActivityAlbum mainActivityAlbum = mAlbumLists.get(beginposition - 1);
-            mainActivityAlbum.getVideos().get(0).setGvid(vid);
-            //Object object,String acode,String pageid,String ref,String rank,String rid_topcid,String sa,String pn,String input
-            UploadStat.uploadstat(mainActivityAlbum, "4", "00S002000_2", "00S002000_1", "-", "-", "-", "-", "-");
-        }
+    if(!TextUtils.isEmpty(vid)) {
+        vid = vid.substring(0, vid.length() - 1);
+        aid = aid.substring(0, aid.length() - 1);
+        cid = cid.substring(0, cid.length() - 1);
+        MainActivityAlbum mainActivityAlbum = new MainActivityAlbum();;
+        mainActivityAlbum.setTitle(mAlbumLists.get(beginposition - 1).getTitle());
+        mainActivityAlbum.setBucket(mAlbumLists.get(beginposition - 1).getBucket());
+        mainActivityAlbum.setId(aid);
+        mainActivityAlbum.setCategory_id(cid);
+        mainActivityAlbum.setContentType(mAlbumLists.get(beginposition - 1).getContentType());
+        mainActivityAlbum.setVideos(mAlbumLists.get(beginposition - 1).getVideos());
+        mainActivityAlbum.setReId(mAlbumLists.get(beginposition - 1).getReId());
+        UploadStat.uploadstat(mainActivityAlbum, "4", pageid, ChaojishipinSplashActivity.pageid, "-", "-", "-", "-", "-",vid);
+    }
     }
     public void uploadstatfirst(AbsListView absListView){
         int endposition = absListView.getLastVisiblePosition();
         int firstposition = absListView.getFirstVisiblePosition();
         String vid = "";
-        StringBuffer sb = new StringBuffer();
+        String aid = "";
+        String cid = "";
         for(int j=firstposition;j<=endposition-1;j++){
             if(j<mAlbumLists.size() && !alreadyupgvid.contains(mAlbumLists.get(j).getVideos().get(0).getGvid())){
                 if(j < 0){
                     j=0;
                 }
                 LogUtil.e("wulianshu", "上报的位置first:" + j);
-                String tmp = mAlbumLists.get(j).getVideos().get(0).getGvid();
-                alreadyupgvid.add(tmp);
-                sb.append(tmp).append(",");
-//                UploadStat.uploadstat(mAlbumLists.get(j), "4", "00S002000_2", "00S002000_1", j + "", "-", "-", "-", "-");
+                alreadyupgvid.add(mAlbumLists.get(j).getVideos().get(0).getGvid());
+                if(TextUtils.isEmpty(mAlbumLists.get(j).getVideos().get(0).getGvid())){
+                    vid = vid +"-" +",";
+                }else{
+                    vid = vid + mAlbumLists.get(j).getVideos().get(0).getGvid()+",";
+                }
+
+                if(TextUtils.isEmpty(  mAlbumLists.get(j).getId()) ){
+                    aid = aid +"-" +",";
+                }else{
+                    aid = aid + mAlbumLists.get(j).getId()+",";
+                }
+                if(TextUtils.isEmpty(mAlbumLists.get(j).getCategory_id())){
+                    cid = cid +"-" +",";
+                }else{
+                    cid = cid + mAlbumLists.get(j).getCategory_id()+",";
+                }
+//              UploadStat.uploadstat(mAlbumLists.get(j), "4", "00S002000_2", "00S002000_1", j + "", "-", "-", "-", "-");
             }
         }
-        vid = sb.toString();
+
         if(vid == null || vid.length()<= 1){
             return ;
         }
         vid = vid.substring(0, vid.length() - 1);
+        aid = aid.substring(0, aid.length() - 1);
+        cid = cid.substring(0, cid.length() - 1);
+        MainActivityAlbum mainActivityAlbum = new MainActivityAlbum();;
+        mainActivityAlbum.setTitle(mAlbumLists.get(0).getTitle());
+        mainActivityAlbum.setBucket(mAlbumLists.get(0).getBucket());
+        mainActivityAlbum.setId(aid);
+        mainActivityAlbum.setCategory_id(cid);
+        mainActivityAlbum.setContentType(mAlbumLists.get(0).getContentType());
+        mainActivityAlbum.setVideos(mAlbumLists.get(0).getVideos());
+        mainActivityAlbum.setReId(mAlbumLists.get(0).getReId());
 
-
-        MainActivityAlbum mainActivityAlbum = mAlbumLists.get(firstposition);
-        mainActivityAlbum.getVideos().get(0).setGvid(vid);
-        UploadStat.uploadstat(mainActivityAlbum, "4", "00S002000_2", "00S002000_1", "-", "-", "-", "-", "-");
+        UploadStat.uploadstat(mainActivityAlbum, "4", pageid, ChaojishipinSplashActivity.pageid, "-", "-", "-", "-", "-",vid);
     }
 }

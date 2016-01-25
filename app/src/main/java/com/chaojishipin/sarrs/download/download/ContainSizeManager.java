@@ -114,7 +114,7 @@ public class ContainSizeManager {
         countFunshionSize();
         countFreeSize();
         showView();
-//        anysnUpdateSizeView();
+//      anysnUpdateSizeView();
     }
 
 //    public void anysnUpdateSizeView() {

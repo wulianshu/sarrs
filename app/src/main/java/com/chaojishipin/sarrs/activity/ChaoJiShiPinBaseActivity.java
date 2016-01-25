@@ -294,33 +294,17 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
     @Override
     public void observeNetWork(String netName, int netType, boolean isHasNetWork) {
           LogUtil.e("wulianshu","observeNetWork 被调用");
+         if(netType!=-1){
+            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
+         }
           handleNetWork(netName,netType,isHasNetWork);
+
           //TODO 整理代碼
-//          if (netType!=-1){
-//              UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
-//           }
-//        if (netType == ConstantUtils.NET_TYPE_ERROR) {
-//        } else {
-//            if (netType == ConnectivityManager.TYPE_WIFI) {
-//                LogUtil.e("xll","base net wifi execute childactivity");
-//            }else{
-//                if (isHasNetWork)
-//                {
-//                    boolean result = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().needContinueDownload();
-//                    if(result) {
-//                        ChaoJiShiPinApplication.getInstatnce().getDownloadManager().pauseDownloadingJob();
-//                        isContinudownload();
-//                    }
-//                }
-//
-//            }
-//                //判断什么网络类型
-//        }
     }
     class RequestUpgradeListener implements RequestListener<UpgradeInfo> {
         @Override
         public void onResponse(UpgradeInfo result, boolean isCachedData) {
-            SharedPreferences sharedPreferences = ChaoJiShiPinBaseActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
             SharedPreferences.Editor edit = sharedPreferences.edit();
             if(result !=null) {
                 if (ChaojishipinSplashActivity.isFrist) {
@@ -356,16 +340,10 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
 
         @Override
         public void netErr(int errorCode) {
-//            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
-//            ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
-//            LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData net err!!!!!!!!!!");
         }
 
         @Override
         public void dataErr(int errorCode) {
-//            SharedPreferences sharedPreferences = ChaojishipinSplashActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
-//            ChaoJiShiPinMainActivity.lasttimeCheck = sharedPreferences.getString("ischeck", "1");
-//            LogUtil.e(UpgradeHelper.TAG, "!!!!!!!!!!launch activity requestUpgradeData data err!!!!!!!!!!");
         }
     }
 

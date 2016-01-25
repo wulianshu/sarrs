@@ -55,10 +55,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/sarrs_dimen_10dp"
-            android:background="@drawable/right_edit_button"
             android:gravity="center"
             android:text="@string/edit"
-            android:textColor="@color/color_666666"
+            android:textColor="@color/edit_tv_color"
             android:textSize="@dimen/sarrs_dimen_15dp"></TextView>
 
         <TextView

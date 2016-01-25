@@ -5,13 +5,8 @@
     android:useLevel="false">
     <solid android:color="@color/white"/>
     <stroke
-
         android:width="0.6dp"
-
         android:color="@color/color_999999"/>
-
-    <size android:width="20dp"
-
-    android:height="20dp"/>
-
+    <size android:width="13dp"
+    android:height="13dp"/>
 </shape>

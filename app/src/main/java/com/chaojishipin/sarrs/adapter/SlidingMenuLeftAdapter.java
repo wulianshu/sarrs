@@ -7,6 +7,7 @@ import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chaojishipin.sarrs.R;
@@ -42,6 +43,7 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
     public View lastview;
 
     public SlidingMenuLeft last_sliding;
+    private LinearLayout main_fragment_user_icon_bg;
 
     public SlidingMenuLeftAdapter(Context context, SarrsArrayList mDatas) {
         super(context, mDatas);
@@ -84,7 +86,7 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
             if (isSelectedList.get(position)) {
                 lastview = commonViewHolder.getmConvertView();
                 last_sliding = (SlidingMenuLeft) getItem(position);
-                title.setTextColor(Color.RED);
+                title.setTextColor(mContext.getResources().getColor(R.color.color_F8E71C));
                 DisplayImageOptions options1= new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
                         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                         .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),false))
@@ -183,7 +185,7 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
                 }else{
                     now_iv.setImageResource(Utils.loadUrl(slidingMenuLeft.getContent_type(),slidingMenuLeft.getCid(),true));
                 }
-                now_tv.setTextColor(Color.RED);
+                now_tv.setTextColor(mContext.getResources().getColor(R.color.color_F8E71C));
                 for (int i = 0; i < isSelectedList.size(); i++) {
                     isSelectedList.set(i, false);
                 }

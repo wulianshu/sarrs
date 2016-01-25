@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
-public class DownloadJob {
+public class DownloadJob implements Comparable<DownloadJob>{
     private static final String TAG = "DownloadJob";
     private DownloadEntity mEntity;
 
@@ -105,9 +105,9 @@ public class DownloadJob {
     private int mExceptionType;
     public DownloadHandler downloadHandler;
     private boolean isUserPauseWhen3G = true;
-    String gvid;
-    String playid = "2";
-    String mFormat = "0,1,2,3,4";//获取所有的清晰度的流地址
+    private String gvid;
+    private String playid = "2";
+    private String mFormat = "0,1,2,3,4";//获取所有的清晰度的流地址
     private int count = 0;
     private boolean isCheck = false;//删除选择时，判断是否被选中
     /**
@@ -116,7 +116,17 @@ public class DownloadJob {
     private SnifferReport mSnifferReport;
     private ArrayList mStateList;
 
+    public boolean isfeedbackalready() {
+        return isfeedbackalready;
+    }
 
+    public void setIsfeedbackalready(boolean isfeedbackalready) {
+        this.isfeedbackalready = isfeedbackalready;
+    }
+
+    private boolean isfeedbackalready = false;
+    private boolean isstream = false;
+    private int begintime = 0;
     private WebView mWebView;
     private TestJavaScriptInterface mTestInterface;
     private List<String> downloadurllist = new ArrayList<String>();
@@ -131,7 +141,6 @@ public class DownloadJob {
 
     private int currentdownloadpositon = 0;
     private boolean isjscut = false;
-    //    private Map<Integer,List<String>> totalstreamlist;
     ArrayList<List<String>> totalstreamlist = new ArrayList<List<String>>();
 
     public int getCurrent_streamlistposition() {
@@ -265,6 +274,14 @@ public class DownloadJob {
         }
 
         if (mProgress != oldProgress) {
+            //进度发生了变化说明下载成功了 就上报
+            if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite()) && outSiteDataInfo!=null) {
+                if (!isfeedbackalready) {
+                    int duration = begintime - (int)(System.currentTimeMillis()/1000);
+                    UploadStat.playfeedback(outSiteDataInfo.getOutSiteDatas().get(0).getUrl(),5,1,getEntity().getSrc(),getEntity().getMid(),duration);
+                    isfeedbackalready = true;
+                }
+            }
             mDownloadManager.notifyObservers();
             notifyDownloadOnUpdate();
         }
@@ -322,15 +339,10 @@ public class DownloadJob {
         return rate + "KB/s";
     }
 
-	/*
-     * public void setEntity(DownloadEntity mEntity) { this.mEntity = mEntity; }
-	 * 
-	 * public void setDestination(String mDestination) { this.mDestination =
-	 * mDestination; }
-	 */
-
-    @SuppressLint("NewApi")
     public void start() {
+        begintime = (int)(System.currentTimeMillis()/1000);
+        isjscut = false;
+        isfeedbackalready = false;
         LogUtil.e("wulianshu", "DownLoadJob start 调用");
         //内存小于500M不下载
         if (ContainSizeManager.getInstance().getFreeSize() <= Utils.SDCARD_MINSIZE) {
@@ -454,7 +466,7 @@ public class DownloadJob {
     public void onFailure() {
         LogUtil.e("wulianshu", "下载失败的返回   outSiteDataInfo:" + outSiteDataInfo);
         if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite())) {
-            if (currentdownloadpositon >= outSiteDataInfo.getOutSiteDatas().size()) {
+            if (outSiteDataInfo!=null && currentdownloadpositon >= outSiteDataInfo.getOutSiteDatas().size()) {
                 //最终考虑 多StreamList的情况
                 if(totalstreamlist.size() >0 && current_streamlistposition < totalstreamlist.size()){
                     mDownloadTask.cancel(true);
@@ -468,27 +480,27 @@ public class DownloadJob {
                     current_streamlistposition ++;
                 }else {
                     //1次重试的机会
-                    if (mRetryNum < 2) {
-                        isjscut = false;
-                        LogUtil.e("wulianshu", "重试下载");
-                        mRetryNum++;
-                        currentdownloadpositon = 0;
-                        mDownloadManager.DOWNLOADING_NUM = 0;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                start();
-                            }
-                        }, 500);
-
-                    } else {
+//                    if (mRetryNum < 2) {
+//                        isjscut = false;
+//                        LogUtil.e("wulianshu", "重试下载");
+//                        mRetryNum++;
+//                        currentdownloadpositon = 0;
+//                        mDownloadManager.DOWNLOADING_NUM = 0;
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                start();
+//                            }
+//                        }, 500);
+//
+//                    } else {
                         LogUtil.e("wulianshu", "都失败了下载下一个任务");
                         isjscut = false;
                         mRetryNum = 0;
                         currentdownloadpositon = 0;
                         mDownloadManager.DOWNLOADING_NUM = 0;
                         downloadfailure();
-                    }
+//                    }
                 }
             } else {
                 LogUtil.e("wulianshu", "失败但是 OutSiteData 还有数据");
@@ -537,39 +549,6 @@ public class DownloadJob {
                 start();
             } else {
                 downloadfailure();
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                },7000);
-//                mRetryNum = 0;
-//                mTotalRetryNum = 0;
-//                autoSnifferRetry = true;
-//                mStatus = DownloadJob.NO_USER_PAUSE;
-//                if (downloadHandler != null) {
-//                    downloadHandler.onPause(this);
-//                }
-//                notifyDownloadOnPause();
-//                // mJob.setmExceptionType();
-//                if (NetworkUtil.reportNetType(ChaoJiShiPinApplication.getInstatnce()) == NetworkUtil.TYPE_ERROR) {
-//                    mExceptionType = NET_SHUT_DOWN; // 无网络
-//                } else if (NetworkUtil.reportNetType(ChaoJiShiPinApplication.getInstatnce()) == NetworkUtil.TYPE_MOBILE) {
-//                    //3g情况下，不允许下载，不做任何处理，和暂停相同
-//                } else if (ContainSizeManager.getInstance().getFreeSize() <= Utils.SDCARD_MINSIZE) {
-//
-//                } else {
-//                    mExceptionType = DOWNLOAD_FAILUER;//下载失败
-//                    pauseByDownLoadFailure();//下载失败，相当于用户暂停
-//                    //上报
-//                    if (!autoSnifferRetry) {
-//                        addReportState(PlayerUtils.M410);
-//                    }
-//                    if (mProgress > 0) {
-//                        addReportState(PlayerUtils.M412);
-//                    }
-//                }
-//                mDownloadManager.notifyObservers();
             }
         }
 
@@ -577,6 +556,14 @@ public class DownloadJob {
 
     void downloadfailure() {
 
+        //失败需要上报
+        if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite()) && outSiteDataInfo !=null) {
+            if (!isfeedbackalready) {
+                int duration = begintime - (int)(System.currentTimeMillis()/1000);
+                    UploadStat.playfeedback(outSiteDataInfo.getOutSiteDatas().get(0).getUrl(),6,1,getEntity().getSrc(),getEntity().getMid(),duration);
+                isfeedbackalready = true;
+            }
+        }
         mRetryNum = 0;
         mTotalRetryNum = 0;
         autoSnifferRetry = true;
@@ -688,18 +675,6 @@ public class DownloadJob {
             return file.exists();
         }
         return false;
-//        if (!StringUtil.isEmpty(mDestination)) {
-//            String tempPath = mDestination;
-//            if (tempPath.contains("/" + Utils.getDownLoadFolder())) {
-//                tempPath = tempPath.substring(0, tempPath.indexOf("/" + Utils.getDownLoadFolder()));
-//            } else if (tempPath.contains("/" + "kuaikan")) {
-//                tempPath = tempPath.substring(0, tempPath.indexOf("/" + "kuaikan"));
-//            }
-//            if (DownloadHelper.isSdcardExist(tempPath)) {
-//                return true;
-//            }
-//        }
-//        return false;
     }
 
     public void notifyDownloadAdded() {
@@ -861,6 +836,11 @@ public class DownloadJob {
         LogUtil.e("wulianshu", "LoadUrl 之后@@@@@@@@@");
     }
 
+    @Override
+    public int compareTo(DownloadJob downloadJob) {
+        return this.getEntity().getPorder().compareTo(downloadJob.getEntity().getPorder());
+    }
+
     public class TestJavaScriptInterface {
         @JavascriptInterface
         public void startFunction(final String result) {
@@ -876,7 +856,7 @@ public class DownloadJob {
                     mDownloadTask.setOutsidedownloadPath(stream);
                     executeDownload();
                     //截流成功的上报
-                    UploadStat.streamupload(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getUrl(), stream,outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getRequest_format());
+//                    UploadStat.streamupload(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getUrl(), stream,outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getRequest_format());
                 } else {
                     LogUtil.e("wulianshuaddUrl", "截流结果为空");
                     //继续解析下一条
@@ -889,25 +869,6 @@ public class DownloadJob {
                         LogUtil.e("wulianshu", "stream 和 截流 数据都为空  没得试了 直接失败");
                         onFailure();
                     }
-
-
-
-//                    if (outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list() != null && outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().size() > 0) {
-//                        LogUtil.e("wulianshuaddUrl", "设置下载地址为 streamlist：" + outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
-//                        if(isallEquals(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list())) {
-//                        mDownloadTask.setOutsidedownloadPath(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
-//                        isjscut = false;
-//                        executeDownload();
-//                        }else{
-//                            totalstreamlist.add(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list());
-//                            currentdownloadpositon++;
-//                            doOutsideDownload();
-//                        }
-//                    } else {
-//                        LogUtil.e("wulianshuaddUrl", "stream_list 也为空  重试下一条");
-//                        currentdownloadpositon++;
-//                        doOutsideDownload();
-//                    }
                 }
             } catch (Exception e) {
                 LogUtil.e("wulianshuaddUrl", "截流结果解析");
@@ -1154,9 +1115,6 @@ public class DownloadJob {
     }
 
     private void executeDownload() {
-//        if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite())) {
-//            LogUtil.e("wulianshu","*****外站源下载的地址为*******:"+mDownloadTask.getOutsidedownloadPath());
-//        }
         if (getStatus() == DOWNLOADING) {
             if (Utils.getAPILevel() >= 11) {
                 mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

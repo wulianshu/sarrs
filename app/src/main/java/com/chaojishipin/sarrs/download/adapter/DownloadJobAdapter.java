@@ -25,7 +25,7 @@ import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.adapter.SparseArrayAdapter;
 import com.chaojishipin.sarrs.config.SettingManage;
-import com.chaojishipin.sarrs.download.activity.DownloadJobActivity;
+import com.mylib.download.activity.DownloadJobActivity;
 import com.chaojishipin.sarrs.download.download.ContainSizeManager;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.download.DownloadHelper;
@@ -86,7 +86,7 @@ public class DownloadJobAdapter extends SparseArrayAdapter<DownloadJob> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         ViewHolder holder = null;
         DownloadJob job = null;
         //有数据 增加和删除的时候更新UI
@@ -110,10 +110,6 @@ public class DownloadJobAdapter extends SparseArrayAdapter<DownloadJob> {
         } else {
             holder.btnDelete.setVisibility(View.GONE);
         }
-//        if (isShowSwipe) {
-//            DownloadJobActivity.getmListView().setIsOpenStatus(false);
-//        } else
-//            DownloadJobActivity.getmListView().setIsOpenStatus(true);
         if (null != mList) {
             if (position < mList.size() && mList.valueAt(position) instanceof DownloadJob) {
                 job = mList.valueAt(position);
@@ -132,14 +128,7 @@ public class DownloadJobAdapter extends SparseArrayAdapter<DownloadJob> {
 //                      ImageLoader.getInstance().displayImage(entity.getImage(), holder.imageView);
                         final ViewHolder finalHolder = holder;
                         LogUtil.e("DownloadJobAdapter","image"+entity.getImage());
-                        DisplayImageOptions options1= new DisplayImageOptions.Builder()
-                                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                                .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.sarrs_main_default)
-                                .showImageForEmptyUri(R.drawable.sarrs_main_default)
-                                .showImageOnLoading(R.drawable.sarrs_main_default)
-                                .build();
-                        ImageLoader.getInstance().displayImage(entity.getImage(), holder.imageView,options1);
-                        holder.progressBar.setMax(100);
+                        displayImage(entity.getImage(), holder.imageView, R.drawable.sarrs_main_default);
                         holder.progressBar.setProgress(job.getProgress());
                         if (mFromWhere == -1) {//是下载中界面
                             holder.downloadName.setTextColor(mContext.getResources().getColor(R.color.color_444444));
@@ -149,7 +138,6 @@ public class DownloadJobAdapter extends SparseArrayAdapter<DownloadJob> {
                             holder.downloadName.setTextSize(16);
                         }
                     }
-
                 }
 
                 if (job.getStatus() == DownloadJob.DOWNLOADING || job.getStatus() == DownloadJob.COMPLETE)
@@ -422,13 +410,13 @@ public class DownloadJobAdapter extends SparseArrayAdapter<DownloadJob> {
                 if (position < mList.size() && mList.valueAt(position) instanceof DownloadJob) {
                     job = mList.valueAt(position);
                 }
-                if (null != job) {
-                    if (job.getCheck()) {
-                        holder.btnDelete.setBackgroundDrawable(DownloadJobActivity.getResources().getDrawable(R.drawable.radiobutton_red_bg));
-                    } else {
-                        holder.btnDelete.setBackgroundDrawable(DownloadJobActivity.getResources().getDrawable(R.drawable.radiobutton_white_bg));
-                    }
-                }
+//                if (null != job) {
+//                    if (job.getCheck()) {
+//                        holder.btnDelete.setBackgroundDrawable(DownloadJobActivity.getResources().getDrawable(R.drawable.radiobutton_red_bg));
+//                    } else {
+//                        holder.btnDelete.setBackgroundDrawable(DownloadJobActivity.getResources().getDrawable(R.drawable.radiobutton_white_bg));
+//                    }
+//                }
             }
 
         } else {

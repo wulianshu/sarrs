@@ -16,7 +16,7 @@ import com.chaojishipin.sarrs.bean.PlayData;
 import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.config.SettingManage;
-import com.chaojishipin.sarrs.download.activity.DownloadJobActivity;
+import com.mylib.download.activity.DownloadJobActivity;
 import com.chaojishipin.sarrs.download.bean.LocalVideoEpisode;
 import com.chaojishipin.sarrs.download.service.DownloadService;
 import com.chaojishipin.sarrs.fragment.videoplayer.PlayerUtils;

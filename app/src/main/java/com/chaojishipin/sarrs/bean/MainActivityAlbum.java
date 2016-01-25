@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by zhangshuo on 2015/6/17.
  */
-public class MainActivityAlbum implements LetvBaseBean{
+public class MainActivityAlbum implements LetvBaseBean,Cloneable{
 
 
     private String id;

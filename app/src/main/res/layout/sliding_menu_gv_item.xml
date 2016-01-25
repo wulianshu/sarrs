@@ -15,7 +15,7 @@
        />
     <TextView
         android:layout_below="@+id/icon"
-        android:layout_marginTop="-18dp"
+        android:layout_marginTop="-25dp"
         android:id="@+id/title"
         android:text="nihao"
         android:background="@color/color_00000000"

@@ -967,15 +967,50 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                 LogUtil.e(TAG, "" + position);
                 int middlePost = (Math.max((gridAdapter.getPn() - 1), 0) * gridAdapter.getPageSize() + position + (gridAdapter.getPageNum() - 1) * gridAdapter.getSmallPageSize()) % gridAdapter.getPageSize();
                 currentPlay = new PlayData(fenyeList, gridAdapter.getPn(), middlePost, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("wulianshu","OnItemClick 切换剧集啊******"+currentPlay.getmGvid());
-                        EventBus.getDefault().post(currentPlay);
-                    }
-                }, 0);
+
                 LogUtil.e("POST", "middle grid key " + gridAdapter.getPn());
                 LogUtil.e("POST", "middle grid positon " + middlePost);
+                if(NetworkUtil.isNetworkAvailable(activity)){
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("v1.1.2","handle episo net ok logic");
+                            EventBus.getDefault().post(currentPlay);
+                        }
+                    }, 0);
+
+                }else {
+
+                    if(fenyeList.indexOfKey(gridAdapter.getPn())>=0&&fenyeList.get(gridAdapter.getPn())!=null&&fenyeList.get(gridAdapter.getPn()).size()>0&&fenyeList.get(gridAdapter.getPn()).size()>middlePost){
+
+                        if(fenyeList.get(gridAdapter.getPn()).get(middlePost).isLocal()){
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    LogUtil.e("v1.1.2","handle episo error logic post local data");
+                                    EventBus.getDefault().post(currentPlay);
+                                }
+                            }, 0);
+                        }else{
+                            Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
+
+                            LogUtil.e("v1.1.2","handle episo error logic");
+
+                        }
+
+                    }else{
+                        LogUtil.e("v1.1.2","handle episo error logic");
+
+                        Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+
+
+                }
+
+
                 break;
             case R.id.videodetail_middle_showlist:
                 int pageNum2 = listAdapter.getPageNum();
@@ -995,14 +1030,48 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                 int middlePost2 = (Math.max((listAdapter.getPn() - 1), 0) * listAdapter.getPageSize() + position + (pageNum2 - 1) * listAdapter.getSmallPageSize()) % listAdapter.getPageSize();
                 LogUtil.e(TAG, "" + position);
                 currentPlay = new PlayData(fenyeList, listAdapter.getPn(), middlePost2, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtil.e("wulianshu","OnItemClick 切换剧集啊******"+currentPlay.getmGvid());
-                        currentPlay.setFrom(ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                        EventBus.getDefault().post(currentPlay);
+
+
+                if(NetworkUtil.isNetworkAvailable(activity)){
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("v1.1.2","handle episo net ok logic");
+                            currentPlay.setFrom(ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                            EventBus.getDefault().post(currentPlay);
+                        }
+                    }, 0);
+                }else {
+
+                    if(fenyeList.indexOfKey(listAdapter.getPn())>=0&&fenyeList.get(listAdapter.getPn())!=null&&fenyeList.get(listAdapter.getPn()).size()>0&&fenyeList.get(listAdapter.getPn()).size()>middlePost2){
+
+                        if(fenyeList.get(listAdapter.getPn()).get(middlePost2).isLocal()){
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    LogUtil.e("v1.1.2","handle episo error logic post local data");
+                                    EventBus.getDefault().post(currentPlay);
+                                }
+                            }, 0);
+                        }else{
+                            Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
+
+                            LogUtil.e("v1.1.2","handle episo error logic");
+
+                        }
+
+                    }else{
+                        LogUtil.e("v1.1.2","handle episo error logic");
+
+                        Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
+
                     }
-                }, 0);
+
+
+
+                }
+
+
 
 
                 break;
@@ -1358,6 +1427,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
             mTitle=mVideoDetailItem.getTitle();
             mBucket=mVideoDetailItem.getBucket();
             mReid=mVideoDetailItem.getReid();
+
         }
     }
 
@@ -1796,6 +1866,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                     if(mVideoDetailItem!=null){
                         //本地porder从下载页传入
                         currentPlay.setPorder(mVideoDetailItem.getPorder());
+                        LogUtil.e("v1.1.2","from local porder is "+mVideoDetailItem.getPorder());
                     }
                 }
                 //设置
@@ -2039,8 +2110,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
     void downloadVideos(){
         // 专辑如果是1集
         if(selfItem!=null) {
-
-            if(selfItem.getVideoItems()!=null&&selfItem.getVideoItems().size()==1){
+            if(selfItem.getEpiso_num()!=null&& "1".equals(selfItem.getEpiso_num())){
                 DownloadEvent event = new DownloadEvent();
                 VideoDetailItem singleDetail=new VideoDetailItem();
                 ArrayList<VideoItem> items=new ArrayList<>();
@@ -2284,6 +2354,8 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                                     if(totallist.get(i)!=null&&!TextUtils.isEmpty(totallist.get(i).getPlay_time())){
                                         mPlayTime = Integer.parseInt(totallist.get(i).getPlay_time().trim());
                                         LogUtil.e("xll ", "local has records playTime " + mPlayTime);
+                                        LogUtil.e("v1.1.2 ", "local has records playTime " + mPlayTime);
+
                                     }
                                     isRecord=true;
                                     playNoRecordOrLocal();
@@ -2355,7 +2427,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
     void playNoRecordOrLocal(){
         //无记录播放
         // 本地剧集请求详情
-        LogUtil.e("xll ","wifi "+NetWorkUtils.isWifi());
+        LogUtil.e("xll ", "wifi " + NetWorkUtils.isWifi());
         if(NetWorkUtils.isNetAvailable()){
             LogUtil.e("xll ","wifi "+NetWorkUtils.isWifi());
             LogUtil.e("xll ","request index wifi "+NetWorkUtils.isWifi());
@@ -2366,25 +2438,25 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
             currentPlay.setIsLocalVideo(true);
             int cuIndex=0;
             int cuKey=0;
+            String porder=null;
             if(mVideoDetailItem!=null){
-                ArrayList<LocalVideoEpisode> locals=mVideoDetailItem.getLocalVideoEpisodes();
+
+                ArrayList<LocalVideoEpisode> locals=activity.getLocalEpisoByFolderId(null,mGvid);
                 PlayData temPlaydata=null;
                 if(locals!=null){
                      temPlaydata=activity.mergeOnlyLocal(locals);
                 }
-                if(TextUtils.isEmpty(mVideoDetailItem.getPorder())){
-                    currentPlay.setPorder("0");
-                }else{
-                    currentPlay.setPorder(mVideoDetailItem.getPorder());
-                    if(temPlaydata!=null&&temPlaydata.getmEpisodes()!=null&&temPlaydata.getmEpisodes().size()>0){
+                   // currentPlay.setPorder(mVideoDetailItem.getPorder());
+                    if(!TextUtils.isEmpty(mGvid)&&temPlaydata!=null&&temPlaydata.getmEpisodes()!=null&&temPlaydata.getmEpisodes().size()>0){
 
                         for(int i=0;i<temPlaydata.getmEpisodes().size();i++){
 
                             List<VideoItem>temVideos=temPlaydata.getmEpisodes().get(i);
 
                              for(int j=0;j<temVideos.size();j++){
-                                 if(mVideoDetailItem.getPorder().equalsIgnoreCase(temVideos.get(j).getPorder())){
+                                 if(mGvid.equalsIgnoreCase(temVideos.get(j).getGvid())){
                                      cuIndex=j;
+                                     porder=temVideos.get(j).getPorder();
                                      cuKey=i;
                                      break;
                                  }
@@ -2392,16 +2464,15 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                         }
                     }
 
-                }
 
-
+                currentPlay.setPorder(porder);
                 //fenyeList=temPlaydata.getmEpisodes();
                 if(temPlaydata!=null){
                     currentPlay.setPage_titles(temPlaydata.getPage_titles());
                 }
 
                 currentPlay.setmLocalDataLists(locals);
-                currentPlay.setIndex(cuIndex);
+
                 currentPlay.setKey(cuKey);
                 LogUtil.e("v1.1.2", "local play (k,v)= (" + cuKey + "," + cuIndex + ")");
                 if(temPlaydata!=null){
@@ -2428,7 +2499,25 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                                 });
                             }
                         }
+                        if(!TextUtils.isEmpty(porder)){
+                            String morder=null;
+                            for(int j=0;j<temPlaydata.getmEpisodes().get(cuKey).size();j++){
+                                if(!TextUtils.isEmpty(temPlaydata.getmEpisodes().get(cuKey).get(j).getPorder())){
+                                    morder=temPlaydata.getmEpisodes().get(cuKey).get(j).getPorder();
+                                }
+                                if(!TextUtils.isEmpty(temPlaydata.getmEpisodes().get(cuKey).get(j).getOrder())){
+                                    morder=temPlaydata.getmEpisodes().get(cuKey).get(j).getOrder();
+                                }
+                                if(!TextUtils.isEmpty(morder)&&morder.equalsIgnoreCase(porder)){
+                                    // 排序后设置index
+                                    cuIndex=j;
+                                     break;
+                                }
 
+
+                            }
+                            currentPlay.setIndex(cuIndex);
+                        }
                         currentPlay.setmEpisodes(temPlaydata.getmEpisodes());
                     }
 
@@ -2447,7 +2536,7 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                 @Override
                 public void run() {
                     EventBus.getDefault().post(currentPlay);
-                    LogUtil.e("v1.1.2","no net merge only local");
+                    LogUtil.e("v1.1.2", "no net merge only local");
                 }
             }, 0);
         }

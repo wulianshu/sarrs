@@ -42,6 +42,23 @@ public class DownloadDaoImpl implements DownloadDao {
 	}
 
 	@Override
+	public boolean isDownloaded(String id){
+		Cursor c = null;
+		try{
+			if(TextUtils.isEmpty(id))
+				return false;
+			c = mDb.query(TABLE_DOWNLOAD, new String[]{"hashId"}, "hashId=?", new String[]{id}, null, null, null);
+			if(c != null && c.moveToFirst())
+				return true;
+		}catch(Throwable e){
+			e.printStackTrace();
+		}finally{
+			closeCursor(c);
+		}
+		return false;
+	}
+
+	@Override
 	public boolean add(DownloadEntity entry) {
 		try {
 			if (mDb == null) {

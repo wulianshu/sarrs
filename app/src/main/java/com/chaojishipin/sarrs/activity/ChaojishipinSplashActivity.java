@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.adapter.InterestAdapter;
 import com.chaojishipin.sarrs.bean.InterestEntity;
@@ -43,6 +46,7 @@ import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.SPUtil;
+import com.chaojishipin.sarrs.utils.StoragePathsManager;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.utils.UpgradeHelper;
 import com.chaojishipin.sarrs.utils.Utils;
@@ -58,6 +62,7 @@ import java.util.ArrayList;
 public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity implements
         SurfaceHolder.Callback, View.OnClickListener, View.OnTouchListener {
     private long startTime;
+    public static final String pageid = "00S002000_1";
     private boolean isDebug = false;
     private static final String TAG = "ChaojishipinSplashActivity";
     private static final String FILENAME = "chaojishipin.mp4";
@@ -143,6 +148,15 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         LogUtil.e("xll", "init screen Width " + Utils.getScreenWidth(this));
         LogUtil.e("xll", "init screen Height " + Utils.getScreenHeight(this));
         gestureDetector =new GestureDetector(this, new Gesturelistener());
+        String current_version_name = Utils.getClientVersionName();
+        SharedPreferences sharedPreferences = getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+        String last_version_name =  sharedPreferences.getString("version_name","");
+        if(!current_version_name.equals(last_version_name)){
+            StoragePathsManager.getInstanse().getExternalSDpath();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("version_name",current_version_name);
+            editor.commit();
+        }
         if (isFrist) {
             setListener();
         }
@@ -617,13 +631,13 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
             ToastUtil.showShortToast(mContext, R.string.nonet_tip);
             LogUtil.e(TAG, "reequest interset use time is " + (System.currentTimeMillis() - startTime));
             LogUtil.e(TAG, "RequestInterestListener net err");
-//            redirectToHome();
+            redirectToHome();
         }
 
         @Override
         public void dataErr(int errorCode) {
             LogUtil.e(TAG, "RequestInterestListener data err");
-//            redirectToHome();
+            redirectToHome();
         }
 
     }
@@ -926,5 +940,14 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
             return true;
         }
+    }
+    //解决系统改变字体大小的时候导致的界面布局混乱的问题
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
     }
 }

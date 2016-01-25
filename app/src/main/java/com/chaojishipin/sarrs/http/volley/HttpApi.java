@@ -944,6 +944,14 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("appfrom",appfrom);
         return createRequest(SarrsRequest.Method.GET, sb.toString(),new UpgradinfoParser(), params, null);
     }
+
+    /**
+     * js截流成功上报
+     * @param playurl
+     * @param stream
+     * @param format
+     * @return
+     */
     public static SarrsRequest<SarrsArrayList> streamUpload(String playurl,String stream,String format){
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_6);
@@ -951,8 +959,27 @@ public class HttpApi extends SarrsBaseHttpApi {
         HashMap<String, String> params = getBaseParams();
         addVer(params);
         params.put("playurl", playurl);
-        params.put("stream",stream);
+        params.put("stream", stream);
         params.put("format",format);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(),null, params, null);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static SarrsRequest<SarrsArrayList> playfeedBack(String playurl,int state,int type,String source,String aid,int waiting){
+        StringBuilder sb = new StringBuilder();
+        sb.append(ConstantUtils.HOST.DOMON_6);
+        sb.append("/sarrs/playfeedback");
+        HashMap<String, String> params = getBaseParams();
+        addVer(params);
+        params.put("playurl", playurl);
+        params.put("state", state+"");
+        params.put("download",type+"");
+        params.put("aid",aid);
+        params.put("source",source);
+        params.put("waiting",waiting+"");
         return createRequest(SarrsRequest.Method.GET, sb.toString(),null, params, null);
     }
 
@@ -965,7 +992,7 @@ public class HttpApi extends SarrsBaseHttpApi {
      * @param rank 点击的位置
      */
 
-    public static void click_stat(String token, Object object,String acode,String pageid,String ref,String rank,String rid_topcid,@Nullable String sa,String pn,String input) {
+    public static void click_stat(String token, Object object,String acode,String pageid,String ref,String rank,String rid_topcid,@Nullable String sa,String pn,String input,String gvid) {
 
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_9);
@@ -990,7 +1017,7 @@ public class HttpApi extends SarrsBaseHttpApi {
             MainActivityAlbum  mainActivityAlbum = (MainActivityAlbum) object;
             params.put("cid",mainActivityAlbum.getCategory_id());
             params.put("aid", mainActivityAlbum.getId());
-            params.put("vid",mainActivityAlbum.getVideos().get(0).getGvid());
+            params.put("vid",gvid);
             params.put("seid",mainActivityAlbum.getReId());
             if(mainActivityAlbum.getVideos() !=null && mainActivityAlbum.getVideos().get(0)!=null && !TextUtils.isEmpty(mainActivityAlbum.getVideos().get(0).getArea_name())){
                 params.put("area",mainActivityAlbum.getVideos().get(0).getArea_name());

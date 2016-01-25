@@ -52,6 +52,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 import de.greenrobot.event.EventBus;
 
@@ -73,6 +74,7 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
     private ImageView mIcon;
     private TextView mName;
     public Button msetBtn;
+    private ImageView user_head_bg;
 
 //    public Button mDownBtn;
 //    public Button mSaveBtn;
@@ -106,17 +108,24 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
         mLeftMenuListView = (ListView) view.findViewById(R.id.slidingmenu_fragment_layout_channle_list);
         mLeftMenuGridView = (NoScrollGridViewNodivider) view.findViewById(R.id.slidingmenu_gv_menu);
-
+        user_head_bg = (ImageView) view.findViewById(R.id.user_head_bg);
         mLeftAdapter = new SlidingMenuLeftAdapter(context, null);
         mLeftGVAdapter = new SlidingMenuGVAdapter(context,null);
         mLeftMenuListView.setAdapter(mLeftAdapter);
         mLeftMenuGridView.setAdapter(mLeftGVAdapter);
         mLeftMenuListView.setOnItemClickListener(this);
         mLeftMenuGridView.setOnItemClickListener(this);
-//        mDownBtn = (Button) view.findViewById(R.id.main_fragment_user_download_btn);
-//        mSaveBtn = (Button) view.findViewById(R.id.main_fragment_user_save_btn);
-
         mIcon = (ImageView) view.findViewById(R.id.main_fragment_user_icon);
+        int i = new Random().nextInt(4);
+        if(i == 0){
+            user_head_bg.setImageResource(R.drawable.user_header_bg1);
+        }else if(i == 1){
+            user_head_bg.setImageResource(R.drawable.user_header_bg2);
+        }else if(i == 2){
+            user_head_bg.setImageResource(R.drawable.user_header_bg3);
+        }else if(i == 3){
+            user_head_bg.setImageResource(R.drawable.user_header_bg4);
+        }
         mName = (TextView) view.findViewById(R.id.main_fragment_user_name);
         msetBtn = (Button) view.findViewById(R.id.main_fragment_user_setting);
         mIcon.setOnClickListener(this);
@@ -197,7 +206,7 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
                 //加载完成后再进行网络请求
                  requestSlidingMenuLeftData();
             } else {
-                //获取本地缓存的侧边栏数据
+                //获取本地缓存的侧边栏数据]
                   loadLocalmenuData();
             }
         } catch (Exception e) {
@@ -283,9 +292,9 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
         switch(parent.getId()) {
             case R.id.slidingmenu_fragment_layout_channle_list:
             Adapter adapter = parent.getAdapter();
-            msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
+//            msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
 //        mDownBtn.setTextColor(Color.WHITE);
-            msetBtn.setTextColor(Color.WHITE);
+//            msetBtn.setTextColor(Color.WHITE);
             if (null != adapter && adapter instanceof SlidingMenuLeftAdapter) {
                 SlidingMenuLeftAdapter leftMenuAdapter = (SlidingMenuLeftAdapter) adapter;
                 SlidingMenuLeft menuLeft = (SlidingMenuLeft) leftMenuAdapter.getItem(position);

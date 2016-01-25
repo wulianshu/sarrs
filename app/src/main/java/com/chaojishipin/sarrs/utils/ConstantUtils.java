@@ -106,8 +106,8 @@ public class ConstantUtils {
 
 //        public static final String DOMON_3 = "http://10.154.252.65:8080";
 //        public static final String DOMON_4 = "http://10.154.252.65:8080";
-        public static final String DOMON_5 = "http://10.154.252.65:8080";
-        //public static final String DOMON_5 = "http://user.chaojishipin.com";
+        //public static final String DOMON_5 = "http://10.154.252.65:8080";
+        public static final String DOMON_5 = "http://user.chaojishipin.com";
         public static final String DOMON_6 = "http://play.chaojishipin.com";
         public static final String DOMON_7 = "http://share.chaojishipin.com";
         public static final String DOMAIN_8 = "http://play.chaojishipin.com";
@@ -162,6 +162,7 @@ public class ConstantUtils {
     public final static String REQUEST_RANKLIST_DETAIL = "request_ranklist_detail";
     public final static String REQUEST_HISTORYRECORD_DETAIL = "request_ranklist_detail";
     public final static String JSCUT_SUCCESS_UPLOAD = "jscut_success_upload";
+    public final static String PLAY_FEED_BACK = "play_feed_back";
     public final static String REQUEST_VIDEODETAIL_HALF_PLAY_TAG = "request_videodetail_half_play";
     public final static String REQUEST_VIDEODETAIL_VIDEO_INDEX_TAG = "request_videodetail_video_index";
     public final static String REQUEST_SEARCHRESULT_TAG = "request_searchresult";

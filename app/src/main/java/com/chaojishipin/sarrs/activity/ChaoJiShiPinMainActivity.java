@@ -58,6 +58,7 @@ import java.util.List;
  * */
 public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implements TitleActionBar.onActionBarClickListener, View.OnClickListener {
     private static final String TAG = "ChaoJiShiPinMainActivity";
+    public static String pageid = "00S002001";
     private SlidingMenu mSlidingMenu;
 //    private int mSwipePostion = -1;
     private TitleActionBar mTitleActionBar;
@@ -457,18 +458,6 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 Intent intent = new Intent(this,SettingActivity.class);
                 startActivity(intent);
                 break;
-
-//            case R.id.main_fragment_user_download_btn:
-//                gotoDownload();
-//                break;
-//            case R.id.main_fragment_user_save_btn:
-//
-//                if (UserLoginState.getInstance().isLogin()) {
-//                    startActivity(new Intent(this, SaveActivity.class));
-//                } else {
-//                    startActivity(new Intent(this, ChaojishipinRegisterActivity.class));
-//                }
-//                break;
         }
     }
 
@@ -599,14 +588,9 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     @Override
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
          LogUtil.e("xll", "MainActivity netType " + netType);
-        if(netType!=-1){
-            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
-        }
-
-
-
-
-
+//        if(netType!=-1){
+//            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
+//        }
 
     }
 

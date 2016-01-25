@@ -243,7 +243,7 @@ public class ChaoJiShiPinRankListDetailActivity extends ChaoJiShiPinBaseActivity
         } else {
             arankListDetail = (RankListDetail) rankListDetailListViewAdapter.getItem(i - 1);
         }
-        UploadStat.uploadstat(arankListDetail, "0", "00S002002_1", "00S002002", i + "", getRankId(), "-", "-", "-");
+        UploadStat.uploadstat(arankListDetail, "0", "00S002002_1", "00S002002", i + "", getRankId(), "-", "-", "-","-");
 
         VideoDetailItem videoDetailItem = new VideoDetailItem();
         videoDetailItem.setTitle(arankListDetail.getTitle());
@@ -256,7 +256,7 @@ public class ChaoJiShiPinRankListDetailActivity extends ChaoJiShiPinBaseActivity
         videoDetailItem.setVideoItems(arankListDetail.getVideos());
         videoDetailItem.setFromMainContentType(ConstantUtils.RANKLIST_CONTENT_TYPE);
         videoDetailItem.setDetailImage(arankListDetail.getImage());
-        if("0".equals(ChaoJiShiPinMainActivity.isCheck)) {
+        if("0".equals(ChaoJiShiPinMainActivity.isCheck)|| "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
             //播放
             //Log.e("RankListDetailActivity",arankListDetail.getTitle()+"##"+arankListDetail.getGaid()+"##"+arankListDetail.getSource());
             playData = new PlayData(arankListDetail.getTitle(), arankListDetail.getVideos().get(0).getGvid(), ConstantUtils.PLAYER_FROM_RANKLIST, arankListDetail.getSource());

@@ -146,6 +146,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
         initView();
         initData();
+        isExistLocalEpiso();
 
     }
 
@@ -153,8 +154,8 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        isExistLocalEpiso();
-        if (getMediaType() == MeDiaType.LOCAL||!NetworkUtil.isNetworkAvailable(this) ) {
+        // 本地剧集优先判断逻辑
+        if (getMediaType() == MeDiaType.LOCAL ) {
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
            // mVideoPlayerFragment.showEpisode();
@@ -250,6 +251,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
                 }
             };
         }
+
     }
 
    public enum NetWork{
@@ -318,7 +320,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         addDetailFragment();
         addVideoPlayerFragment();
         initData();
-        if(this.getMediaType()==MeDiaType.LOCAL||!NetworkUtil.isNetworkAvailable(this)){
+        if(this.getMediaType()==MeDiaType.LOCAL||(!NetworkUtil.isNetworkAvailable(this)&&isLocalEpisoSize)){
             // 点击下载管理跳回本地播放
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
@@ -366,7 +368,12 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
            }
        }
        if(!TextUtils.isEmpty(gvid)){
-          ArrayList<LocalVideoEpisode>locals=getLocalEpisoByFolderId(id);
+          ArrayList<LocalVideoEpisode>locals=getLocalEpisoByFolderId(null,gvid);
+          if(locals==null){
+              isLocalEpisoSize=false;
+              isExits=false;
+              return isExits;
+          }
            for(LocalVideoEpisode local:locals){
            if(local.getGvid().equalsIgnoreCase(gvid)){
                isExits=true;
@@ -448,34 +455,57 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     }
 
   /**
-   *  根据下载文件夹获取一个专辑视频列表
-   *  @param id  : aid   id
+   *
+   *  @param aid
+   *  @param gvid
+   *   case gvid!=null 判断某个视频是否在缓存在本地
+   *   case aid！=null 获取专辑视频
    *
    * */
-  public ArrayList<LocalVideoEpisode> getLocalEpisoByFolderId(String id) {
+  public ArrayList<LocalVideoEpisode> getLocalEpisoByFolderId(String aid,String gvid) {
+      LogUtil.e("v1.1.2", "local episo init");
+      if(!TextUtils.isEmpty(aid)){
+          gvid=null;
+      }
+      if(!TextUtils.isEmpty(gvid)){
+          aid=null;
+      }
       String path;
       SparseArray<DownloadFolderJob> folderJobs = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getDownloadFolderJobs();
-      DownloadJob job = null;
-      DownloadEntity entity = null;
       ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>();
-      int key = 0;
+      SparseArray<DownloadJob> jobDs=null;
       for (int i = 0; i < folderJobs.size(); i++) {
-          SparseArray<DownloadJob> downloadJobs = folderJobs.get(i).getDownloadJobs();
+        SparseArray<DownloadJob>  downloadJobs = folderJobs.get(i).getDownloadJobs();
           int size = downloadJobs.size();
           for (int j = 0; j < size; j++) {
-              job = downloadJobs.valueAt(j);
-              entity = job.getEntity();
-              //TODO 单视频逻辑
-              if (!TextUtils.isEmpty(entity.getMid()) && entity.getMid().equalsIgnoreCase(id)) {
-                  key = j;
-                  break;
-              }
-          }
-          job = downloadJobs.valueAt(key);
-          if (job == null) {
-              LogUtil.e("xll", "v1_1_2  local null");
-          }
+             DownloadJob job = downloadJobs.valueAt(j);
+              DownloadEntity entity = job.getEntity();
 
+             if(!TextUtils.isEmpty(gvid)){
+                  if (!TextUtils.isEmpty(entity.getGlobaVid()) && entity.getGlobaVid().equalsIgnoreCase(gvid)) {
+                      jobDs=downloadJobs;
+                      break;
+                  }
+              }
+              if(!TextUtils.isEmpty(aid)){
+                  if (!TextUtils.isEmpty(entity.getMid()) && entity.getMid().equalsIgnoreCase(aid)) {
+                      jobDs=downloadJobs;
+                      break;
+                  }
+              }
+
+
+
+          }
+      }
+      if(jobDs==null){
+          LogUtil.e("v1.1.2","no local episo ");
+          return null;
+      }else{
+          LogUtil.e("v1.1.2","has local episo ");
+      }
+      for(int i=0;i<jobDs.size();i++){
+          DownloadJob job=jobDs.valueAt(i);
           if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
               path =
                       DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity().getPath())
@@ -486,13 +516,11 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
                               + DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity()
                               .getPath());
           }
-
-
-
+          DownloadEntity entity=job.getEntity();
           // 创建播放本地视频的类对象
           LocalVideoEpisode localVideoEpisode = new LocalVideoEpisode();
           // TODO 单视频时 mid=gvid
-          if (!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())) {
+          if(!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())){
               localVideoEpisode.setAid(entity.getMid());
               localVideoEpisode.setId(entity.getId());
           }
@@ -500,12 +528,13 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
           localVideoEpisode.setPorder(entity.getPorder());
           localVideoEpisode.setCid(entity.getCid());
           localVideoEpisode.setName(entity.getMedianame());
+          localVideoEpisode.setTitle(entity.getMedianame());
           localVideoEpisode.setPlay_url(path);
           localVideoEpisode.setGvid(entity.getGlobaVid());
           localVideoEpisode.setVt(entity.getVt());
           localVideoEpisode.setSource(entity.getSite());
+          LogUtil.e("v1.1.2", " local episo  "+entity.getMedianame());
           localVideoEpisodeList.add(localVideoEpisode);
-
       }
       return localVideoEpisodeList;
   }
@@ -549,6 +578,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
             localVideoEpisode.setPorder(entity.getPorder());
             localVideoEpisode.setCid(entity.getCid());
             localVideoEpisode.setName(entity.getMedianame());
+            localVideoEpisode.setTitle(entity.getMedianame());
             localVideoEpisode.setPlay_url(path);
             localVideoEpisode.setGvid(entity.getGlobaVid());
             localVideoEpisode.setVt(entity.getVt());
@@ -632,6 +662,9 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
                     LogUtil.e("v1.1.2", "local order" + localItems.get(i).getPorder());
                     item.setSource(localItems.get(i).getSource());
                     item.setTitle(localItems.get(i).getTitle());
+                    if(TextUtils.isEmpty(item.getTitle())){
+                        item.setTitle(localItems.get(i).getName());
+                    }
                     item.setCategory_id(localItems.get(i).getCid());
                     item.setId(localItems.get(i).getAid());
                     item.setDownLoadType(localItems.get(i).getDownType());
@@ -642,20 +675,15 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
                         newList=new ArrayList<>();
                         newList.addAll(tempList);
                         tempList.clear();
-                        fenyeList.append(key - 1, newList);
+                        // 非多集类视频处理key =0
+                        key=key - 1;
+                        if(key<=0){
+                            key=0;
+                        }
+                        fenyeList.append(key, newList);
                         tagList.add(key+"-"+key*pageSize+pageSize);
-
                         key++;
-
-
-
-
-                }
-
-
-
-
-
+                    }
             }
 
         playData.setmEpisodes(fenyeList);
@@ -805,7 +833,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     public enum MeDiaType {
         ONLINE, //  从除下载页进入半屏页执行播放逻辑
 
-        LOCAL;// 从下载页面点击本地剧集进入播放页
+        LOCAL;// 从下载页面点击本地剧集进入播放页,断网情况&又本地缓存
 
     }
 
@@ -849,7 +877,14 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
            // LogUtil.e("v1.1.2","from local");
             return MeDiaType.LOCAL;
         } else{
-            return MeDiaType.ONLINE;
+            if(!NetworkUtil.isNetworkAvailable(this)&&isLocalEpisoSize){
+                return MeDiaType.LOCAL;
+            }else{
+                return MeDiaType.ONLINE;
+            }
+
+
+
         }
     }
 
