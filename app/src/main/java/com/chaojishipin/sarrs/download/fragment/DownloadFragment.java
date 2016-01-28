@@ -31,6 +31,7 @@ import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.fragment.videoplayer.PlayerUtils;
 import com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuLayout;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.Utils;
 
 import java.util.ArrayList;
@@ -97,19 +98,6 @@ public class DownloadFragment extends Fragment implements
         unregisterCheckNetwork();
     }
 
-    private void initSliderImageView() {
-        mSelectBar = (ImageView) rootView.findViewById(R.id.select_image);
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        mImageWidth = dm.widthPixels / 2;
-        ViewGroup.LayoutParams params = mSelectBar.getLayoutParams();
-        params.width = mImageWidth;
-        mSelectBar.setLayoutParams(params);
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(0, 0);
-        mSelectBar.setImageMatrix(matrix);
-    }
-
     private void initContent() {
         mDownloadListFragment = new DownloadListFragment();
         mDownloadListFragment.downloadFragment = this;
@@ -137,7 +125,7 @@ public class DownloadFragment extends Fragment implements
     }
 
     private void updateDeleteIcon() {
-        if (ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads().size() > 0) {
+        if (DataUtils.getInstance().getCompletedDownloads().size() > 0) {
             setFilterButtonState(true);
         } else {
             setFilterButtonState(false);
@@ -183,7 +171,7 @@ public class DownloadFragment extends Fragment implements
 
     public void checkUserSelectAll() {
         if (null != mDownloadListFragment.adapter) {
-            boolean isAll = mDownloadListFragment.adapter.deletedNum == mDownloadListFragment
+            boolean isAll = mDownloadListFragment.adapter.deletedNum == DataUtils.getInstance()
                     .getRemainNum() ? true : false;
             setCheckTabText(isAll);
         }
@@ -192,7 +180,7 @@ public class DownloadFragment extends Fragment implements
     // 我的下载界面编辑下全选状态判断
     public void checkUserSelectStatus() {
         if (null != mDownloadListFragment.adapter) {
-            boolean isAll = mDownloadListFragment.adapter.deletedNum == mDownloadListFragment
+            boolean isAll = mDownloadListFragment.adapter.deletedNum == DataUtils.getInstance()
                     .getRemainNum() ? false : true;
             setCheckTabText(isAll);
         }
@@ -382,7 +370,7 @@ public class DownloadFragment extends Fragment implements
     }
 
     public void updateEditView() {
-        ArrayList<DownloadJob> jobsList = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getProvider().getCompletedDownloads();
+        ArrayList<DownloadJob> jobsList = DataUtils.getInstance().getCompletedDownloads();
         if (null != jobsList && jobsList.size() > 0) {
             SwipeMenuLayout mSwipe = null;
             mSwipe = mDownloadListFragment.mListView.getSwipeMenuLayout();

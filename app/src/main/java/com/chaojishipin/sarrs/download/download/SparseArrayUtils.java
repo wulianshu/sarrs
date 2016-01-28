@@ -31,6 +31,27 @@ public class SparseArrayUtils {
 		
 	}
 
+	private static void add(DownloadJob job,SparseArray<DownloadJob> jobs){
+		if(job == null)
+			return;
+		if(jobs == null)
+			jobs = new SparseArray<DownloadJob>();
+		jobs.put(job.getIndex(), job);
+	}
+
+	public static void remove(DownloadJob job,SparseArray<DownloadFolderJob> folderJobs){
+		if(job == null || folderJobs == null)
+			return;
+		int index = indexOfMid(job.getEntity().getMid(), folderJobs);
+		if(index == -1){
+		}else{
+			DownloadFolderJob folderJob = folderJobs.valueAt(index);
+			SparseArray<DownloadJob> jobs = folderJob.getDownloadJobs();
+			jobs.remove(job.getIndex());
+			if(jobs.size() == 0)
+				folderJobs.valueAt(index);
+		}
+	}
 	
 	public static SparseArray<DownloadJob> find(int index,SparseArray<DownloadFolderJob> folderJobs){
 		if(folderJobs == null)
@@ -78,15 +99,7 @@ public class SparseArrayUtils {
 		}
 		return key;
 	}
-	
-	private static void add(DownloadJob job,SparseArray<DownloadJob> jobs){
-		if(job == null)
-			return;
-		if(jobs == null)
-			jobs = new SparseArray<DownloadJob>();
-		jobs.put(job.getIndex(), job);
-	}
-	
+
 	private static int keyByMid(String mid,SparseArray<DownloadFolderJob> folderJobs){
 		if(mid == null || folderJobs == null)
 			throw new IllegalArgumentException("Argument can't be null");

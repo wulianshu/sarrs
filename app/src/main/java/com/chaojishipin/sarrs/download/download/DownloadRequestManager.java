@@ -25,6 +25,7 @@ import com.chaojishipin.sarrs.http.parser.HtmlParser;
 import com.chaojishipin.sarrs.http.parser.SingleInfoParser;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.letv.http.LetvHttpConstant;
@@ -57,7 +58,7 @@ public class DownloadRequestManager {
     private int num = 0;
     private String mCurrSinffType;
     private String SNIFF_SUCCESS = "success";
-    private String mDefaultDefinition ="";
+    private String mDefaultDefinition = "";
     private String downLoadUrl;
     private String downLoadType;
 	private final String type = "0"; //0:mp4, 1:m3u8
@@ -90,9 +91,6 @@ public class DownloadRequestManager {
 			return null;
 		}
 		String json = getHttpRequest(url);
-		byte[] decodeData = Base64.decode(json, Base64.DEFAULT);
-//		String result = Utils.AES256_decode(decodeData, ConstantUtils.AES_KEY);
-//		JSONObject jsonObjectdata = new JSONObject(result);
 
 		VStreamInfoList data = getJsonObject(json);
 		int retryNum= 0;
@@ -101,57 +99,33 @@ public class DownloadRequestManager {
 			json = getHttpRequest(url);
 			data = getJsonObject(json);
 		}
-		if(data == null){ //tuner容灾
-//			String secondRequestUrl;			
-//			if(url.startsWith("http://jobsfe")){
-//				String[] strArray= url.split("\\.",2);				
-//				secondRequestUrl = "http://jobsff." + strArray[1];
-//			}else{
-//				secondRequestUrl = url;
-//			}
-//			json = getHttpRequest(secondRequestUrl);
-//			data = getJsonObject(json);
-//			
-//			retryNum= 0;
-//			while(data == null&&retryNum < 2 ){
-//				retryNum++;
-//				json = getHttpRequest(secondRequestUrl);
-//				data = getJsonObject(json);
-//			}
-		}
 		return data;
 	}
+    public String getSnifDownloadData(DownloadEntity downloadEntity) {
+        String url;
+        try {
+            url = initUrl(downloadEntity);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+        String json = getHttpRequest(url);
+        String result = decodeString(json);
+        if (!TextUtils.isEmpty(result)) {
+            return result;
+        }
+        int retryNum = 0;
+        while (json == null && retryNum < 2) {
+            retryNum++;
+            json = getHttpRequest(url);
+            result = decodeString(json);
+        }
 
-	public String getSnifDownloadData(DownloadEntity downloadEntity) {
-		String url;
-		try {
-			url = initUrl(downloadEntity);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-		String json = getHttpRequest(url);
-		String result = decodeString(json);
-		if (!TextUtils.isEmpty(result)) {
-			return result;
-		}
-		int retryNum= 0;
-		while(json == null&&retryNum < 2 ){
-			retryNum++;
-			json = getHttpRequest(url);
-			result = decodeString(json);
-		}
-
-		return result;
-	}
-	
+        return result;
+    }
 	private String initUrl(DownloadEntity downloadEntity) throws UnsupportedEncodingException {
 		
 		Bundle bundle = new Bundle();
-//		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_MMSID, downloadEntity.getLetvMid());
-//		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_PLS, downloadEntity.getCurrClarity());
-//		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_CDETYPE,MoviesHttpApi.LeTvBitStreamParam.KEY_CDETYPE_AES);
-//		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_REQUESTTYPE, ConstantUtils.LeTvBitStreamParam.KEY_DOWNLOAD);
 		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_VID, downloadEntity.getGlobaVid());
 		if (downloadEntity.getSrc() != null && downloadEntity.getSrc().equals("letv"))
 		{
@@ -645,7 +619,7 @@ public class DownloadRequestManager {
 		/**
 		 * m3u8api,m3u8playUrl,mp4api,mp4playUrl使用相同的清晰度
 		 */
-		DownloadEntity entity = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getDownloadEntity(downloadEntity);
+		DownloadEntity entity = DataUtils.getInstance().getDownloadEntity(downloadEntity);
 		if (entity != null && entity.getCurrClarity() != null)
 			mDefaultDefinition = entity.getCurrClarity();
 		else

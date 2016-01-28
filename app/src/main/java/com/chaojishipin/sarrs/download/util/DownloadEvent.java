@@ -18,7 +18,6 @@ import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.download.DownloadHelper;
-import com.chaojishipin.sarrs.download.download.DownloadManager;
 import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 public class DownloadEvent {
 
     private VideoDetailItem mVideoDetailItem;
-    private DownloadManager downLoadManager;
     private int addTime;
     private Activity mCurrentActivity;
 
@@ -40,11 +38,10 @@ public class DownloadEvent {
     public boolean downloadFile(Activity activity, VideoDetailItem item, int index) {
         mCurrentActivity = activity;
         mVideoDetailItem = item;
-        downLoadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
 
         if (mVideoDetailItem != null) {
             Episode episode = VideoInfoAdapter.wrapVideoDetail(mVideoDetailItem, index);
-            if (downLoadManager.selectDownloadJobByMid(episode.getSerialid())) {
+            if (DataUtils.getInstance().selectDownloadJobByMid(episode.getSerialid())) {
                 String content = mCurrentActivity.getResources().getString(R.string.down_exists);
                 ToastUtil.showShortToast(ChaoJiShiPinApplication.getInstatnce(), content);
             } else {
@@ -102,7 +99,7 @@ public class DownloadEvent {
 
     //确认下载
     public void confirmDownload(int position, DownloadEntity entity) {
-        boolean addDownloadSuccess = DataUtils.getInstance(mCurrentActivity).download(entity);
+        boolean addDownloadSuccess = DataUtils.getInstance().download(entity);
         if (!addDownloadSuccess) {
             ToastUtil.showLongToast(ChaoJiShiPinApplication.getInstatnce(), R.string.addfailure, position + 1);
         }else
@@ -114,7 +111,7 @@ public class DownloadEvent {
             , String mid, Episode episode, String site, int addTime) {
         DownloadEntity entity = buildDownloadEntity(position, mid, episode, site, addTime);
         if (null != entity) {
-            ChaoJiShiPinApplication.getInstatnce().getDownloadManager().add(entity);
+            entity.setDisplayName(DownloadHelper.constructName(entity));
         }
         return entity;
     }

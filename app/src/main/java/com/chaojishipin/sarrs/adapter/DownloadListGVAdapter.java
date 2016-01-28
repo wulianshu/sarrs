@@ -1,6 +1,7 @@
 package com.chaojishipin.sarrs.adapter;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +17,29 @@ import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.download.DownloadFolderJob;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
-import com.chaojishipin.sarrs.download.download.DownloadManager;
+import com.chaojishipin.sarrs.download.download.DownloadProvider;
+import com.chaojishipin.sarrs.utils.DataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by wulianshu on 2015/9/2.
  */
-public class DownloadListGVAdapter extends BaseAdapter {
+public class DownloadListGVAdapter extends MyBaseAdapter {
 
-    private Context context;
-    private ArrayList<VideoItem> list;
-    private SparseArray<Boolean> downloadstatus;
-    private VideoDetailItem videoDetailItem;
+    protected ArrayList<VideoItem> list;
+    protected VideoDetailItem videoDetailItem;
+    private Set<String> mDoneSet;
+    private Set<String> mGoingSet;
 
-    public DownloadListGVAdapter(Context context, ArrayList<VideoItem> list, SparseArray<Boolean> downloadstatus, VideoDetailItem videoDetailItem) {
-        this.context = context;
+    public DownloadListGVAdapter(Context context, ArrayList<VideoItem> list, VideoDetailItem videoDetailItem) {
+        super(context);
         this.list = list;
-        this.downloadstatus = downloadstatus;
         this.videoDetailItem = videoDetailItem;
+        mDoneSet = DownloadProvider.getInstance().getCompleteGvidSet();
+        mGoingSet = DownloadProvider.getInstance().getmUnCompleteGvidSet();
     }
 
     @Override
@@ -54,11 +58,11 @@ public class DownloadListGVAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view) {
 
         Viewholder viewholder = null;
         if (view == null) {
-            view = View.inflate(context, R.layout.videodetailactivity_fragment_expand_grid_item, null);
+            view = View.inflate(mContext, R.layout.videodetailactivity_fragment_expand_grid_item, null);
             viewholder = new Viewholder();
             viewholder.imageView = (ImageView) view.findViewById(R.id.video_detail_anim_bottom_showgrid_item_play);
             viewholder.textView = (TextView) view.findViewById(R.id.video_detail_anim_bottom_showgrid_item_title);
@@ -68,20 +72,8 @@ public class DownloadListGVAdapter extends BaseAdapter {
             viewholder = (Viewholder) view.getTag();
         }
         viewholder.lv_item.setVisibility(View.GONE);
-        DownloadManager mDownloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
-//                 SparseArray<DownloadFolderJob> no_complete = mDownloadManager.getProvider().getuncompleteFolderjob();
-//
-        if (downloadstatus != null && downloadstatus.get(i) != null && downloadstatus.get(i)) {
-            SparseArray<DownloadFolderJob> jobs = mDownloadManager.getProvider().getFolderJobs();
-            if (isDownloadComplete(jobs, list.get(i))) {
-                viewholder.imageView.setImageResource(R.drawable.download_complete);
-            } else {
-                viewholder.imageView.setImageResource(R.drawable.downloadlistactivity_download_icon);
-            }
-            viewholder.imageView.setVisibility(View.VISIBLE);
-        } else {
-            viewholder.imageView.setVisibility(View.GONE);
-        }
+        viewholder.imageView.setVisibility(View.VISIBLE);
+        setVideoDownloadState(list.get(i), viewholder.imageView);
         viewholder.textView.setText(list.get(i).getOrder());
         return view;
     }
@@ -92,33 +84,15 @@ public class DownloadListGVAdapter extends BaseAdapter {
         LinearLayout lv_item;
     }
 
-    public boolean isDownloadComplete(SparseArray<DownloadFolderJob> jobs, VideoItem item) {
-        for (int i = 0; i < jobs.size(); i++) {
-            DownloadFolderJob job = jobs.valueAt(i);
-            if (job.getMediaId().equals(videoDetailItem.getId())) {
-                SparseArray<DownloadJob> downloadJobs = job.getDownloadJobs();
-                for (int j = 0; j < downloadJobs.size(); j++) {
-                    if (downloadJobs.valueAt(j).getEntity().getGlobaVid().equals(item.getGvid())) {
-                        return true;
-                    }
-                }
-            }
+    protected void setVideoDownloadState(VideoItem item, ImageView view){
+        if(mDoneSet.contains(item.getGvid())){
+            view.setImageResource(R.drawable.download_complete);
+            view.setVisibility(View.VISIBLE);
+        }else if(mGoingSet.contains(item.getGvid())){
+            view.setImageResource(R.drawable.downloadlistactivity_download_icon);
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.GONE);
         }
-        return false;
-    }
-
-    public boolean unCompleteDownloadlist(SparseArray<DownloadFolderJob> jobs, VideoItem item) {
-        for (int i = 0; i < jobs.size(); i++) {
-            DownloadFolderJob job = jobs.valueAt(i);
-            if (job.getMediaId().equals(videoDetailItem.getId())) {
-                SparseArray<DownloadJob> downloadJobs = job.getDownloadJobs();
-                for (int j = 0; j < downloadJobs.size(); j++) {
-                    if (downloadJobs.valueAt(j).getEntity().getGlobaVid().equals(item.getGvid())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 }

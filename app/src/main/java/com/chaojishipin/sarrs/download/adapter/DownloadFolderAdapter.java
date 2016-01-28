@@ -34,6 +34,7 @@ import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.download.DownloadUtils;
 import com.chaojishipin.sarrs.download.fragment.DownloadFragment;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.ImageCacheManager;
 import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.Utils;
@@ -52,7 +53,6 @@ public class DownloadFolderAdapter extends
     public static String TAG = "DownloadFolderAdapter";
 
     private boolean deleteState;
-    public ArrayList<Boolean> mChecked;
     public int deletedNum;
     //	public DownloadActivity mContext;
     public Activity mContext;
@@ -67,19 +67,10 @@ public class DownloadFolderAdapter extends
                                  Activity context) {
         super(list, context);
         mContext = context;
-//		mP2pHelper = P2pHelper.getInstance();
-        initChecked();
         mSettingManage = new SettingManage(mContext);
         if (null != mContext) {
             mSettingSharePreference = mContext.getSharedPreferences(SettingManage.SETTING_RELATIVE_SHAREPREFERENCE, Context.MODE_PRIVATE);
             mSettingPreferenceEditor = mSettingSharePreference.edit();
-        }
-    }
-
-    private void initChecked() {
-        mChecked = new ArrayList<Boolean>();
-        for (int i = 0; i < ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getAllDownloads().size(); i++) {
-            mChecked.add(false);
         }
     }
 
@@ -116,15 +107,7 @@ public class DownloadFolderAdapter extends
         int size = folderJob.getDownloadJobs().size();
         if (size > 1) {
             DownloadJob job = folderJob.getDownloadJobs().valueAt(0);
-//            ImageLoader.getInstance().displayImage(job.getEntity().getImage(), holder.downloadPoster);
-
-            DisplayImageOptions options1= new DisplayImageOptions.Builder()
-                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.sarrs_main_default)
-                    .showImageForEmptyUri(R.drawable.sarrs_main_default)
-                    .showImageOnLoading(R.drawable.sarrs_main_default)
-                    .build();
-            ImageLoader.getInstance().displayImage(job.getEntity().getImage(), holder.downloadPoster,options1);
+            displayImage(job.getEntity().getImage(), holder.downloadPoster, R.drawable.sarrs_main_default);
 
             DownloadJob jobObj = null;
             boolean isAllWatch = false;
@@ -145,139 +128,27 @@ public class DownloadFolderAdapter extends
             else
                 holder.ifwatch.setVisibility(View.VISIBLE);
 
-//            holder.folderBg.setVisibility(View.VISIBLE);
             holder.downloadName.setText(job.getEntity().getFolderName());
             holder.downloadLength.setText(getTotalSize(folderJob.getDownloadJobs()));
-//            holder.progressBar.setVisibility(View.GONE);
-//            holder.progressText.setVisibility(View.GONE);
-            deleteStateHandler(holder, position);
-//            holder.downloadControl.setVisibility(View.GONE);
-//            holder.totalvideos.setVisibility(View.VISIBLE);
+            deleteStateHandler(holder, folderJob);
             holder.videocounts.setVisibility(View.VISIBLE);
             holder.videocounts.setText(folderJob.getDownloadJobs().size() + "个视频");
         } else {
             DownloadJob job = folderJob.getDownloadJobs().valueAt(0);
-//            holder.folderBg.setVisibility(View.GONE);
             holder.downloadName.setText(job.getEntity().getDisplayName());
             holder.downloadLength.setText(DownloadUtils.getDownloadedSize(job.getDownloadedSize()) + "MB/" + DownloadUtils.getTotalSize(job.getTotalSize()) + "MB");
-            if (job.getProgress() == 100) {
+            if (job.getStatus() == DownloadJob.COMPLETE || job.getProgress() == 100) {
                 Log.i("iswatch", "check ifwatch " + job.getEntity().getIfWatch());
                 if (!"true".equals(job.getEntity().getIfWatch())) {
                     holder.ifwatch.setVisibility(View.VISIBLE);
                 } else {
                     holder.ifwatch.setVisibility(View.GONE);
                 }
-                downloadJobCompleted(holder, job.getEntity(), position);
+                downloadJobCompleted(holder, job.getEntity(), folderJob);
             }
-//            else {
-//                downloadJobUnCompleted(holder, job, position);
-//                switch (job.getStatus()) {
-//                    case DownloadJob.INIT:
-//                        break;
-//                    case DownloadJob.DOWNLOADING:
-//                        holder.downloadControl.setBackgroundResource(R.drawable.download_pausebtn_selector);
-//                        break;
-//                    case DownloadJob.PAUSE:
-//                    case DownloadJob.NO_USER_PAUSE:
-//                        holder.progressText.setText("  暂停中...");
-//                        showExceptionPause(holder, job);
-//                        holder.downloadControl.setBackgroundResource(R.drawable.download_controlbtn_selector);
-//                        break;
-//                    case DownloadJob.WAITING:
-//                        holder.progressText.setText("  等待中...");
-//                        holder.downloadControl.setBackgroundResource(R.drawable.download_waitbtn_selector);
-//                        if (job.getProgress() == 0)
-//                            holder.downloadLength.setText("0MB/" + DownloadUtils.getTotalSize(job.getTotalSize()) + "MB");
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                holder.downloadControl.setOnClickListener(new DownloadControlListener(job, holder));
-//            }
         }
 
-//		holder.btnDelete.setOnClickListener(new DeleteListener(position));
         return convertView;
-    }
-
-    private class DownloadControlListener implements OnClickListener {
-        private final DownloadJob job;
-        private final ViewHolder holder;
-
-        private DownloadControlListener(DownloadJob job, ViewHolder holder) {
-            this.job = job;
-            this.holder = holder;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (job.getStatus()) {
-                case DownloadJob.NO_USER_PAUSE:
-                case DownloadJob.PAUSE:
-                    popIfContinueDownloadDialog();
-                    break;
-                case DownloadJob.WAITING:
-//                    holder.downloadControl.setBackgroundResource(R.drawable.download_controlbtn_selector);
-                    job.cancel();
-//                    holder.progressText.setText("  暂停中...");
-                    break;
-                case DownloadJob.DOWNLOADING:
-//                    holder.downloadControl.setBackgroundResource(R.drawable.download_controlbtn_selector);
-                    job.pauseByUser();
-//                    holder.progressText.setText("  暂停中...");
-                    break;
-            }
-        }
-
-        private void popIfContinueDownloadDialog() {
-            if (NetworkUtil.reportNetType(mContext) == 2 && !job.isDownloadcan3g()) {
-                if (job.isCurrentPathExist()) {
-//					mP2pHelper.stopDownloadTask(job);
-                    checkIfContinueDownloadDialog();
-                }
-            } else {
-                start(job, holder);
-            }
-        }
-
-        private void checkIfContinueDownloadDialog() {
-            Builder customBuilder = new Builder(mContext);
-            customBuilder
-                    .setTitle(R.string.tip)
-                    .setMessage(R.string.wireless_tip)
-                    .setPositiveButton(R.string.continue_download,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-//			                    	job.setUserPauseWhen3G(false);
-                                    mSettingManage.setToggleButtonPreference(true, mSettingPreferenceEditor, SettingManage.IS_DOWNLOAD_CAN_3G);
-                                    start(job, holder);
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setNegativeButton(R.string.pause_download,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-//			                        job.setUserPauseWhen3G(true);
-                                    //start(job,holder);
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setOnKeyListener(new OnKeyListener() {
-                        @Override
-                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//								job.setUserPauseWhen3G(true);
-//								start(job,holder);
-                                dialog.dismiss();
-                            }
-                            return false;
-                        }
-                    });
-            Dialog dialog = customBuilder.create();
-            dialog.show();
-        }
     }
 
     public void start(DownloadJob job, ViewHolder holder) {
@@ -288,95 +159,29 @@ public class DownloadFolderAdapter extends
                 if (TextUtils.isEmpty(job.getEntity().getPath()) && !TextUtils.isEmpty(job.getmDestination())) {
                     job.getEntity().setPath(job.getmDestination());
                 }
-                job.start();
-                if (null != holder) {
-//                    holder.downloadControl.setBackgroundResource(R.drawable.download_pausebtn_selector);
-//                    holder.progressText.setText("0.0KB/s");
-                }
+                DataUtils.getInstance().startDownload(job);
             }
         }
     }
 
-
-    //下载未完成的页面显示与处理
-    private void downloadJobUnCompleted(ViewHolder holder, DownloadJob job, int position) {
-//        holder.progressText.setVisibility(View.VISIBLE);
-//        holder.downloadControl.setVisibility(View.VISIBLE);
-//        holder.progressBar.setVisibility(View.VISIBLE);
-//        holder.progressBar.setMax(100);
-//        holder.progressBar.setProgress(job.getProgress());
-//        holder.progressText.setText(job.getRate());
-        deleteStateHandler(holder, position);
-    }
-
-    private void deleteStateHandler(ViewHolder holder, int position) {
+    private void deleteStateHandler(ViewHolder holder, DownloadFolderJob job) {
         if (deleteState) {
             holder.btnDelete.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_white_bg));
-            if (position >= mChecked.size()) {
-                for (int i = mChecked.size() - 1; i < position; i++) {
-                    mChecked.add(false);
-                }
-            }
-            if (position < mChecked.size()) {
-                if (mChecked.get(position)) {
-                    holder.btnDelete.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_red_bg));
-                } else {
-                    holder.btnDelete.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_white_bg));
-                }
+            if (job.isCheck()) {
+                holder.btnDelete.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_red_bg));
+            } else {
+                holder.btnDelete.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_white_bg));
             }
             holder.btnDelete.setVisibility(View.VISIBLE);
-//            holder.downloadControl.setVisibility(View.GONE);
-//			holder.rlDownLayout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-//			holder.rlDownLayout.setBackgroundResource(R.drawable.video_listview_bg);
         } else {
             holder.btnDelete.setVisibility(View.GONE);
-//            holder.downloadControl.setVisibility(View.VISIBLE);
-//			holder.rlDownLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-//			holder.rlDownLayout.setBackgroundResource(R.drawable.download_folder_selector);
         }
     }
 
     //下载完成的页面显示与处理
-    private void downloadJobCompleted(final ViewHolder holder, DownloadEntity entity, int position) {
-//        holder.progressBar.setVisibility(View.GONE);
-//        holder.progressText.setVisibility(View.GONE);
+    private void downloadJobCompleted(final ViewHolder holder, DownloadEntity entity, DownloadFolderJob job) {
         holder.videocounts.setText("1个视频");
-//        Log.i("downloadJobCompleted", "position is " + position + "and image url is " + entity.getImage());
-//        ImageLoader.getInstance().displayImage(entity.getImage(), holder.downloadPoster);
         ImageLoader.getInstance().displayImage(entity.getImage(),holder.downloadPoster);
-//        ImageCacheManager.loadImage(entity.getImage(), new com.android.volley.toolbox.ImageLoader.ImageListener() {
-//            @Override
-//            public void onResponse(com.android.volley.toolbox.ImageLoader.ImageContainer response, boolean isImmediate) {
-//                if (response.getBitmap() != null) {
-//                    holder.downloadPoster.setImageBitmap(response.getBitmap());
-//                }
-//            }
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                holder.downloadPoster.setImageResource(R.drawable.search_default_poster);
-//            }
-//        });
-//        ImageLoader.getInstance().displayImage(entity.getImage(), holder.downloadPoster, new ImageLoadingListener() {
-//            @Override
-//            public void onLoadingStarted(String s, View view) {
-//            }
-//
-//            @Override
-//            public void onLoadingFailed(String s, View view, FailReason failReason) {
-//                holder.downloadPoster.setImageResource(R.drawable.search_default_poster);
-//            }
-//
-//            @Override
-//            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-//                ImageLoader.getInstance().displayImage(s, holder.downloadPoster);
-//            }
-//
-//            @Override
-//            public void onLoadingCancelled(String s, View view) {
-//
-//            }
-//        });
         if (DownloadHelper.getDownloadedFileSize(entity, entity.getPath()) == 0) {
             holder.videocounts.setVisibility(View.GONE);
             holder.ifwatch.setVisibility(View.GONE);
@@ -392,47 +197,7 @@ public class DownloadFolderAdapter extends
                 holder.downloadLength.setText(DownloadUtils.getTotalSize(DownloadHelper.getDownloadedFileSize(entity, entity.getPath())) + "MB");
             }
         }
-        deleteStateHandler(holder, position);
-//        holder.downloadControl.setVisibility(View.GONE);
-    }
-
-    private void showExceptionPause(final ViewHolder holder,
-                                    final DownloadJob job) {
-//        if (job.getExceptionType() == DownloadJob.NET_SHUT_DOWN)
-//            holder.progressText.setText("  " + mContext.getString(R.string.net_shutdown));
-//        if (job.getExceptionType() == DownloadJob.NO_SD)
-//            holder.progressText.setText("  " + mContext.getString(R.string.no_sdcard_added));
-//        if (job.getExceptionType() == DownloadJob.SD_SPACE_FULL)
-//            holder.progressText.setText("  " + mContext.getString(R.string.no_space_tip));
-//        if (job.getExceptionType() == DownloadJob.FILE_NOT_FOUND)
-//            holder.progressText.setText("  " + mContext.getString(R.string.no_sdcard_added));
-    }
-
-    class DeleteListener implements OnClickListener {
-
-        public int mPosition;
-
-        public DeleteListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            ToggleButton deleteBtn = (ToggleButton) v;
-            DownloadFolderJob folderJob = mList.valueAt(mPosition);
-            int size = folderJob.getDownloadJobs().size();
-            if (deleteBtn.isChecked()) {
-                deletedNum += size;
-            } else {
-                deletedNum -= size;
-            }
-            mChecked.set(mPosition, deleteBtn.isChecked());
-            if (deletedNum == 0) {
-                fragment.restoreDeleteView();
-            } else if (deletedNum > 0) {
-                showUserSelecedItem();
-            }
-        }
+        deleteStateHandler(holder, job);
     }
 
     // 设置编辑删除项
@@ -442,16 +207,16 @@ public class DownloadFolderAdapter extends
 
         DownloadFolderJob folderJob = mList.valueAt(position);
         int size = folderJob.getDownloadJobs().size();
-        if (mChecked.get(position)) {
+        if (folderJob.isCheck()) {
             // 选中-->取消
             deleteBtn.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_white_bg));
             deletedNum -= size;
-            mChecked.set(position, false);
+            folderJob.setCheck(false);
         } else {
             // 取消-->选中
             deleteBtn.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.radiobutton_red_bg));
             deletedNum += size;
-            mChecked.set(position, true);
+            folderJob.setCheck(true);
         }
         if (deletedNum == 0) {
             fragment.restoreDeleteView();
@@ -492,18 +257,10 @@ public class DownloadFolderAdapter extends
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-//		                    	mP2pHelper.removeP2pFileFromDisk(dJob);
-//		                    	mP2pHelper.removeP2pTaskFromList(dJob);
                                 DownloadJob job = dJob;
-//		                    	if(mP2pHelper.isP2pDownLoad(dJob.getEntity())) {
-//		                    		String p2pPath = mP2pHelper.getP2PDownloadPath(dJob.getEntity());
-//		                    		job.setmDestination(p2pPath);
-//			                    	job.getEntity().setPath(p2pPath);
-//		                    	} else {
                                 job.setmDestination(DownloadHelper.getDownloadPath());
                                 job.getEntity().setPath(DownloadHelper.getDownloadPath());
-//		                    	}
-                                ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getProvider().updateDownloadEntity(job);
+                                DataUtils.getInstance().updateDownloadEntity(job);
                                 start(job, holder);
                                 dialog.dismiss();
                             }

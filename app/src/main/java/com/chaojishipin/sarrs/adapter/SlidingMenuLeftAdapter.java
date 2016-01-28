@@ -17,6 +17,8 @@ import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.ImageCacheManager;
 import com.chaojishipin.sarrs.utils.LogUtil;
+import com.chaojishipin.sarrs.utils.SharePreferenceManager;
+import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.letv.http.bean.LetvBaseBean;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -81,6 +83,8 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
             TextView title = (TextView) commonViewHolder.getView(R.id.slidingmenu_lefe_view_title);
             title.setText(menuLeft.getTitle());
             ImageView imageView = (ImageView) commonViewHolder.getView(R.id.slidingmenu_left_view_icon);
+            // 直播小黄点
+            ImageView livePush = (ImageView) commonViewHolder.getView(R.id.live_push);
 //          使用三级图片缓存加载ICON
 //          ImageCacheManager.loadImage(menuLeft.getIcon(),imageView,null,null);
             if (isSelectedList.get(position)) {
@@ -132,7 +136,8 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
                // imageView.setImageResource(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),false));
 
             }
-
+            // 更新消息推送ui
+            refreshLivePushView(menuLeft, livePush);
         } else if (TYPE_LINE == type) {
             LogUtil.e("Line", "" + type);
             commonViewHolder = CommonViewHolder.get(mContext, convertView, parent, R.layout.slidingmenu_left_line_mode, position);
@@ -154,7 +159,8 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
 
                 TextView now_tv = viewHolder.getView(R.id.slidingmenu_lefe_view_title);
                 ImageView now_iv = viewHolder.getView(R.id.slidingmenu_left_view_icon);
-                DisplayImageOptions options1= new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
+                ImageView livePush = viewHolder.getView(R.id.live_push);
+                DisplayImageOptions options1 = new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
                         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                         .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(slidingMenuLeft.getContent_type(),slidingMenuLeft.getCid(),true))
                         .showImageForEmptyUri(R.color.color_00000000)
@@ -192,26 +198,50 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
                 isSelectedList.set(position, true);
                 lastview = view;
                 last_sliding = (SlidingMenuLeft) getItem(position);
+                // 更新消息推送ui
+                refreshLivePushView(slidingMenuLeft, livePush);
             }
-        }else if(position == -1 ){
-            if(lastview!=null){
-            CommonViewHolder lastholder = (CommonViewHolder) lastview.getTag();
-            TextView last_tv = lastholder.getView(R.id.slidingmenu_lefe_view_title);
-            ImageView last_iv = lastholder.getView(R.id.slidingmenu_left_view_icon);
-                DisplayImageOptions options1= new DisplayImageOptions.Builder()
+        } else if (position == -1) {
+            if (lastview != null) {
+                CommonViewHolder lastholder = (CommonViewHolder) lastview.getTag();
+                TextView last_tv = lastholder.getView(R.id.slidingmenu_lefe_view_title);
+                ImageView last_iv = lastholder.getView(R.id.slidingmenu_left_view_icon);
+                DisplayImageOptions options1 = new DisplayImageOptions.Builder()
                         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                        .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(last_sliding.getContent_type(),last_sliding.getCid(),false))
+                        .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(last_sliding.getContent_type(), last_sliding.getCid(), false))
                         .showImageForEmptyUri(R.color.color_e7e7e7)
                         .build();
-            ImageLoader.getInstance().displayImage(last_sliding.getIcon(), last_iv,options1);
-            last_tv.setTextColor(Color.WHITE);
-            for (int i = 0; i < isSelectedList.size(); i++) {
-                isSelectedList.set(i, false);
-            }
+                ImageLoader.getInstance().displayImage(last_sliding.getIcon(), last_iv, options1);
+                last_tv.setTextColor(Color.WHITE);
+                for (int i = 0; i < isSelectedList.size(); i++) {
+                    isSelectedList.set(i, false);
+                }
             }
             lastview = null;
             last_sliding = null;
-
         }
+    }
+
+    /**
+     * 显示直播频道消息推送提示
+     *
+     * @param menuLeft
+     * @param livePush
+     */
+    private void refreshLivePushView(SlidingMenuLeft menuLeft, ImageView livePush) {
+        if (ConstantUtils.LIVE_CONTENT_TYPE.equalsIgnoreCase(menuLeft.getContent_type())) {
+            String serverVersion = menuLeft.getVersion();
+            String localVersion = SharePreferenceManager.getVaule(mContext, ConstantUtils.LIVE_PUSH_KEY, "0");
+            LogUtil.e(Utils.LIVE_TAG, "##################refreshLivePushView called##################");
+            LogUtil.e(Utils.LIVE_TAG, "###################serverVersion is " + serverVersion);
+            LogUtil.e(Utils.LIVE_TAG, "###################localVersion is " + localVersion);
+            // 本地版本小于服务器版本才显示
+            if (!StringUtil.isEmpty(serverVersion) && !StringUtil.isEmpty(localVersion) && Integer.valueOf(localVersion) < Integer.valueOf(serverVersion)) {
+                livePush.bringToFront();
+                livePush.setVisibility(View.VISIBLE);
+            } else
+                livePush.setVisibility(View.GONE);
+        } else
+            livePush.setVisibility(View.GONE);
     }
 }

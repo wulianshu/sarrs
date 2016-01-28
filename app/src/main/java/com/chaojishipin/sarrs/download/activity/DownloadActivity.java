@@ -16,6 +16,7 @@ import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinBaseActivity;
 import com.chaojishipin.sarrs.download.fragment.DownloadFragment;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.widget.TitleActionBar;
 
 
@@ -117,27 +118,10 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
         finish();
     }
 
-
-//    public boolean isShowFilterButton() {
-//        return isShowFilterButton;
-//    }
-//
-//    public void setIsShowFilterButton(boolean isShowFilterButton) {
-//        this.isShowFilterButton = isShowFilterButton;
-//    }
-//
-//    /**
-//     * @param isShowFilterButton 是否显示
-//     */
-//    public void setFilterButtonState(boolean isShowFilterButton) {
-//        this.isShowFilterButton = isShowFilterButton;
-//        supportInvalidateOptionsMenu();
-//    }
-
     public void updateDeleteIcon() {
         if(mTitleActionBar!=null){
             mTitleActionBar.setmRightButtonVisibility(false);
-            if (ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads().size() > 0) {
+            if (DataUtils.getInstance().getCompletedDownloads().size() > 0) {
                 mTitleActionBar.setRightEditButtonVisibility(true);
             } else {
                 mTitleActionBar.setRightEditButtonVisibility(false);

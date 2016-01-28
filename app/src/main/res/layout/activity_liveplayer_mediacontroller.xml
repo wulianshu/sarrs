@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mediacontroller_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--直播播放器顶部-->
+    <RelativeLayout
+        android:id="@+id/mediacontroller_top"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/activity_liveplayer_mediacontroller_top" />
+    </RelativeLayout>
+
+    <!-- 加载时的Loading -->
+    <include
+        android:id="@+id/layout_loading"
+        layout="@layout/videoplayerfragment_mideaplayer_loading_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+    <!-- 加载失败超时-->
+    <include
+        android:id="@+id/videoplayer_load_timeout_layout"
+        layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_timeout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
+    <!-- 网络异常界面-->
+    <include
+        android:id="@+id/videoplayer_error_layout"
+        layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_net"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+</RelativeLayout>

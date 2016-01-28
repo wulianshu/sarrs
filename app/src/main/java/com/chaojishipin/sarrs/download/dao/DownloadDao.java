@@ -8,6 +8,7 @@ import com.chaojishipin.sarrs.bean.Episode;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
+import com.chaojishipin.sarrs.utils.DataUtils;
 
 import java.util.ArrayList;
 
@@ -17,8 +18,7 @@ import java.util.ArrayList;
 public class DownloadDao {
     // 根据下载数据库中的数据更新已下载标记
     public static SparseArray<Boolean> updateDownloadedFlagByDB(ArrayList<VideoItem> episodeList,SparseArray<Boolean> isSelected) {
-        ArrayList<DownloadJob> downloadList = ChaoJiShiPinApplication.getInstatnce()
-                .getDownloadManager().getAllDownloads();
+        ArrayList<DownloadJob> downloadList = DataUtils.getInstance().getAllDownloads();
         if (null != downloadList && downloadList.size() > 0) {
             DownloadEntity entity;
             String downloadSerialsId;

@@ -33,11 +33,16 @@ public class ConstantUtils {
     //排行榜Contant_Type
     public static String RANKLIST_CONTENT_TYPE = "9";
 
+    //直播Contant_Type
+    public static String LIVE_CONTENT_TYPE = "6";
+
     public final static String TITLE_MOVIE = "电影";
 
     public final static String TITLE_SUGGEST = "精彩推荐";
 
     public final static String TITLE_ZHUANTI = "专题";
+
+    public final static String TITLE_LIVE = "直播";
 
     public final static int NET_TYPE_ERROR = -1;
 
@@ -186,14 +191,17 @@ public class ConstantUtils {
     public final static String REQUEST_ADDCOMMENTINFO_TAG = "request_addcomment";
     public final static String REQUEST_INTERESTRECOMMEND_TAG = "request_interestcommend";
 
-    public final static String UPLOAD_HISTORY_RECORD="upload_history_record";
-    public final static String UPLOAD_HISTORY_RECORD_ONE_RECORD="upload_history_record_one_record";
-    public final static String REQUEST_FAVORITE_BATCH="request_favorite_batch";
-    public final static String REQUEST_GET_FAVORITE_RESULT="request_favorite_result";
-    public final static String REQUEST_ADD_FAVORITE="request_add_favorite";
-    public final static String REQUEST_CANCEL_FAVORITE="request_cancel_favorite";
-    public final static String REQUEST_ISEXISTS_FAVORITE="request_isexists_favorite";
-    public final static String REQUEST_UPLOAD_STAT="request_upload_stat";
+    public final static String UPLOAD_HISTORY_RECORD = "upload_history_record";
+    public final static String UPLOAD_HISTORY_RECORD_ONE_RECORD = "upload_history_record_one_record";
+    public final static String REQUEST_FAVORITE_BATCH = "request_favorite_batch";
+    public final static String REQUEST_GET_FAVORITE_RESULT = "request_favorite_result";
+    public final static String REQUEST_ADD_FAVORITE = "request_add_favorite";
+    public final static String REQUEST_CANCEL_FAVORITE = "request_cancel_favorite";
+    public final static String REQUEST_ISEXISTS_FAVORITE = "request_isexists_favorite";
+    public final static String REQUEST_UPLOAD_STAT = "request_upload_stat";
+    // live相关
+    public final static String REQUEST_LIVE_DATA_TAG = "request_live_data";
+    public final static String REQUEST_LIVE_STREAM_DATA_TAG = "request_live_stream_data";
     /*****************************
      * 播放器来源页面枚举值
      ****************************************/
@@ -260,8 +268,19 @@ public class ConstantUtils {
     //渠道名称启动的时候赋值
     public static String CHANNEL_NAME = "0";
 
+    //直播频道id
+    public static final String LIVE_SPORT = "1";
+    public static final String LIVE_MUSIC = "2";
+    public static final String LIVE_ENTERTAINMENT = "3";
+    public static final String LIVE_TELEVISION = "4";
+    public static final String LIVE_OTHER = "5";
+    //直播小红点key值
+    public static final String LIVE_PUSH_KEY = "live_push_key";
 
-
+    public interface HttpRequestStatus {
+        String STATUSCODE = "200";
+        String STATUS = "status";
+    }
 
     public interface ThirdpartySecret{
         public static final String START = "1@3$545";

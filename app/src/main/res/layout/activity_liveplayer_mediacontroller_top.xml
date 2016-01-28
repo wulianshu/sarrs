@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_player_top_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_b2000000">
+
+    <ImageView
+        android:id="@+id/top_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_mediacontroller_margintop"
+        android:background="@color/black" />
+
+    <RelativeLayout
+        android:id="@+id/top_small"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_videoplayer_title_marginleft"
+        android:layout_below="@id/top_status_bar"
+        android:background="@color/color_00000000">
+
+        <ImageView
+            android:id="@+id/mediacontroller_top_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/selector_videoplayer_back" />
+
+        <TextView
+            android:id="@+id/tv_video_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_videoplayer_title_marginleft"
+            android:layout_marginRight="80dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/color_b2ffffff"
+            android:textSize="@dimen/sarrs_text_15sp" />
+
+    </RelativeLayout>
+</RelativeLayout>

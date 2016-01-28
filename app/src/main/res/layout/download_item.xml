@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/top_edit_layout"
-    android:background="@color/color_ffffff">
+    android:background="@color/color_ffffff"
+    android:padding="10dp">
 
 
     <com.chaojishipin.sarrs.widget.EqualRatioImageView
         android:id="@+id/download_poster"
         android:layout_width="112dp"
         android:layout_height="63dp"
-        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
-        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
-        android:layout_marginTop="@dimen/sarrs_dimen_10dp"
         android:layout_toRightOf="@+id/edit_delete"
         android:scaleType="centerCrop"
         android:src="@drawable/search_default_poster"
@@ -22,11 +20,11 @@
 
     <ToggleButton
         android:id="@+id/edit_delete"
-        android:layout_width="@dimen/sarrs_dimen_10dp"
-        android:layout_height="@dimen/sarrs_dimen_10dp"
+        android:layout_width="@dimen/sarrs_dimen_14dp"
+        android:layout_height="@dimen/sarrs_dimen_14dp"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/sarrs_dimen_10dp"
+        android:layout_marginRight="@dimen/sarrs_dimen_10dp"
         android:background="@drawable/radiobutton_background"
         android:clickable="false"
         android:focusable="false"
@@ -50,7 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:layout_alignTop="@+id/download_poster"
-        android:layout_marginBottom="@dimen/sarrs_dimen_10dp"
         android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left"
         android:layout_toRightOf="@+id/download_poster">
 

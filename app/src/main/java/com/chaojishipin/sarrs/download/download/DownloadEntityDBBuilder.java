@@ -7,7 +7,10 @@ import android.text.TextUtils;
 
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.StringUtil;
+
+import java.io.File;
 
 
 public class DownloadEntityDBBuilder {	
@@ -25,7 +28,7 @@ public class DownloadEntityDBBuilder {
 	private static final String PATH = "path";
 //	private static final String LANGUAGE = "language";
 	private static final String INDEX = "position";
-	private static final String DOWNLOAD_TYPE = "download_type";
+	public static final String DOWNLOAD_TYPE = "download_type";
 	private static final String SITE = "site";
 	private static final String PORDER = "porder";
 //	private static final String REQUEST_STIE = "request_site";
@@ -97,6 +100,15 @@ public class DownloadEntityDBBuilder {
 		int progress = query.getInt(query.getColumnIndex(DOWNLOADED));
 		if (progress == 1) {
 			dJob.setProgress(100);
+		}else{
+			int p;
+			if(dJob.getTotalSize() <= 0)
+				p = 0;
+			else {
+				long size = DataUtils.getLocalFile(dJob).length();
+				p = (int) (size * 100F / dJob.getTotalSize());
+			}
+			dJob.setProgress(p);
 		}
 		if(dEntry.getIndex()==0){
 			int index = getIndex(dEntry);

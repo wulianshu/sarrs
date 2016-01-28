@@ -27,6 +27,7 @@ import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.thread.ThreadPoolManager;
 import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.FileUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.ToastUtil;
@@ -71,14 +72,12 @@ public class DownloadJob implements Comparable<DownloadJob>{
     private long mTotalSize;
     private long mDownloadedSize;
     private long mM3u8DownloadedSize;
-    private String mRate;
+    private long mRate;
     private long mOldTime = 0;
     private long mOldBytes = 0;
     private String mDestination;
     private int mIndex;
     private DownloadJobListener mListener;
-    private DownloadManager mDownloadManager;
-    private DownloadTask mDownloadTask;
     private int mRetryNum;
     private int mTotalRetryNum;
     private boolean autoSnifferRetry = true;//站外源，走截流时，自动重试走截流逻辑
@@ -92,6 +91,7 @@ public class DownloadJob implements Comparable<DownloadJob>{
     public static final int DELETE = 6;
     public static final int PAUSEONSPEED = 7;
     public static final int NO_USER_PAUSE = 0; // 指网络等其他原因非用户任务暂停
+    public static final int FAIL = 8;
     private int mStatus = INIT;
 
     public final static int NET_TIMEOUT = 1;
@@ -143,6 +143,8 @@ public class DownloadJob implements Comparable<DownloadJob>{
     private boolean isjscut = false;
     ArrayList<List<String>> totalstreamlist = new ArrayList<List<String>>();
 
+    private Runnable mRunnable;
+
     public int getCurrent_streamlistposition() {
         return current_streamlistposition;
     }
@@ -160,7 +162,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
         mProgress = initProgress();
         mStatus = data.getStatus();
         mTotalSize = data.getFileSize();
-        mDownloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
         initSniffRepeortData();
         initWebView(ChaoJiShiPinApplication.getInstatnce().getApplicationContext());
     }
@@ -227,14 +228,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
         this.isUserPauseWhen3G = isUserPauseWhen3G;
     }
 
-    public DownloadManager getDownloadManager() {
-        return mDownloadManager;
-    }
-
-    public void setDownloadManager(DownloadManager mDownloadManager) {
-        this.mDownloadManager = mDownloadManager;
-    }
-
     public void setStatus(int status) {
         this.mStatus = status;
     }
@@ -248,7 +241,7 @@ public class DownloadJob implements Comparable<DownloadJob>{
     }
 
     public boolean isDownloadcan3g() {
-        return mDownloadManager.IsDownloadcan3g();
+        return DataUtils.getInstance().IsDownloadcan3g();
     }
 
     public long getTotalSize() {
@@ -258,9 +251,8 @@ public class DownloadJob implements Comparable<DownloadJob>{
     public void setTotalSize(long mTotalSize) {
 //        LogUtil.e("wulianshu","文件总大小为："+mTotalSize);
         this.mTotalSize = mTotalSize;
-        DownloadProvider mDownloadProvider = mDownloadManager.getProvider();
         if (mTotalSize > 0)
-            mDownloadProvider.updateDatabaseValue(getEntity(), "file_length", (int) mTotalSize);
+            DownloadProvider.getInstance().updateDatabaseValue(getEntity(), "file_length", (int) mTotalSize);
     }
 
     public void setDownloadedSize(long mDownloadedSize) {
@@ -282,8 +274,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
                     isfeedbackalready = true;
                 }
             }
-            mDownloadManager.notifyObservers();
-            notifyDownloadOnUpdate();
         }
     }
 
@@ -300,8 +290,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
             this.mRate = getRate(mDownloadedSize - mOldBytes);
             System.out.println("rate source:" + this.mRate);
             mOldBytes = mDownloadedSize;
-            mDownloadManager.notifyObservers();
-            notifyDownloadOnUpdate();
         }
     }
 
@@ -313,155 +301,87 @@ public class DownloadJob implements Comparable<DownloadJob>{
             mOldTime = curTime;
             this.mRate = getRate(mM3u8DownloadedSize - mOldBytes);
             mOldBytes = mM3u8DownloadedSize;
-            mDownloadManager.notifyObservers();
-            notifyDownloadOnUpdate();
         }
     }
 
-    public void setRate(String strRate) {
+    public void setRate(long strRate) {
         mRate = strRate;
     }
 
-    public String getRate() {
-        if (TextUtils.isEmpty(mRate)) {
-            mRate = "0.0KB/s";
-        }
+    public long getByteRate(){
         return mRate;
     }
 
-    public String getRate(long l) {
+    public String getRate() {
+        if(mRate == 0)
+            return "0.0KB/s";
+        return DownloadUtils.getDownloadedSpeed(mRate);
+    }
+
+    public long getRate(long l) {
         System.out.println("l:" + l);
-
-        float rate = (int) (l / 1024 / 1.5);
-//		if (rate > 3000 || rate < 0.0)
-        if (rate < 0.0)
-            rate = 0.0f;
-        return rate + "KB/s";
+        if(l < 0)
+            return 0;
+        return (int) (l / 1.5);
     }
 
-    public void start() {
-        begintime = (int)(System.currentTimeMillis()/1000);
-        isjscut = false;
-        isfeedbackalready = false;
-        LogUtil.e("wulianshu", "DownLoadJob start 调用");
-        //内存小于500M不下载
-        if (ContainSizeManager.getInstance().getFreeSize() <= Utils.SDCARD_MINSIZE) {
-            mStatus = NO_USER_PAUSE;
-            ToastUtil.showShortToast(ChaoJiShiPinApplication.getInstatnce().getApplicationContext(), R.string.sdcard_nospace);
-            return;
-        }
-        int num = mDownloadManager.getMaxDownloadNum();
-        mExceptionType = 0;
-        synchronized (DownloadJob.class) {
-            if (mDownloadManager.DOWNLOADING_NUM < num) {
-                LogUtil.e("wulianshu", "正在下载：" + gvid);
-                mDownloadManager.DOWNLOADING_NUM = 1;
-                currentdownloadpositon = 0;
-                mDownloadTask = new DownloadTask(this);
-                //走外站源
-                LogUtil.e("v1.1.2","site "+this.getEntity().getSite());
-                LogUtil.e("v1.1.2","src "+this.getEntity().getSrc());
-                if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite())) {
-                    LogUtil.e("v1.1.2","download source outiste! ");
-                    if (outSiteDataInfo == null) {
-                        mRetryNum = 0;
-                    }
-                    gvid = getEntity().getGlobaVid();
-                    LogUtil.e("wulianshu", "走外站源下载的下载");
-                    HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_DOWNLOADURL_TAG);
-                    LogUtil.e("wulianshu", "走外站源 请求js截流详情");
-                    HttpApi.requestOutSiteData(gvid, null, playid, mFormat).start(new OutSiteDataListener());
-
-                } else {
-                    LogUtil.e("v1.1.2","download source insite! ");
-                    LogUtil.e("wulianshu","走乐视源下载。。。。。。。");
-                    isjscut = false;
-                    if (Utils.getAPILevel() >= 11) {
-                        mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    } else {
-                        mDownloadTask.execute();
-                    }
-                }
-                mStatus = DOWNLOADING;
-                mDownloadManager.setStatus(mEntity, mStatus);
-            } else {
-                LogUtil.e("wulianshu", "A正在下载的数量大于0暂停当前的下载任务");
-                mStatus = WAITING;
-                mDownloadManager.setStatus(mEntity, mStatus);
-            }
-
-            if (downloadHandler != null) {
-                downloadHandler.onStart();
-            }
-
-        }
-    }
-
-    public void onCompleted() {
-//		LogUtils.i("dyf", "下载成功：onCompleted");
-        //wulianshu
-        mRetryNum = 0;
-        mStatus = DownloadJob.COMPLETE;
-        notifyDownloadOnPause();
-        notifyDownloadEnded();
-        mDownloadManager.DOWNLOADING_NUM = 0;
-        mDownloadManager.startNextTask();
-    }
-
-    public boolean pauseByUser() {
-        setRate("0");
-        mStatus = PAUSE;
-        mTotalRetryNum = 0;
-        mDownloadManager.DOWNLOADING_NUM = 0;
-        //wulianshu
-        mRetryNum = 0;
-        mDownloadManager.startNextTask();
-        mDownloadManager.setStatus(mEntity, PAUSE);
-        if (downloadHandler != null) {
-            downloadHandler.onPause(this);
-        }
-        return mDownloadTask.cancel(true);
-    }
-
-    /**
-     * 下载失败后，置为暂停状态。和点击暂停有区别：DOWNLOADING_NUM不自减
-     */
-    public boolean pauseByDownLoadFailure() {
-        mStatus = PAUSE;
-        //wulianshu
-        mRetryNum = 0;
-        mTotalRetryNum = 0;
-//		mDownloadManager.DOWNLOADING_NUM--;
-        mDownloadManager.startNextTask();
-        mDownloadManager.setStatus(mEntity, PAUSE);
-        if (downloadHandler != null) {
-            downloadHandler.onPause(this);
-        }
-        return mDownloadTask.cancel(true);
-    }
-
-    public boolean allPause() {
-        mStatus = PAUSE;
-        mDownloadManager.DOWNLOADING_NUM = 0;
-//		mDownloadManager.startNextTask();
-        mDownloadManager.setStatus(mEntity, PAUSE);
-        if (downloadHandler != null) {
-            downloadHandler.onPause(this);
-        }
-        boolean result = false;
-        if (null != mDownloadTask) {
-            result = mDownloadTask.cancel(true);
-        }
-        return result;
-    }
-
-    /**
-     * Waiting-->Pause
-     */
-    public void cancel() {
-        mStatus = PAUSE;
-        mDownloadManager.setStatus(mEntity, PAUSE);
-    }
+//    public void start() {
+//        begintime = (int)(System.currentTimeMillis()/1000);
+//        isjscut = false;
+//        isfeedbackalready = false;
+//        LogUtil.e("wulianshu", "DownLoadJob start 调用");
+//        //内存小于500M不下载
+//        if (ContainSizeManager.getInstance().getFreeSize() <= Utils.SDCARD_MINSIZE) {
+//            mStatus = NO_USER_PAUSE;
+//            ToastUtil.showShortToast(ChaoJiShiPinApplication.getInstatnce().getApplicationContext(), R.string.sdcard_nospace);
+//            return;
+//        }
+//        int num = mDownloadManager.getMaxDownloadNum();
+//        mExceptionType = 0;
+//        synchronized (DownloadJob.class) {
+//            if (mDownloadManager.DOWNLOADING_NUM < num) {
+//                LogUtil.e("wulianshu", "正在下载：" + gvid);
+//                mDownloadManager.DOWNLOADING_NUM = 1;
+//                currentdownloadpositon = 0;
+//                mDownloadTask = new DownloadTask(this);
+//                //走外站源
+//                LogUtil.e("v1.1.2","site "+this.getEntity().getSite());
+//                LogUtil.e("v1.1.2","src "+this.getEntity().getSrc());
+//                if (!"letv".equals(this.getEntity().getSite()) && !"nets".equals(this.getEntity().getSite())) {
+//                    LogUtil.e("v1.1.2","download source outiste! ");
+//                    if (outSiteDataInfo == null) {
+//                        mRetryNum = 0;
+//                    }
+//                    gvid = getEntity().getGlobaVid();
+//                    LogUtil.e("wulianshu", "走外站源下载的下载");
+//                    HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_DOWNLOADURL_TAG);
+//                    LogUtil.e("wulianshu", "走外站源 请求js截流详情");
+//                    HttpApi.requestOutSiteData(gvid, null, playid, mFormat).start(new OutSiteDataListener());
+//
+//                } else {
+//                    LogUtil.e("v1.1.2","download source insite! ");
+//                    LogUtil.e("wulianshu","走乐视源下载。。。。。。。");
+//                    isjscut = false;
+//                    if (Utils.getAPILevel() >= 11) {
+//                        mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                    } else {
+//                        mDownloadTask.execute();
+//                    }
+//                }
+//                mStatus = DOWNLOADING;
+//                mDownloadManager.setStatus(mEntity, mStatus);
+//            } else {
+//                LogUtil.e("wulianshu", "A正在下载的数量大于0暂停当前的下载任务");
+//                mStatus = WAITING;
+//                mDownloadManager.setStatus(mEntity, mStatus);
+//            }
+//
+//            if (downloadHandler != null) {
+//                downloadHandler.onStart();
+//            }
+//
+//        }
+//    }
 
     public void onFailure() {
         LogUtil.e("wulianshu", "下载失败的返回   outSiteDataInfo:" + outSiteDataInfo);
@@ -469,44 +389,21 @@ public class DownloadJob implements Comparable<DownloadJob>{
             if (outSiteDataInfo!=null && currentdownloadpositon >= outSiteDataInfo.getOutSiteDatas().size()) {
                 //最终考虑 多StreamList的情况
                 if(totalstreamlist.size() >0 && current_streamlistposition < totalstreamlist.size()){
-                    mDownloadTask.cancel(true);
-                    mDownloadTask = null;
-                    mDownloadTask = new DownloadTask(this);
                     isjscut = false;
                     String downloadpath = totalstreamlist.get(current_streamlistposition).get(0);
-                    mDownloadTask.setOutsidedownloadPath(downloadpath);
+                    this.setmOutSiteDownloadPath(downloadpath);
                     LogUtil.e("wulianshu", "多个SreamList情况下载："+downloadpath);
                     executeDownload();
                     current_streamlistposition ++;
                 }else {
-                    //1次重试的机会
-//                    if (mRetryNum < 2) {
-//                        isjscut = false;
-//                        LogUtil.e("wulianshu", "重试下载");
-//                        mRetryNum++;
-//                        currentdownloadpositon = 0;
-//                        mDownloadManager.DOWNLOADING_NUM = 0;
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                start();
-//                            }
-//                        }, 500);
-//
-//                    } else {
                         LogUtil.e("wulianshu", "都失败了下载下一个任务");
                         isjscut = false;
                         mRetryNum = 0;
                         currentdownloadpositon = 0;
-                        mDownloadManager.DOWNLOADING_NUM = 0;
                         downloadfailure();
-//                    }
                 }
             } else {
                 LogUtil.e("wulianshu", "失败但是 OutSiteData 还有数据");
-                mDownloadTask.cancel(true);
-                mDownloadTask = null;
-                mDownloadTask = new DownloadTask(this);
                 if (isjscut) {
                     //下载 StreamList
                     LogUtil.e("wulianshu", "截流下载失败走Stream_list 下载2");
@@ -514,7 +411,8 @@ public class DownloadJob implements Comparable<DownloadJob>{
                         if(isallEquals(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list())) {
                             LogUtil.e("wulianshu", "走stream_list下载地s址" + outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
                             isjscut = false;
-                            mDownloadTask.setOutsidedownloadPath(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
+                            String path = outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0);
+                            this.setmOutSiteDownloadPath(path);
                             executeDownload();
                         }else{
                             totalstreamlist.add(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list());
@@ -533,20 +431,19 @@ public class DownloadJob implements Comparable<DownloadJob>{
 
             }
         } else {
-            mDownloadManager.DOWNLOADING_NUM = 0;
             if (isCanReTry()) {
                 mRetryNum++;
                 mTotalRetryNum++;
-                start();
+//                start();
             } else if (isSnifferCanReTry()) {
                 addReportState(PlayerUtils.M400);
                 autoSnifferRetry = false;
                 mRetryNum = 0;
-                start();
+//                start();
             } else if (isCanChangeSniffer()) {
                 mRetryNum = 0;
                 autoSnifferRetry = true;
-                start();
+//                start();
             } else {
                 downloadfailure();
             }
@@ -571,7 +468,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
         if (downloadHandler != null) {
             downloadHandler.onPause(this);
         }
-        notifyDownloadOnPause();
         // mJob.setmExceptionType();
         if (NetworkUtil.reportNetType(ChaoJiShiPinApplication.getInstatnce()) == NetworkUtil.TYPE_ERROR) {
             mExceptionType = NET_SHUT_DOWN; // 无网络
@@ -581,7 +477,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
 
         } else {
             mExceptionType = DOWNLOAD_FAILUER;//下载失败
-            pauseByDownLoadFailure();//下载失败，相当于用户暂停
             //上报
             if (!autoSnifferRetry) {
                 addReportState(PlayerUtils.M410);
@@ -590,31 +485,8 @@ public class DownloadJob implements Comparable<DownloadJob>{
                 addReportState(PlayerUtils.M412);
             }
         }
-        mDownloadManager.notifyObservers();
 
-    }
-
-    public boolean pauseOnOther(int status) {
-        mStatus = status;
-        mDownloadManager.DOWNLOADING_NUM = 0;
-        if (mListener != null)
-            mListener.downloadPaused(this);
-
-        if (downloadHandler != null) {
-            downloadHandler.onPause(this);
-        }
-        return mDownloadTask.cancel(true);
-    }
-
-    /**
-     * 当不开启后台下载退出时的处理
-     */
-    public void pauseOnExit() {
-        mStatus = PAUSEONSPEED;
-        mDownloadManager.DOWNLOADING_NUM = 0;
-        if (mListener != null)
-            mListener.downloadPaused(this);
-        mDownloadTask.cancel(true);
+        resumeThread();
     }
 
     private boolean isCanReTry() {
@@ -677,47 +549,8 @@ public class DownloadJob implements Comparable<DownloadJob>{
         return false;
     }
 
-    public void notifyDownloadAdded() {
-        if (mListener != null)
-            mListener.downloadStarted(this);
-    }
-
-    public void notifyDownloadStarted() {
-        if (mListener != null)
-            mListener.downloadOnDownloading(this);
-    }
-
-    public void notifyDownloadOnUpdate() {
-        if (mListener != null)
-            mListener.updateNotifyOnDownloading(this);
-    }
-
-    public void notifyDownloadOnPause() {
-        if (mListener != null)
-            mListener.downloadOnPause(this);
-    }
-
-    public void notifyDownloadEnded() {
-        if (!mDownloadTask.isCancelled()) {
-//			LogUtils.i("dyf", "下载成功：notifyDownloadEnded");
-            if (mListener != null) {
-//				LogUtils.i("dyf", "下载成功：notifyDownloadEnded---mListener");
-                mListener.downloadEnded(this);
-            } else {
-//				LogUtils.i("dyf", "下载成功：notifyDownloadEnded---？？？？？");
-                DownloadProvider mDownloadProvider = mDownloadManager.getProvider();
-                mDownloadProvider.downloadCompleted(this);
-            }
-            mProgress = 100;
-        }
-    }
-
     public void updateDownloadEntity() {
-        mDownloadManager.getProvider().updateDownloadEntity(this);
-    }
-
-    public boolean isCancelled() {
-        return mDownloadTask.isCancelled();
+        DownloadProvider.getInstance().updateDownloadEntity(this);
     }
 
     public DownloadHandler getDownloadHandler() {
@@ -853,7 +686,7 @@ public class DownloadJob implements Comparable<DownloadJob>{
                     String fileName = "jscutresult4download.html";
                     FileUtils.writeHtmlToData(ChaoJiShiPinApplication.getInstatnce(), fileName, stream);
                     isjscut = true;
-                    mDownloadTask.setOutsidedownloadPath(stream);
+                    setmOutSiteDownloadPath(stream);
                     executeDownload();
                     //截流成功的上报
 //                    UploadStat.streamupload(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getUrl(), stream,outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getRequest_format());
@@ -874,7 +707,8 @@ public class DownloadJob implements Comparable<DownloadJob>{
                 LogUtil.e("wulianshuaddUrl", "截流结果解析");
                 if (outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list() != null && outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().size() > 0) {
                     if(isallEquals(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list())) {
-                        mDownloadTask.setOutsidedownloadPath(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
+                        String path = outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0);
+                        setmOutSiteDownloadPath(path);
                         isjscut = false;
                         executeDownload();
                     }else{
@@ -984,8 +818,9 @@ public class DownloadJob implements Comparable<DownloadJob>{
             LogUtil.e("wulianshu", "mApi_contentlist为空 走stream_list");
             if (outSiteData.getStream_list() != null && outSiteData.getStream_list().size() > 0) {
                 if(isallEquals(outSiteData.getStream_list())) {
-                    LogUtil.e("wulianshu", "下载路劲为：" + outSiteData.getStream_list().get(0));
-                    mDownloadTask.setOutsidedownloadPath(outSiteData.getStream_list().get(0));
+                    String path = outSiteData.getStream_list().get(0);
+                    LogUtil.e("wulianshu", "下载路劲为：" + path);
+                    setmOutSiteDownloadPath(path);
                     isjscut = false;
                     executeDownload();
                 }else{
@@ -1021,8 +856,9 @@ public class DownloadJob implements Comparable<DownloadJob>{
                     if (outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list() != null && outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().size() > 0) {
                         if(isallEquals(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list())) {
                             isjscut = false;
-                            LogUtil.e("wulianshu", "streamlist 下载地址为：" + outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
-                            mDownloadTask.setOutsidedownloadPath(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0));
+                            String path = outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list().get(0);
+                            LogUtil.e("wulianshu", "streamlist 下载地址为：" + path);
+                            this.setmOutSiteDownloadPath(path);
                             executeDownload();
                         }else{
                             totalstreamlist.add(outSiteDataInfo.getOutSiteDatas().get(currentdownloadpositon).getStream_list());
@@ -1062,10 +898,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
         @Override
         public void onResponse(OutSiteDataInfo result, boolean isCachedData) {
             LogUtil.e("wulianshu ", "获取 截流纤情 返回数据成功：" + result.toString());
-            // 默认设置M3U8 有清晰度选项
-            //executeOutSitePlayCore(mStreamIndex);
-            //M3U8失败设置MP4
-            //executeOutSitePlayCore(ConstantUtils.OutSiteDateType.MP4);
             //排列下载链接
             if (result != null && result.getOutSiteDatas() != null && result.getOutSiteDatas().size() > 0) {
                 LogUtil.e("wulianshu ", "获取 截流纤情 返回数据成功  并且数据不为空");
@@ -1073,9 +905,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
                     result.getOutSiteDatas().get(i).setPriority(Utils.getPriority4Download(result.getOutSiteDatas().get(i).getOs_type(), result.getOutSiteDatas().get(i).getRequest_format()));
                 }
                 Collections.sort(result.getOutSiteDatas());
-//                for (OutSiteData outSiteData:result.getOutSiteDatas()){
-//                    LogUtil.e("wulianshu","priority:"+outSiteData.getPriority());
-//                }
                 setOutSiteDataInfo(result);
                 LogUtil.e("wulianshu ", "调用job的下载外站源方==doOutsideDownload");
                 doOutsideDownload();
@@ -1114,16 +943,31 @@ public class DownloadJob implements Comparable<DownloadJob>{
         }
     }
 
-    private void executeDownload() {
-        if (getStatus() == DOWNLOADING) {
-            if (Utils.getAPILevel() >= 11) {
-                mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                mDownloadTask.execute();
+    private void resumeThread(){
+        if(mRunnable == null)
+            return;
+        try{
+            synchronized(mRunnable){
+                mRunnable.notify();
             }
+        }catch(Throwable e){
+            e.printStackTrace();
         }
-        mDownloadManager.notifyObservers();
     }
+
+    private void executeDownload() {
+        resumeThread();
+
+//        if (getStatus() == DOWNLOADING) {
+//            if (Utils.getAPILevel() >= 11) {
+//                mDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            } else {
+//                mDownloadTask.execute();
+//            }
+//        }
+//        mDownloadManager.notifyObservers();
+    }
+
     public boolean isallEquals(List<String> list){
         if(list.size() == 1){
             return true;
@@ -1134,5 +978,23 @@ public class DownloadJob implements Comparable<DownloadJob>{
             }
         }
         return true;
+    }
+
+    public void getOutSiteStream(Runnable run){
+        gvid = getEntity().getGlobaVid();
+        LogUtil.e("wulianshu", "走外站源下载的下载");
+        HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_DOWNLOADURL_TAG);
+        LogUtil.e("wulianshu", "走外站源 请求js截流详情");
+        HttpApi.requestOutSiteData(gvid, null, playid, mFormat).start(new OutSiteDataListener());
+
+        try {
+            synchronized(run){
+                mRunnable = run;
+                run.wait();
+            }
+        }catch(Throwable e){
+            mRunnable = null;
+            e.printStackTrace();
+        }
     }
 }

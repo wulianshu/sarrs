@@ -952,125 +952,68 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
         switch (parent.getId()) {
             case R.id.videodetail_middle_showgrid:
                 LogUtil.e(TAG, "" + position);
+                int middlePost = (Math.max((gridAdapter.getPn() - 1), 0) * gridAdapter.getPageSize() + position + (gridAdapter.getPageNum() - 1) * gridAdapter.getSmallPageSize()) % gridAdapter.getPageSize();
                 int pageNum = gridAdapter.getPageNum();
                 List<VideoItem> gridList = gridAdapter.getData();
-                for (int i = 0; i < gridList.size(); i++) {
-                    if (i == (position + (pageNum - 1) * 6)) {
-                        gridList.get(i).setIsPlay(true);
+                if(NetworkUtil.isNetworkAvailable(activity)||fenyeList.get(gridAdapter.getPn()).get(middlePost).isLocal()){
+                    for (int i = 0; i < gridList.size(); i++) {
+                        if (i == (position + (pageNum - 1) * 6)) {
+                            gridList.get(i).setIsPlay(true);
 
-                    } else {
-                        gridList.get(i).setIsPlay(false);
-                    }
-                }
-                gridAdapter.setData(fenyeList);
-                gridAdapter.notifyDataSetChanged();
-                LogUtil.e(TAG, "" + position);
-                int middlePost = (Math.max((gridAdapter.getPn() - 1), 0) * gridAdapter.getPageSize() + position + (gridAdapter.getPageNum() - 1) * gridAdapter.getSmallPageSize()) % gridAdapter.getPageSize();
-                currentPlay = new PlayData(fenyeList, gridAdapter.getPn(), middlePost, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-
-                LogUtil.e("POST", "middle grid key " + gridAdapter.getPn());
-                LogUtil.e("POST", "middle grid positon " + middlePost);
-                if(NetworkUtil.isNetworkAvailable(activity)){
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            LogUtil.e("v1.1.2","handle episo net ok logic");
-                            EventBus.getDefault().post(currentPlay);
+                        } else {
+                            gridList.get(i).setIsPlay(false);
                         }
-                    }, 0);
-
-                }else {
-
-                    if(fenyeList.indexOfKey(gridAdapter.getPn())>=0&&fenyeList.get(gridAdapter.getPn())!=null&&fenyeList.get(gridAdapter.getPn()).size()>0&&fenyeList.get(gridAdapter.getPn()).size()>middlePost){
-
-                        if(fenyeList.get(gridAdapter.getPn()).get(middlePost).isLocal()){
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    LogUtil.e("v1.1.2","handle episo error logic post local data");
-                                    EventBus.getDefault().post(currentPlay);
-                                }
-                            }, 0);
-                        }else{
-                            Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
-
-                            LogUtil.e("v1.1.2","handle episo error logic");
-
-                        }
-
-                    }else{
-                        LogUtil.e("v1.1.2","handle episo error logic");
-
-                        Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
-
                     }
+                    gridAdapter.setData(fenyeList);
+                    LogUtil.e(TAG, "" + position);
+                    currentPlay = new PlayData(fenyeList, gridAdapter.getPn(), middlePost, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                    currentPlay.setFrom(ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                    LogUtil.e("POST", "middle grid key " + gridAdapter.getPn());
+                    LogUtil.e("POST", "middle grid positon " + middlePost);
+                    gridAdapter.notifyDataSetChanged();
+                    LogUtil.e("v1.1.2","handle episo error logic post local data");
+                    EventBus.getDefault().post(currentPlay);
 
+                }else{
+                    Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
 
-
-
+                    LogUtil.e("v1.1.2","handle episo error logic");
                 }
+
 
 
                 break;
             case R.id.videodetail_middle_showlist:
-                int pageNum2 = listAdapter.getPageNum();
-                LogUtil.e(TAG, "" + position);
-                List<VideoItem> listItems = listAdapter.getData();
-                for (int i = 0; i < listItems.size(); i++) {
-                    if (i == (position + (pageNum2 - 1) * 6)) {
-                        listItems.get(i).setIsPlay(true);
-                    } else {
-                        listItems.get(i).setIsPlay(false);
-                    }
-
-                }
-
-                listAdapter.setData(fenyeList);
-                listAdapter.notifyDataSetChanged();
-                int middlePost2 = (Math.max((listAdapter.getPn() - 1), 0) * listAdapter.getPageSize() + position + (pageNum2 - 1) * listAdapter.getSmallPageSize()) % listAdapter.getPageSize();
-                LogUtil.e(TAG, "" + position);
-                currentPlay = new PlayData(fenyeList, listAdapter.getPn(), middlePost2, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
 
 
-                if(NetworkUtil.isNetworkAvailable(activity)){
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            LogUtil.e("v1.1.2","handle episo net ok logic");
-                            currentPlay.setFrom(ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                            EventBus.getDefault().post(currentPlay);
-                        }
-                    }, 0);
-                }else {
-
-                    if(fenyeList.indexOfKey(listAdapter.getPn())>=0&&fenyeList.get(listAdapter.getPn())!=null&&fenyeList.get(listAdapter.getPn()).size()>0&&fenyeList.get(listAdapter.getPn()).size()>middlePost2){
-
-                        if(fenyeList.get(listAdapter.getPn()).get(middlePost2).isLocal()){
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    LogUtil.e("v1.1.2","handle episo error logic post local data");
-                                    EventBus.getDefault().post(currentPlay);
-                                }
-                            }, 0);
-                        }else{
-                            Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
-
-                            LogUtil.e("v1.1.2","handle episo error logic");
+                    int pageNum2 = listAdapter.getPageNum();
+                    LogUtil.e(TAG, "" + position);
+                    List<VideoItem> listItems = listAdapter.getData();
+                    int middlePost2 = (Math.max((listAdapter.getPn() - 1), 0) * listAdapter.getPageSize() + position + (pageNum2 - 1) * listAdapter.getSmallPageSize()) % listAdapter.getPageSize();
+                    if(NetworkUtil.isNetworkAvailable(activity)||fenyeList.get(listAdapter.getPn()).get(middlePost2).isLocal()){
+                        for (int i = 0; i < listItems.size(); i++) {
+                            if (i == (position + (pageNum2 - 1) * 6)) {
+                                listItems.get(i).setIsPlay(true);
+                            } else {
+                                listItems.get(i).setIsPlay(false);
+                            }
 
                         }
+
+                        listAdapter.setData(fenyeList);
+
+                        LogUtil.e(TAG, "" + position);
+                        currentPlay = new PlayData(fenyeList, listAdapter.getPn(), middlePost2, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                        listAdapter.notifyDataSetChanged();
+                        LogUtil.e("v1.1.2", "handle episo net ok logic");
+                        currentPlay.setFrom(ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                        EventBus.getDefault().post(currentPlay);
 
                     }else{
-                        LogUtil.e("v1.1.2","handle episo error logic");
-
+                        LogUtil.e("v1.1.2", "handle !net&local logic");
                         Toast.makeText(activity,activity.getString(R.string.nonet_tip),Toast.LENGTH_SHORT).show();
 
                     }
-
-
-
-                }
-
 
 
 
@@ -2464,8 +2407,12 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
                         }
                     }
 
+                if(!TextUtils.isEmpty(porder)){
+                    currentPlay.setPorder(porder);
+                }else{
+                    currentPlay.setPorder("0");
+                }
 
-                currentPlay.setPorder(porder);
                 //fenyeList=temPlaydata.getmEpisodes();
                 if(temPlaydata!=null){
                     currentPlay.setPage_titles(temPlaydata.getPage_titles());

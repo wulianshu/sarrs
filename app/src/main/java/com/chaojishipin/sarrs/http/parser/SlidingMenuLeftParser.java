@@ -4,6 +4,7 @@ import com.chaojishipin.sarrs.bean.SarrsArrayList;
 import com.chaojishipin.sarrs.bean.SlidingMenuLeft;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.FileCacheManager;
+import com.chaojishipin.sarrs.utils.StringUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.json.JSONArray;
@@ -33,11 +34,16 @@ public class SlidingMenuLeftParser extends ResponseBaseParser<SarrsArrayList> {
             for (int i = 0; i < channelSize; i++) {
                 SlidingMenuLeft slidingMenuLeft = new SlidingMenuLeft();
                 JSONObject channelObj = channelArray.optJSONObject(i);
-                slidingMenuLeft.setContent_type(channelObj.optString("content_type"));
+                String content_type = channelObj.optString("content_type");
+                slidingMenuLeft.setContent_type(content_type);
                 slidingMenuLeft.setIcon(channelObj.optString("icon"));
                 slidingMenuLeft.setIcon_select(channelObj.optString("icon_select"));
                 slidingMenuLeft.setTitle(channelObj.optString("title"));
                 slidingMenuLeft.setCid(channelObj.optString("cid"));
+                // 直播需要解析构造 version字段
+                if (!StringUtil.isEmpty(content_type) && ConstantUtils.LIVE_CONTENT_TYPE.equalsIgnoreCase(content_type)) {
+                    slidingMenuLeft.setVersion(channelObj.optString("version"));
+                }
                 menuList.add(slidingMenuLeft);
             }
             return menuList;

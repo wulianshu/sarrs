@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 
 import com.chaojishipin.sarrs.interfaces.INetWorkObServe;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.Utils;
@@ -22,17 +23,30 @@ import java.util.ArrayList;
 public class NetWorkStateReceiver extends BroadcastReceiver {
 
     private INetWorkObServe mNetWorkObserve;
-    private ArrayList<INetWorkObServe> observers = new ArrayList<>();
+    private boolean isWifi;
 
     public NetWorkStateReceiver() {
+        isWifi = NetWorkUtils.isWifi();
+    }
 
+    private void setChange(){
+        try{
+            boolean tmp = NetWorkUtils.isWifi();
+            if(tmp != isWifi){
+                DataUtils.getInstance().setChange(true);
+            }else
+                DataUtils.getInstance().setChange(false);
+            isWifi = tmp;
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //刚进入界面会读取网络状态
-         if(intent.getAction().equalsIgnoreCase( ConnectivityManager.CONNECTIVITY_ACTION)){
-
+        setChange();
+        if(intent.getAction().equalsIgnoreCase( ConnectivityManager.CONNECTIVITY_ACTION)){
             try {
                 NetworkInfo networkInfo = NetWorkUtils.getAvailableNetWorkInfo();
                 if (null != context && null != networkInfo) {
@@ -48,29 +62,9 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
 
 //                observeNetwork(ConstantUtils.NET_TYPE_NAME, ConstantUtils.NET_TYPE_ERROR, false);
         }
-
-
     }
 
     public void setmNetWorkObserve(INetWorkObServe mNetWorkObserve) {
         this.mNetWorkObserve = mNetWorkObserve;
-    }
-
-    public void addNetworkObserver(INetWorkObServe mNetWorkObserve)
-    {
-        observers.add(mNetWorkObserve);
-    }
-
-    public void removeNetworkOberver(INetWorkObServe mNetWorkObserve)
-    {
-        observers.remove(mNetWorkObserve);
-    }
-
-    private void observeNetwork(String netName, int netType, boolean isHasNetWork)
-    {
-        for (INetWorkObServe observer: observers
-             ) {
-            mNetWorkObserve.observeNetWork(netName, netType, isHasNetWork);
-        }
     }
 }

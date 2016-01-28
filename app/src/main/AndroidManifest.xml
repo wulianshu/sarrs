@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chaojishipin.sarrs"
     android:installLocation="preferExternal"
-    android:versionCode="13"
-    android:versionName="1.1.2" >
+    android:versionCode="14"
+    android:versionName="1.2.0">
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -106,6 +106,24 @@
 
                 <data android:scheme="sarrs1" />
                 <data android:scheme="sarrs2" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.ChaojishipinLivePlayActivity"
+            android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden|locale|layoutDirection"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+
+            <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
+            <intent-filter>
+
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
             </intent-filter>
         </activity>
 

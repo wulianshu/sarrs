@@ -57,42 +57,29 @@ public class ExpandViewOnChildItemClick  implements AdapterView.OnItemClickListe
         switch (parent.getId()){
             case R.id.video_detail_expand_grid:
                 LogUtil.e("Grid", "expand pn" + parentId);
-                /*if(position/6>0){
-                    pageForMiddle=position/6+1+parentId*10;
-                }else{
-                    pageForMiddle=1;
-                }*/
-                   oldposition=position;
-                   oldItems=fenyeList.get(parentId);
-                    currentEpiso=fenyeList.get(parentId).get(position).getOrder();
-                for(int i=0;i< fenyeList.get(parentId).size();i++){
-                    if(i==position){
-                        fenyeList.get(parentId).get(i).setIsPlay(true);
-                    }else{
-                        fenyeList.get(parentId).get(i).setIsPlay(false);
+                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())||fenyeList.get(parentId).get(position).isLocal()) {
+                    oldposition = position;
+                    oldItems = fenyeList.get(parentId);
+                    currentEpiso = fenyeList.get(parentId).get(position).getOrder();
+                    for (int i = 0; i < fenyeList.get(parentId).size(); i++) {
+                        if (i == position) {
+                            fenyeList.get(parentId).get(i).setIsPlay(true);
+                        } else {
+                            fenyeList.get(parentId).get(i).setIsPlay(false);
+                        }
                     }
-                }
-                if(childAdapter!=null){
-                childAdapter.setFenyeList(fenyeList);
-                childAdapter.notifyDataSetChanged();
-            }
-                LogUtil.e("wulianshu","视频被点了正要播放 parentId："+parentId+"   key:"+position);
-                PlayData p=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-
-                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())){
+                    if (childAdapter != null) {
+                        childAdapter.setFenyeList(fenyeList);
+                        childAdapter.notifyDataSetChanged();
+                    }
+                    LogUtil.e("wulianshu", "视频被点了正要播放 parentId：" + parentId + "   key:" + position);
+                    PlayData p = new PlayData(fenyeList, parentId, position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
                     EventBus.getDefault().post(p);
-                    LogUtil.e("v1.1.2","handle episo net ok logic");
                 }else{
-                    if(fenyeList.get(parentId).get(position).isLocal()){
-                        LogUtil.e("v1.1.2","handle episo net error logic send data");
-                    }else{
-                        Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
-                        LogUtil.e("v1.1.2","handle episo net error logic ");
-                    }
+                    Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
 
-
+                    LogUtil.e("v1.1.2","handle episo net ok logic");
                 }
-
 
                 LogUtil.e("POST ", "expand position" + position);
                 LogUtil.e("POST "," expand key : "+parentId);
@@ -106,35 +93,31 @@ public class ExpandViewOnChildItemClick  implements AdapterView.OnItemClickListe
             case R.id.video_detail_expand_list:
                 LogUtil.e("child", "click grid" + position);
                 LogUtil.e("child", "click grid" + position);
+                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())||fenyeList.get(parentId).get(position).isLocal()) {
                 oldposition=position;
                 oldItems=fenyeList.get(parentId);
                 currentEpiso=fenyeList.get(parentId).get(position).getOrder();
-                for(int i=0;i< fenyeList.get(parentId).size();i++){
-                    if(i==position){
-                        fenyeList.get(parentId).get(i).setIsPlay(true);
-                    }else{
-                        fenyeList.get(parentId).get(i).setIsPlay(false);
-                    }
-                }
-                if(childAdapter!=null){
-                    childAdapter.setFenyeList(fenyeList);
-                    childAdapter.notifyDataSetChanged();
-                }
-                PlayData p2=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
 
-                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())){
-                    EventBus.getDefault().post(p2);                    LogUtil.e("v1.1.2","handle episo net ok logic");
+                    for (int i = 0; i < fenyeList.get(parentId).size(); i++) {
+                        if (i == position) {
+                            fenyeList.get(parentId).get(i).setIsPlay(true);
+                        } else {
+                            fenyeList.get(parentId).get(i).setIsPlay(false);
+                        }
+                    }
+                    if (childAdapter != null) {
+                        childAdapter.setFenyeList(fenyeList);
+
+                        childAdapter.notifyDataSetChanged();
+                    }
+
+                    PlayData p2 = new PlayData(fenyeList, parentId, position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                    EventBus.getDefault().post(p2);
                 }else{
-                    if(fenyeList.get(parentId).get(position).isLocal()){
-                        LogUtil.e("v1.1.2","handle episo net error logic send data");
-                        EventBus.getDefault().post(p2);
-                    }else{
-                        Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
-                        LogUtil.e("v1.1.2","handle episo net error logic ");
-                    }
-
+                    Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
 
                 }
+
                 break;
         }
     }

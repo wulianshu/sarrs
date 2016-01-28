@@ -258,13 +258,15 @@ public class DownloadHelper {
 	//获取sd卡已使用的空间大小
 	public static double getSdUsedStorage(String sdPath) {
 		double usedStorage = 0;
-		if(isSdcardExist(sdPath)) {
+		if(!isSdcardExist(sdPath)) {
+			File file = new File(sdPath);
+			file.mkdirs();
+		}
 			StatFs sf = new StatFs(sdPath);
-			long blockSize = sf.getBlockSize(); 
+			long blockSize = sf.getBlockSize();
 			long totalBlocks = sf.getBlockCount();
 			long availCount = sf.getAvailableBlocks();
 			usedStorage = (totalBlocks - availCount)*blockSize/1024/1024;
-		}
         return usedStorage;
 	}
 	

@@ -1203,9 +1203,24 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
            mSelectBtn.setVisibility(View.VISIBLE);
            LogUtil.e("v1.1.2","play local size>=1 show episo&next btn ");
        }else if(mPlayData.getmEpisodes()!=null&&mPlayData.getmEpisodes().indexOfKey(mPlayData.getKey())>=0&&mPlayData.getmEpisodes().get(mPlayData.getKey()).size()>1){
-           mPlayNextBtn.setBackgroundResource(R.drawable.sarrs_pic_videoplayer_next);
-           mSelectBtn.setVisibility(View.VISIBLE);
-           LogUtil.e("v1.1.2","play local & click online item");
+           // 进入半屏页有网，过一会无网络时此时后去mode是local，  半屏状态下点击本地剧集
+           if(mActivity.getSCRREN()== ChaoJiShiPinVideoDetailActivity.SCREEN.HALF){
+               LogUtil.e("v1.1.2", "play local & half screen show episo");
+               mPlayNextBtn.setVisibility(View.GONE);
+               mSelectBtn.setVisibility(View.GONE);
+               mSlideTrggle.setVisibility(View.GONE);
+               full_screen.setBackgroundResource(R.drawable.sarrs_pic_full_screen);
+               LogUtil.e("v1.1.2","play local & click online item");
+           }else{
+               mSlideTrggle.setVisibility(View.VISIBLE);
+               mPlayNextBtn.setBackgroundResource(R.drawable.sarrs_pic_videoplayer_next);
+               mSelectBtn.setVisibility(View.VISIBLE);
+               full_screen.setBackgroundResource(R.drawable.sarrs_pic_small_screen);
+
+               LogUtil.e("v1.1.2","play local & click online item");
+               LogUtil.e("v1.1.2", "play local & full screen show episo");
+           }
+
        }else
 
        {
@@ -1288,14 +1303,17 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         mIsPause = true;
         mPlayData = playData;
         setControllerUI();
-        // 从现在页进来UI展示
+        // 从现在页进来UI展示  出在线&进半屏页之外所有入口
         if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
-            initLocalFullScreenView();
-        }else{
+                initLocalFullScreenView();
 
+        }else{
+            LogUtil.e("v1.1.2","play on line & init screen logic");
            if( mActivity.getSCRREN()== ChaoJiShiPinVideoDetailActivity.SCREEN.HALF){
-               LogUtil.e("v1.1.2","play on line half screen hide episo");
+               LogUtil.e("v1.1.2","play on line & half screen hide episo");
                mSelectBtn.setVisibility(View.GONE);
+               mPlayNextBtn.setVisibility(View.GONE);
+               mSlideTrggle.setVisibility(View.GONE);
                full_screen.setBackgroundResource(R.drawable.sarrs_pic_full_screen);
 
            }
@@ -1761,8 +1779,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                     }
                 }
             }
-            LogUtil.e(TAG,"juji2"+mEpisodes.toString());
-            if(mEpisodes.indexOfKey(mNotifyData.getKey())>=0&&mEpisodes.get(mNotifyData.getKey()).size()>mNotifyData.getPosition()){
+           // LogUtil.e(TAG,"juji2"+mEpisodes.toString());
+            if(mEpisodes!=null&&mEpisodes.indexOfKey(mNotifyData.getKey())>=0&&mEpisodes.get(mNotifyData.getKey()).size()>mNotifyData.getPosition()){
                 mEpisodes.get(mNotifyData.getKey()).get(mNotifyData.getPosition()).setIsPlay(true);
             }
            // LogUtil.e(TAG,"juji3"+mEpisodes.toString());
@@ -1790,6 +1808,9 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 LogUtil.e("xll","send  "+mNotifyData.getPosition());
                 EventBus.getDefault().post(mNotifyData);
                 setisPlayEpisode();
+                if(mPlayEpisode==null){
+                    return;
+                }
                 if (!TextUtils.isEmpty(mPlayEpisode.getSource()) && mPlayEpisode.getSource().equalsIgnoreCase(PlayerUtils.SIET_LETV)) {
                     CdeHelper cdeHelper = mCDEManager.getmCdeHelper();
                     // 判断当前CDE服务是否启动
@@ -2692,7 +2713,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         setPlayerListener();
         setVideoUri(playUrl);
         LogUtil.e("TestStreamUrl", "" + playUrl);
-        Log.e("TestStreamUrl",""+ playUrl);
+        Log.e("TestStreamUrl", "" + playUrl);
         }
 
     private void setVideoUri(String playUrl) {
@@ -2750,7 +2771,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                     executePrePare();
                 }
 
-            } else if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.GSM && isForcePlay) {
+            } else if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.GSM ) {
                 LogUtil.e(TAG, "Media gsm net !");
                 if (null != mPlayContorl && !mIsPrepared) {
                     LogUtil.e("v1.1.2"," onprepare gsm");
@@ -2793,6 +2814,9 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      * executePrepare
      */
     void executePrePare() {
+        if(mPlayEpisode!=null&&mPlayEpisode.isLocal()){
+            isForcePlay=true;
+        }
 
         if (mPlayContorl == null) {
             return;
@@ -3737,12 +3761,18 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         if (null != mSelectBtn) {
             if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
                 //
-                if(isShow&&mPlayData!=null&&mPlayData.getmLocalDataLists()!=null&&mPlayData.getmLocalDataLists().size()>=1){
+                if(isShow&&mPlayData!=null&&mPlayData.getmLocalDataLists()!=null&&mPlayData.getmLocalDataLists().size()>1){
                     mSelectBtn.setVisibility(View.VISIBLE);
-                    LogUtil.e("v1.1.2","play local size>=1 ");
+                    LogUtil.e("v1.1.2","play local size>1 ");
                 }else{
-                    mSelectBtn.setVisibility(View.GONE);
-                    LogUtil.e("v1.1.2", "play local size<1 ");
+                    if(mActivity.getIslocaEpisoSize()){
+                        LogUtil.e("v1.1.2", "play local size>1 ");
+                        mSelectBtn.setVisibility(View.VISIBLE);
+                    }else{
+                        mSelectBtn.setVisibility(View.GONE);
+                        LogUtil.e("v1.1.2", "play local size<1 ");
+                    }
+
                 }
 
             }else{
@@ -3765,7 +3795,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                     LogUtil.e("v1.1.2"," epsiso view gone");
                 }
 
-                }
+            }
         }
     }
 
@@ -3899,7 +3929,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     public void showAnimSelect() {
         if(mPlayData==null){
-            LogUtil.e("v1.1.2","playdata is null not show AnimaSelect");
+            LogUtil.e("v1.1.2", "playdata is null not show AnimaSelect");
             return;
         }
         if (mPlayData != null && !TextUtils.isEmpty(mPlayData.getCid())) {
@@ -4145,6 +4175,16 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
     public void showNoNetView() {
+
+        if(mPlayEpisode!=null&&mPlayEpisode.isLocal()){
+
+            return;
+        }
+        if(mPlayEpisode==null){
+            LogUtil.e("v1.1.2","local episode is null");
+        }
+
+
         mNetLayout.setVisibility(View.VISIBLE);
         controller_net_error.setText(mActivity.getResources().getString(R.string.nonet_tip));
         controller_net_error_play.setVisibility(View.GONE);

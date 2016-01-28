@@ -123,7 +123,7 @@ public class TopiclistFragment extends MainBaseFragment implements PullToRefresh
      * @auth daipei
      */
     public void buildDrawingCacheAndIntent() {
-        SearchActivity.launch(getActivity());
+        SearchActivity.launch(getActivity(), "");
     }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {

@@ -36,12 +36,15 @@ import com.chaojishipin.sarrs.http.parser.SlidingMenuLeftParser;
 import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
+import com.chaojishipin.sarrs.thirdparty.Constant;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.FileCacheManager;
 import com.chaojishipin.sarrs.utils.JsonUtil;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
+import com.chaojishipin.sarrs.utils.SharePreferenceManager;
+import com.chaojishipin.sarrs.utils.Utils;
 import com.chaojishipin.sarrs.widget.NoScrollGridViewNodivider;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -294,21 +297,29 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
             Adapter adapter = parent.getAdapter();
 //            msetBtn.setBackgroundResource(R.drawable.sarrs_pic_setting_normal);
 //        mDownBtn.setTextColor(Color.WHITE);
-//            msetBtn.setTextColor(Color.WHITE);
-            if (null != adapter && adapter instanceof SlidingMenuLeftAdapter) {
-                SlidingMenuLeftAdapter leftMenuAdapter = (SlidingMenuLeftAdapter) adapter;
-                SlidingMenuLeft menuLeft = (SlidingMenuLeft) leftMenuAdapter.getItem(position);
-                //如果当前类型不是分隔线则将相应的左侧侧边栏数据传送给首页
-                //设置选中状态
-                //refreshView();
-                if (!menuLeft.getContent_type().equals(ConstantUtils.SLIDINGMENU_LINE)) {
-                    EventBus.getDefault().post(menuLeft);
-                    if (mSlideMenu != null) {
-                        mSlideMenu.showContent(true);
+                msetBtn.setTextColor(Color.WHITE);
+                if (null != adapter && adapter instanceof SlidingMenuLeftAdapter) {
+                    SlidingMenuLeftAdapter leftMenuAdapter = (SlidingMenuLeftAdapter) adapter;
+                    SlidingMenuLeft menuLeft = (SlidingMenuLeft) leftMenuAdapter.getItem(position);
+                    //如果当前类型不是分隔线则将相应的左侧侧边栏数据传送给首页
+                    //设置选中状态
+                    //refreshView();
+                    if (!menuLeft.getContent_type().equals(ConstantUtils.SLIDINGMENU_LINE)) {
+                        EventBus.getDefault().post(menuLeft);
+                        if (mSlideMenu != null) {
+                            mSlideMenu.showContent(true);
+                        }
+                        if (ConstantUtils.LIVE_CONTENT_TYPE.equalsIgnoreCase(menuLeft.getContent_type())) {
+                            String version = menuLeft.getVersion();
+                            LogUtil.e(Utils.LIVE_TAG, "################click live channel and update version################");
+                            LogUtil.e(Utils.LIVE_TAG, "################server newest version is " + version);
+                            SharePreferenceManager.saveVaule(context, ConstantUtils.LIVE_PUSH_KEY,
+                                    version);
+                        }
+                        // 更新侧边栏ui
+                        leftMenuAdapter.setSelectItem(position, view);
                     }
-                    leftMenuAdapter.setSelectItem(position, view);
                 }
-            }
                 break;
             case R.id.slidingmenu_gv_menu:
                 String content_type = ((SlidingMenuLeft)slidings_gv.get(position)).getContent_type();
@@ -382,11 +393,13 @@ public class SlidingMenuFragment extends ChaoJiShiPinBaseFragment implements Ada
 
         @Override
         public void onResponse(SarrsArrayList result, boolean isCachedData) {
-            SharedPreferences sharedPreferences = SlidingMenuFragment.this.getActivity().getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            String channel_list = JsonUtil.toJSONString(result);
-            editor.putString(CHANNEL_LIST,channel_list);
-            editor.commit();
+            if(getActivity() != null) {
+                SharedPreferences sharedPreferences = SlidingMenuFragment.this.getActivity().getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String channel_list = JsonUtil.toJSONString(result);
+                editor.putString(CHANNEL_LIST, channel_list);
+                editor.commit();
+            }
             slidings_lv = result;
             for (int i = 0;i<slidings_lv.size();i++){
                 if( ((SlidingMenuLeft)slidings_lv.get(i)).getContent_type().equals("10") ){

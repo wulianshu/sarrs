@@ -33,20 +33,12 @@ public class DownloadListExpandlistviewAdapter extends BaseExpandableListAdapter
     private List<String> titlelist;
     private int current_group_open_position = 0;
     private VideoDetailItem videoDetailItem;
-    private SparseArray<SparseArray<Boolean>> downloadstatulist;
-    private SparseIntArray groupStatusMap = new SparseIntArray();
-//  private PinnedHeaderExpandableListView lv_juji;
-    public void setDownloadstatulist(SparseArray<SparseArray<Boolean>> downloadstatulist){
-        this.downloadstatulist = downloadstatulist;
-    }
+
     public void setTitlelist(List<String> titlelist){
         this.titlelist = titlelist;
     }
     public void setVideoDetailItem(VideoDetailItem videoDetailItem){
          this.videoDetailItem = videoDetailItem;
-    }
-    public int getCurrent_group_open_position() {
-        return current_group_open_position;
     }
 
     public void setCurrent_group_open_position(int current_group_open_position) {
@@ -58,7 +50,6 @@ public class DownloadListExpandlistviewAdapter extends BaseExpandableListAdapter
         this.listSparseArray = listSparseArray;
         this.titlelist = titlelist;
         this.videoDetailItem = videoDetailItem;
-//        this.lv_juji = lv_juji;
     }
 
     public void setData(SparseArray<ArrayList<VideoItem>> listSparseArray) {
@@ -151,14 +142,14 @@ public class DownloadListExpandlistviewAdapter extends BaseExpandableListAdapter
             if (videoDetailItem.getCategory_id().equals(ConstantUtils.CARTOON_CATEGORYID) || videoDetailItem.getCategory_id().equals(ConstantUtils.TV_SERISE_CATEGORYID)) {
                 viewholderchildView.listView.setVisibility(View.GONE);
                 viewholderchildView.gridView.setVisibility(View.VISIBLE);
-                DownloadListGVAdapter gridAdapter = new DownloadListGVAdapter(context, listSparseArray.get(i),downloadstatulist.get(i),videoDetailItem);
+                DownloadListGVAdapter gridAdapter = new DownloadListGVAdapter(context, listSparseArray.get(i), videoDetailItem);
                 viewholderchildView.gridView.setAdapter(gridAdapter);
                 viewholderchildView.gridView.setOnItemClickListener(new MyGridViewOnItemClickListener(i, listSparseArray));
            //综艺 记录片
             } else if (videoDetailItem.getCategory_id().equals(ConstantUtils.DOCUMENTARY_CATEGORYID) || videoDetailItem.getCategory_id().equals(ConstantUtils.VARIETY_CATEGORYID)) {
                 viewholderchildView.listView.setVisibility(View.VISIBLE);
                 viewholderchildView.gridView.setVisibility(View.GONE);
-                DownloadListLVAdapter lvAdapter = new DownloadListLVAdapter(context, listSparseArray.get(i),downloadstatulist.get(i),videoDetailItem);
+                DownloadListLVAdapter lvAdapter = new DownloadListLVAdapter(context, listSparseArray.get(i), videoDetailItem);
                 viewholderchildView.listView.setAdapter(lvAdapter);
                 viewholderchildView.listView.setOnItemClickListener(new MyGridViewOnItemClickListener(i, listSparseArray));
             }
@@ -171,40 +162,6 @@ public class DownloadListExpandlistviewAdapter extends BaseExpandableListAdapter
     public boolean isChildSelectable(int i, int i1) {
         return false;
     }
-
-//    @Override
-//    public int getHeaderState(int groupPosition, int childPosition) {
-//        final int childCount = getChildrenCount(groupPosition);
-//        if (childPosition == childCount - 1) {
-//            return PINNED_HEADER_PUSHED_UP;
-//        } else if (childPosition == -1
-//                && !lv_juji.isGroupExpanded(groupPosition)) {
-//            return PINNED_HEADER_GONE;
-//        } else {
-//            return PINNED_HEADER_VISIBLE;
-//        }
-//
-//    }
-//
-//    @Override
-//    public void configureHeader(View header, int groupPosition, int childPosition, int alpha) {
-//        String groupData =  this.titlelist.get(groupPosition);
-//        ((TextView) header.findViewById(R.id.video_detail_bottom_title)).setText(groupData);
-//    }
-//
-//    @Override
-//    public void setGroupClickStatus(int groupPosition, int status) {
-//        groupStatusMap.put(groupPosition, status);
-//    }
-//
-//    @Override
-//    public int getGroupClickStatus(int groupPosition) {
-//        if (groupStatusMap.keyAt(groupPosition)>=0) {
-//            return groupStatusMap.get(groupPosition);
-//        } else {
-//            return 0;
-//        }
-//    }
 
     public class ViewholderGroupView {
         ImageView imageview;

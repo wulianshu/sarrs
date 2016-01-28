@@ -16,6 +16,7 @@ import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.download.download.DownloadFolderJob;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -23,40 +24,17 @@ import java.util.ArrayList;
 /**
  * Created by wulianshu on 2015/9/2.
  */
-public class DownloadListLVAdapter extends BaseAdapter {
+public class DownloadListLVAdapter extends DownloadListGVAdapter {
 
-    private Context context;
-    private ArrayList<VideoItem> list;
-    private SparseArray<Boolean> downloadstatus;
-    private VideoDetailItem videoDetailItem;
-
-    public DownloadListLVAdapter(Context context, ArrayList<VideoItem> list, SparseArray<Boolean> downloadstatus, VideoDetailItem videoDetailItem) {
-        this.context = context;
-        this.list = list;
-        this.downloadstatus = downloadstatus;
-        this.videoDetailItem = videoDetailItem;
+    public DownloadListLVAdapter(Context context, ArrayList<VideoItem> list, VideoDetailItem videoDetailItem) {
+        super(context, list, videoDetailItem);
     }
 
     @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view) {
         Viewholder viewholder = null;
         if (view == null) {
-            view = View.inflate(context, R.layout.videodetailactivity_fragment_expand_grid_item, null);
+            view = View.inflate(mContext, R.layout.videodetailactivity_fragment_expand_grid_item, null);
             viewholder = new Viewholder();
             viewholder.gv_item = (RelativeLayout) view.findViewById(R.id.rl_gv_item);
             viewholder.lv_item = (LinearLayout) view.findViewById(R.id.video_detail_anim_bottom_showlist_item_ln);
@@ -71,22 +49,10 @@ public class DownloadListLVAdapter extends BaseAdapter {
             viewholder = (Viewholder) view.getTag();
         }
         viewholder.imageview_play.setVisibility(View.GONE);
-
-        if (downloadstatus != null && downloadstatus.get(i) != null && downloadstatus.get(i)) {
-            ChaoJiShiPinApplication application = ChaoJiShiPinApplication.getInstatnce();
-            SparseArray<DownloadFolderJob> jobs = application.getDownloadManager().getDownloadFolderJobs();
-            if (isDownloadComplete(jobs, list.get(i))) {
-                viewholder.imageView_download_icon.setImageResource(R.drawable.download_complete);
-            } else {
-                viewholder.imageView_download_icon.setImageResource(R.drawable.downloadlistactivity_download_icon);
-            }
-
-            viewholder.imageView_download_icon.setVisibility(View.VISIBLE);
-        } else {
-            viewholder.imageView_download_icon.setVisibility(View.GONE);
-        }
-        viewholder.textView.setText(list.get(i).getTitle());
-        ImageLoader.getInstance().displayImage(list.get(i).getImage(), viewholder.imageView);
+        VideoItem item = list.get(i);
+        setVideoDownloadState(item, viewholder.imageView_download_icon);
+        viewholder.textView.setText(item.getTitle());
+        ImageLoader.getInstance().displayImage(item.getImage(), viewholder.imageView);
         return view;
     }
 
@@ -97,20 +63,5 @@ public class DownloadListLVAdapter extends BaseAdapter {
         ImageView imageView_download_icon;
         ImageView imageview_play;
         TextView textView;
-    }
-
-    public boolean isDownloadComplete(SparseArray<DownloadFolderJob> jobs, VideoItem item) {
-        for (int i = 0; i < jobs.size(); i++) {
-            DownloadFolderJob job = jobs.valueAt(i);
-            if (job.getMediaId().equals(videoDetailItem.getId())) {
-                SparseArray<DownloadJob> downloadJobs = job.getDownloadJobs();
-                for (int j = 0; j < downloadJobs.size(); j++) {
-                    if (downloadJobs.valueAt(j).getEntity().getGlobaVid().equals(item.getGvid())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 }

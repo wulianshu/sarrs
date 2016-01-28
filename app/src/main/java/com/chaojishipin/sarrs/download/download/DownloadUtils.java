@@ -9,7 +9,7 @@ public class DownloadUtils {
 	private static DecimalFormat mMediumSizeFormat = null;
 	public static String ISDOWNLOAD = "1";//判断是否能下载，1可以
 	
-	private static void initSizeFormat(){
+	private synchronized static void initSizeFormat(){
 		if(null == mSmallSizeFormat){
 			mSmallSizeFormat = new DecimalFormat("0.##");
 		}
@@ -28,7 +28,26 @@ public class DownloadUtils {
 		}	
 		return downloadedSize;
 	}
-	
+
+	public static String getDownloadedSpeed(long speed){
+		initSizeFormat();
+		String downloadedSize = "";
+		int i = 0;
+		float size = speed;
+		while(size > 1024){
+			size /= 1024;
+			++i;
+		}
+		switch(i){
+			case 1:
+				return String.valueOf(mSmallSizeFormat.format(size)) + "KB/s";
+			case 2:
+				return String.valueOf(mSmallSizeFormat.format(size)) + "MB/s";
+			default:
+				return String.valueOf(mSmallSizeFormat.format(size)) + "B/s";
+		}
+	}
+
 	public static String getTotalSize(long size){
 		initSizeFormat();
 		String downloadedSize = "";

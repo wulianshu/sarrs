@@ -13,6 +13,7 @@ import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.download.activity.DownloadActivity;
 import com.chaojishipin.sarrs.download.fragment.DownloadFragment;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 
 
@@ -46,34 +47,10 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
                     return;
                 }
                 if (wifi.isConnected()) {
-                    for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                        if (null != job && job.getStatus() == DownloadJob.NO_USER_PAUSE) {
-                            if (job.getExceptionType() != DownloadJob.NO_SD
-                                    && job.getExceptionType() != DownloadJob.FILE_NOT_FOUND) {
-                                job.start();
-                            }
-                        }
-                    }
-                    // wifi连接，自动继续下载升级包文件
-//					AutoDownloadApkSupporter mDownloadApkInstance = AutoDownloadApkSupporter.getInstance();
-//					if (mDownloadApkInstance.getAutoDownloadUpdateFileState() == FAILURE) {
-//						mDownloadApkInstance.reDownloadUpgradeApk(context, mDownloadApkInstance.getmUpgradeUrl());
-//					}
-
-//					AdShowUtils.mApkDownloadPauseFlag = false;
-//					reDownloadApk(context);
+                    DataUtils.getInstance().startAllDownload();
                 }
                 if (gprs.isConnected()) {
-//					P2pHelper p2pHelper =P2pHelper.getInstance();
-//					p2pHelper.stopTaskOnPauseOrWait();
-//					p2pHelper.stopAllTaskOn3G();
-                    DownloadManager downloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
-                    for (DownloadJob job : downloadManager.getQueuedDownloads()) {
-//						p2pHelper.stopDownloadTask(job);
-                        if (job.getStatus() == DownloadJob.DOWNLOADING) {
-                            job.pauseOnOther(DownloadJob.NO_USER_PAUSE);
-                        }
-                    }
+                    DataUtils.getInstance().pauseAllDownload();
                 }
             }
 
@@ -83,85 +60,30 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
                 if (!(NetworkUtil.reportNetType(ChaoJiShiPinApplication.getInstatnce()) == 2))
                     return;
                 if (!isDownloadcan3g) {
-                    for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                        if (null != job && job.getStatus() == DownloadJob.DOWNLOADING)
-                            job.pauseOnOther(DownloadJob.NO_USER_PAUSE);
-                    }
+                    DataUtils.getInstance().pauseAllDownload();
                 } else {
-                    for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                        if (null != job && job.getStatus() == DownloadJob.NO_USER_PAUSE) {
-                            if (job.getExceptionType() != DownloadJob.NO_SD
-                                    && job.getExceptionType() != DownloadJob.FILE_NOT_FOUND) {
-                                job.start();
-                            }
-                        }
-                    }
+                    DataUtils.getInstance().startAllDownload();
                 }
             }
 
             if (SDCARD_NOSPACE_ACTION.equals(action)) {
-                for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                    if (null != job && job.getStatus() == DownloadJob.DOWNLOADING) {
-                        job.pauseOnOther(DownloadJob.NO_USER_PAUSE);
-                        ToastUtil.showShortToast(context, R.string.sdcard_nospace);
-                        Log.d("order", "space no 1");
-                    }
-                }
+                ToastUtil.showShortToast(context, R.string.sdcard_nospace);
+                DataUtils.getInstance().pauseAllDownload();
             }
 
             if (SPEED_ACTION.equals(action)) {
                 boolean cutSpeed = intent.getBooleanExtra("player", false);
                 ChaoJiShiPinApplication.getInstatnce().setSpeedCut(cutSpeed);
                 if (cutSpeed) {
-                    for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                        if (null != job && job.getStatus() == DownloadJob.DOWNLOADING) {
-                            job.pauseOnOther(DownloadJob.NO_USER_PAUSE);
-                        }
-                        ChaoJiShiPinApplication.getInstatnce().getDownloadManager().notifyObservers();
-                    }
-//					AdShowUtils.mApkDownloadPauseFlag = true;
-//					LogUtils.i(TAG, "AdShowUtils.mApkDownloadPauseFlag被赋值为 " + AdShowUtils.mApkDownloadPauseFlag);
+                    DataUtils.getInstance().pauseAllDownload();
                 } else {
-                    for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                        if (null != job && job.getStatus() == DownloadJob.NO_USER_PAUSE) {
-                            if (job.getExceptionType() != DownloadJob.NO_SD
-                                    && job.getExceptionType() != DownloadJob.FILE_NOT_FOUND) {
-                                job.start();
-                            }
-                        }
-                    }
-//					ConnectivityManager manager = (ConnectivityManager) context
-//							.getSystemService(Context.CONNECTIVITY_SERVICE);
-//					if (null == manager) {
-//						return;
-//					}
-//					NetworkInfo gprs = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-//					if (null != gprs && !gprs.isConnected()) {
-////						AdShowUtils.mApkDownloadPauseFlag = false;
-////						reDownloadApk(context);
-//					}
-//					P2pHelper.getInstance().stopTaskOnPauseOrWait();
-                }
-            }
-
-            if (Intent.ACTION_MEDIA_MOUNTED.equals(action)) {
-                for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-//					if (null != job && job.getStatus() == DownloadJob.NO_USER_PAUSE)
-//						job.start();
-//                    if (DownloadFragment.mSizeManager != null) {
-//						DownloadActivity.mSizeManager.ansynHandlerSdcardSize();
-//                    }
+                    DataUtils.getInstance().startAllDownload();
                 }
             }
 
             if (Intent.ACTION_MEDIA_REMOVED.equals(action) || Intent.ACTION_MEDIA_EJECT.equals(action)
                     || Intent.ACTION_MEDIA_BAD_REMOVAL.equals(action)) {
-                for (DownloadJob job : ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()) {
-                    if (null != job && job.getStatus() == DownloadJob.DOWNLOADING) {
-                        job.setExceptionType(DownloadJob.NO_SD);
-                        job.pauseOnOther(DownloadJob.NO_USER_PAUSE);
-                    }
-                }
+                DataUtils.getInstance().pauseAllDownload();
             }
 
             if (Intent.ACTION_MEDIA_MOUNTED.equals(action)) {
@@ -172,18 +94,4 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
             }
         }
     }
-
-//	private void reDownloadApk(Context context) {
-//		ArrayList<AdApkEntity> apkList = MoviesApplication.getInstance().getmAdDownloadAppList();
-//		if (null != apkList && apkList.size() > 0) {
-//			// for(AdApkEntity entity : apkList) {
-//			for (int i = 0; i < apkList.size(); i++) {
-//				AdApkEntity entity = apkList.get(i);
-//				AdShowUtils.startDownload(context, entity.getDownloadUrl(), entity.getNotifyId());
-//				LogUtils.i(TAG, "start apk download -- url == " + entity.getDownloadUrl());
-//			}
-//		}
-//		LogUtils.i(TAG, "start download -- mApkDownloadPauseFlag == " + AdShowUtils.mApkDownloadPauseFlag);
-//	}
-
 }

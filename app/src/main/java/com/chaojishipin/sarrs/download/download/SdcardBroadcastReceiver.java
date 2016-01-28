@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
+import com.chaojishipin.sarrs.utils.DataUtils;
 
 
 public class SdcardBroadcastReceiver extends BroadcastReceiver {
@@ -29,11 +30,7 @@ public class SdcardBroadcastReceiver extends BroadcastReceiver {
 				ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 				NetworkInfo wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 				if(wifi.isConnected()){
-					for(DownloadJob job: ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads()){
-						if(job.getStatus()==DownloadJob.NO_USER_PAUSE||job.getStatus()==DownloadJob.WAITING) {
-							job.start();
-						}
-					}
+					DataUtils.getInstance().startAllDownload();
 				}
 			} else if(Intent.ACTION_MEDIA_EJECT.equals(action)) {//拔出sd卡
 				DownloadHelper.NEW_ADDED_SDCARDPATH = "";

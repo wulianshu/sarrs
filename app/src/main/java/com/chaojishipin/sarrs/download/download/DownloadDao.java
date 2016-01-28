@@ -3,6 +3,7 @@ package com.chaojishipin.sarrs.download.download;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 数据库增删改查
@@ -20,7 +21,7 @@ public interface DownloadDao {
 	public SparseArray<DownloadFolderJob> getAllDownloadFloderJobs();
 	
 	public ArrayList<DownloadJob> getAllDownloadJobs();
-	
+	public ArrayList<DownloadJob> getAllCompleteJobs();
 	public void remove(DownloadJob job);
 	
 	public ArrayList<DownloadJob> getDownloadJobsByMid(String mid);
@@ -29,6 +30,9 @@ public interface DownloadDao {
 
 	public boolean updateValue(DownloadEntity entity, String key, String newValue);
 	public boolean updateValue(DownloadEntity entity, String key, int newValue);
+	public HashMap<String, DownloadJob> getDownloadJobsMap();
+	public int getDownloadJobNum();
+	public int getAllDownloadJobNum();
 
 	public boolean isDownloaded(String id);
 }

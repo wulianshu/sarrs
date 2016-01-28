@@ -20,6 +20,8 @@ import com.chaojishipin.sarrs.bean.HistoryRecord;
 import com.chaojishipin.sarrs.bean.HistoryRecordResponseData;
 import com.chaojishipin.sarrs.bean.HtmlDataBean;
 import com.chaojishipin.sarrs.bean.InterestRecommend;
+import com.chaojishipin.sarrs.bean.LiveDataInfo;
+import com.chaojishipin.sarrs.bean.LiveStreamInfo;
 import com.chaojishipin.sarrs.bean.LogOutInfo;
 import com.chaojishipin.sarrs.bean.MainActivityAlbum;
 import com.chaojishipin.sarrs.bean.MainActivityData;
@@ -57,7 +59,9 @@ import com.chaojishipin.sarrs.http.parser.HistoryRecordParser;
 import com.chaojishipin.sarrs.http.parser.HistoryRecordReponseDataParser;
 import com.chaojishipin.sarrs.http.parser.HtmlParser;
 import com.chaojishipin.sarrs.http.parser.InterestRecommendParser;
+import com.chaojishipin.sarrs.http.parser.LiveDataInfoParser;
 import com.chaojishipin.sarrs.http.parser.LiveInfoParser;
+import com.chaojishipin.sarrs.http.parser.LiveStreamInfoParser;
 import com.chaojishipin.sarrs.http.parser.LoginParser;
 import com.chaojishipin.sarrs.http.parser.LogoutParser;
 import com.chaojishipin.sarrs.http.parser.MainActivityDataParser;
@@ -189,8 +193,8 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("appid", "0");
         params.put("clientos", Utils.getSystemVer());
         // 分辨率
-         params.put("resolution", SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, "") + "*" + SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, ""));
-         params.put("width", SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, ""));
+        params.put("resolution", SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, "") + "*" + SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, ""));
+        params.put("width", SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, ""));
         // 设备ID TODO 两个字段一样需统一
         params.put("lc", Utils.getDeviceId(ChaoJiShiPinApplication.getInstatnce()));
         // 设备ID
@@ -310,9 +314,9 @@ public class HttpApi extends SarrsBaseHttpApi {
         sb.append("/sarrs/suggest");
         HashMap<String, String> params = getBaseParams();
         params.put("q", keyWord);
-        params.put("imei",Utils.getPhoneImei());
-        if(UserLoginState.getInstance().getUserInfo()!=null){
-            params.put("token",""+ UserLoginState.getInstance().getUserInfo().getToken());
+        params.put("imei", Utils.getPhoneImei());
+        if (UserLoginState.getInstance().getUserInfo() != null) {
+            params.put("token", "" + UserLoginState.getInstance().getUserInfo().getToken());
         }
         addVer(params);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new SearchSuggestParser(), params, null);
@@ -320,6 +324,7 @@ public class HttpApi extends SarrsBaseHttpApi {
 
     /**
      * 热门搜索接口
+     *
      * @return
      */
     public static SarrsRequest getToplistRequest() {
@@ -1207,4 +1212,34 @@ public class HttpApi extends SarrsBaseHttpApi {
         createRequest(SarrsRequest.Method.GET, sb.toString(),null, params, null).start(null,ConstantUtils.REQUEST_UPLOAD_STAT);
     }
 
+    /**
+     * 直播首页接口
+     *
+     * @return
+     */
+    public static SarrsRequest<LiveDataInfo> getLiveChannelDataRequest() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ConstantUtils.HOST.DOMON_6);
+        sb.append("/sarrs/livehall");
+        HashMap<String, String> params = getBaseParams();
+        addVer(params);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(), new LiveDataInfoParser(), params, null);
+    }
+
+    /**
+     * 直播流地址接口
+     *
+     * @param channelId
+     * @return
+     */
+    public static SarrsRequest<LiveStreamInfo> getLiveStreamUrlRequest(String channelId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ConstantUtils.HOST.DOMON_6);
+        sb.append("/sarrs/livestream");
+        HashMap<String, String> params = getBaseParams();
+        addVer(params);
+        params.put("channelId", channelId);
+        params.put("withAllStreams", "1");
+        return createRequest(SarrsRequest.Method.GET, sb.toString(), new LiveStreamInfoParser(), params, null);
+    }
 }

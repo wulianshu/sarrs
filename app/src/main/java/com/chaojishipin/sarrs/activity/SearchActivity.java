@@ -1408,10 +1408,11 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         super.onConfigurationChanged(newConfig);
     }
 
-    public static void launch(Activity ac){
+    public static void launch(Activity ac, String ref){
         Bitmap bm = ScreenShot.shoot(ac);
         ((ChaoJiShiPinApplication)ac.getApplication()).setBitmap(bm);
         Intent intent = new Intent(ac, SearchActivity.class);
+        intent.putExtra("ref", ref);
         ac.startActivity(intent);
     }
 }

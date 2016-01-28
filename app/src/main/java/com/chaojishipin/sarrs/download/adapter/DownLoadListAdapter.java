@@ -16,6 +16,7 @@ import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.download.DownloadUtils;
 import com.chaojishipin.sarrs.download.view.SquareLayoutForList;
+import com.chaojishipin.sarrs.utils.DataUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -208,8 +209,7 @@ public class DownLoadListAdapter extends BaseAdapter {
 
 		// 根据下载数据库中的数据更新已下载标记
 		public SparseArray<Boolean> updateDownloadedFlagByDB(ArrayList<Episode> episodeList,SparseArray<Boolean> isSelected) {
-			ArrayList<DownloadJob> downloadList = ChaoJiShiPinApplication.getInstatnce()
-					.getDownloadManager().getAllDownloads();
+			ArrayList<DownloadJob> downloadList = DataUtils.getInstance().getAllDownloads();
 			if (null != downloadList && downloadList.size() > 0) {
 				DownloadEntity entity;
 				String downloadSerialsId;

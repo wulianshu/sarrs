@@ -25,21 +25,28 @@ import android.widget.RelativeLayout;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinMainActivity;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
+import com.chaojishipin.sarrs.activity.ChaojishipinLivePlayActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinRegisterActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinSplashActivity;
 import com.chaojishipin.sarrs.activity.PlayActivityFroWebView;
 import com.chaojishipin.sarrs.activity.SearchActivity;
+import com.chaojishipin.sarrs.adapter.LiveActivityChannelAdapter;
 import com.chaojishipin.sarrs.adapter.MainActivityChannelAdapter2;
 import com.chaojishipin.sarrs.bean.AddFavorite;
 import com.chaojishipin.sarrs.bean.CancelFavorite;
 import com.chaojishipin.sarrs.bean.CheckFavorite;
+import com.chaojishipin.sarrs.bean.LiveDataEntity;
+import com.chaojishipin.sarrs.bean.LiveDataInfo;
+import com.chaojishipin.sarrs.bean.LivePlayData;
+import com.chaojishipin.sarrs.bean.LiveStreamEntity;
+import com.chaojishipin.sarrs.bean.LiveStreamInfo;
 import com.chaojishipin.sarrs.bean.MainActivityAlbum;
 import com.chaojishipin.sarrs.bean.MainActivityData;
 import com.chaojishipin.sarrs.bean.MainMenuItem;
 import com.chaojishipin.sarrs.bean.SlidingMenuLeft;
 import com.chaojishipin.sarrs.bean.UploadRecord;
 import com.chaojishipin.sarrs.bean.VideoDetailItem;
-import com.chaojishipin.sarrs.bean.VideoItem;
+import com.chaojishipin.sarrs.feedback.DataReporter;
 import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
@@ -74,6 +81,8 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -112,8 +121,15 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     String source = "";
     String bucket;
     String seid;
-    VideoDetailItem detail=null;
-    int mparentId=0;
+    VideoDetailItem detail = null;
+    int mparentId = 0;
+
+    // live相关
+    private LiveActivityChannelAdapter mLiveactivitychanneladapter;
+    private ArrayList<LiveDataEntity> mLiveItemLists = new ArrayList<LiveDataEntity>();
+    private ArrayList<LiveStreamEntity> mLiveStreamLists = new ArrayList<LiveStreamEntity>();
+    private ArrayList<String> mLivePlayStreams = new ArrayList<String>();
+    private String mLivePlayUrl;
 
     @Override
     protected void init(){
@@ -121,8 +137,14 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         SarrsMainMenuView.mode=ConstantUtils.SarrsMenuInitMode.MODE_DELETE_SAVE_SHARE;
         activity = (ChaoJiShiPinMainActivity) getActivity();
 
-        mainActivityChannelAdapter = new MainActivityChannelAdapter2(getActivity());
-        mXListView.setAdapter(mainActivityChannelAdapter);
+		if (!isLiveChannel()) {	
+            mainActivityChannelAdapter = new MainActivityChannelAdapter2(getActivity());
+            mXListView.setAdapter(mainActivityChannelAdapter);
+        } else {
+            mLiveactivitychanneladapter = new LiveActivityChannelAdapter(getActivity());
+            mXListView.setAdapter(mLiveactivitychanneladapter);
+        }
+		
         mSearchIcon.setOnClickListener(this);
         mXListView.setOnItemClickListener(this);
         mXListView.setOnScrollListener(new AbsListView.OnScrollListener(){
@@ -159,6 +181,8 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         if (mAlbumLists != null) {
             mAlbumLists.clear();
         }
+		if (null != mLiveItemLists)
+            mLiveItemLists.clear();
         if(mainActivityChannelAdapter.menuStates!=null){
             mainActivityChannelAdapter.menuStates.clear();
         }
@@ -172,6 +196,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
             slidingMenuLeft.setCid("0");
             mCid = "0";
         }
+		
     }
 
     @Override
@@ -188,8 +213,14 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     public void onRetry() {
         LogUtil.e("main ", "reloading");
         reQMode = 0;
-        requestData();
+        if (isLiveChannel()) {
+            requestLiveData();
+        } else {
+            requestChannelData(getActivity(), cid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
+        }
     }
+	
+	
 
     @Override
     protected void requestData(){
@@ -201,9 +232,13 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
             mXListView.setOnlyShowRefreshingHeader(false);
             reQMode = 0;
-            requestChannelData(getActivity(), mCid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
-            //Umeng上拉刷新上报
-            MobclickAgent.onEvent(getActivity(), ConstantUtils.FEED_UP_LOAD);
+            if (!isLiveChannel()) {
+                requestChannelData(getActivity(), mCid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
+                //Umeng上拉刷新上报
+                MobclickAgent.onEvent(getActivity(), ConstantUtils.FEED_UP_LOAD);
+            } else {
+                requestLiveData();
+            }
         }
 
         @Override
@@ -219,6 +254,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
      * 根据上啦下拉动作设置 刷新组件文案信息
      */
     private void setListViewMode() {
+        mXListView.setMode(PullToRefreshSwipeListView.Mode.BOTH);
         mXListView.getLoadingLayoutProxy(true, false).setPullLabel(getActivity().getString(R.string.pull_to_refresh_pull_label));
         mXListView.getLoadingLayoutProxy(true, false).setRefreshingLabel(getActivity().getString(R.string.pull_to_refresh_refreshing_label));
         mXListView.getLoadingLayoutProxy(true, false).setReleaseLabel(getActivity().getString(R.string.pull_to_refresh_release_label));
@@ -227,6 +263,15 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         mXListView.getLoadingLayoutProxy(false, true).setRefreshingLabel(getActivity().getString(R.string.pull_to_refresh_load_more_loading));
     }
 
+    /**
+     * 直播频道只有下拉刷新，没有上拉加载更多
+     */
+    private void setLiveListViewMode() {
+        mXListView.setMode(PullToRefreshSwipeMenuListView.Mode.PULL_FROM_START);
+        mXListView.getLoadingLayoutProxy(true, false).setPullLabel(this.getString(R.string.pull_to_refresh_pull_label));
+        mXListView.getLoadingLayoutProxy(true, false).setRefreshingLabel(this.getString(R.string.pull_to_refresh_refreshing_label));
+        mXListView.getLoadingLayoutProxy(true, false).setReleaseLabel(this.getString(R.string.pull_to_refresh_release_label));
+    }
 
     /**
      * 请求具体的频道数据
@@ -274,36 +319,53 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
 //        else{
 //            pageid = "00S002001";
 //        }
+        if (!isLiveChannel()) {
+            if (null == mainActivityChannelAdapter)
+                mainActivityChannelAdapter = new MainActivityChannelAdapter2(getActivity());
+            mXListView.setAdapter(mainActivityChannelAdapter);
+        } else {
+            if (null == mLiveactivitychanneladapter)
+                mLiveactivitychanneladapter = new LiveActivityChannelAdapter(getActivity());
+            mXListView.setAdapter(mLiveactivitychanneladapter);
+        }
         getNetData(slidingMenuLeft);
 
     }
 
     public void getNetData(SlidingMenuLeft slidingMenuLeft) {
-        if(ConstantUtils.TOPIC_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type()) || ConstantUtils.RANKLIST_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type())){
+        if (ConstantUtils.TOPIC_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type()) || ConstantUtils.RANKLIST_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type())) {
             return;
         }
         String cid = null;
-        if (ConstantUtils.TITLE_SUGGEST.equals(slidingMenuLeft.getTitle())) {
+        String title = slidingMenuLeft.getTitle();
+        if (ConstantUtils.TITLE_SUGGEST.equals(title)) {
             cid = "0";
         } else {
             cid = slidingMenuLeft.getCid();
         }
-        if (mCurrentTitle.equals(slidingMenuLeft.getTitle())) {
+        if (mCurrentTitle.equals(title)) {
             reQMode = 3;
 
         } else {
             reQMode = 4;
 
-            mCurrentTitle = slidingMenuLeft.getTitle();
+            mCurrentTitle = title;
         }
         if (NetWorkUtils.isNetAvailable()) {
-            setListViewMode();
+            setListViewRefreshMode();
             if (mAlbumLists != null) {
                 mAlbumLists.clear();
             }
+            if (null != mLiveItemLists)
+                mLiveItemLists.clear();
             mXListView.setOnlyShowRefreshingHeader(true);
             mXListView.setRefreshing(true);
-            requestChannelData(getActivity(), cid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
+            if (isLiveChannel()) {
+                // 直播 cid字段为空
+                requestLiveData();
+            } else {
+                requestChannelData(getActivity(), cid, ConstantUtils.MAINACTIVITY_REFRESH_AREA);
+            }
         } else {
             showErrorView(mRootView);
             mXListView.setRefreshing(true);
@@ -395,7 +457,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
      * @auth daipei
      */
     public void buildDrawingCacheAndIntent() {
-        SearchActivity.launch(getActivity());
+        SearchActivity.launch(getActivity(), pageid);
     }
 
 //    @Override
@@ -493,11 +555,11 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
                         for (int i = 0; i < albumsSize; i++) {
                             if (!isContainItem(albums.get(i).getId())) {
                                 mAlbumLists.add(0, albums.get(albumsSize - 1 - i));
-                                MainMenuItem item=new MainMenuItem();
+                                MainMenuItem item = new MainMenuItem();
                                 item.setIsDelete(false);
                                 item.setIsSave(false);
                                 item.setIsSare(false);
-                                mainActivityChannelAdapter.menuStates.add(0,item);
+                                mainActivityChannelAdapter.menuStates.add(0, item);
                             }
                         }
                         //下拉加载
@@ -506,11 +568,11 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
                             if (!isContainItem(albums.get(i).getId())) {
                                 int index = mAlbumLists.size();
                                 mAlbumLists.add(index, albums.get(i));
-                                MainMenuItem item=new MainMenuItem();
+                                MainMenuItem item = new MainMenuItem();
                                 item.setIsDelete(false);
                                 item.setIsSave(false);
                                 item.setIsSare(false);
-                                mainActivityChannelAdapter.menuStates.add(index,item);
+                                mainActivityChannelAdapter.menuStates.add(index, item);
 
                             }
                         }
@@ -522,11 +584,11 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
                             if (!isContainItem(albums.get(i).getId())) {
                                 int index = mAlbumLists.size();
                                 mAlbumLists.add(index, albums.get(i));
-                                MainMenuItem item=new MainMenuItem();
+                                MainMenuItem item = new MainMenuItem();
                                 item.setIsDelete(false);
                                 item.setIsSave(false);
                                 item.setIsSare(false);
-                                mainActivityChannelAdapter.menuStates.add(index,item);
+                                mainActivityChannelAdapter.menuStates.add(index, item);
                             }
                         }
 //                        ToastUtil.showShortToast(getActivity(), "切换频道");
@@ -628,43 +690,52 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         LogUtil.e("onItemClick", "position0 " + position);
-        if (mAlbumLists != null && mAlbumLists.size() > 0) {
-            MainActivityAlbum item = mAlbumLists.get(position - 1);
-            UploadStat.uploadstat(item, "0", pageid, ChaojishipinSplashActivity.pageid, position + "", "-", "-", "-", "-","-");
-            LogUtil.e("wulianshu", "=====页面点击上报=====");
-            VideoDetailItem videoDetailItem = new VideoDetailItem();
-            videoDetailItem.setTitle(item.getTitle());
-            videoDetailItem.setDescription(item.getDescription());
-            videoDetailItem.setId(item.getId());
-            videoDetailItem.setCategory_id(item.getCategory_id());
-            videoDetailItem.setPlay_count(item.getPlay_count());
-            videoDetailItem.setVideoItems(item.getVideos());
-            // 视频来源
-            videoDetailItem.setBucket(item.getBucket());
-            videoDetailItem.setReid(item.getReId());
-            videoDetailItem.setSource(item.getSource());
-            videoDetailItem.setFromMainContentType(item.getContentType());
-            videoDetailItem.setDetailImage(item.getImgage());
+        if (!isLiveChannel()) {
+            if (mAlbumLists != null && mAlbumLists.size() > 0) {
+                MainActivityAlbum item = mAlbumLists.get(position - 1);
+                UploadStat.uploadstat(item, "0", pageid, ChaojishipinSplashActivity.pageid, position + "", "-", "-", "-", "-", "-");
+                LogUtil.e("wulianshu", "=====页面点击上报=====");
+                VideoDetailItem videoDetailItem = new VideoDetailItem();
+                videoDetailItem.setTitle(item.getTitle());
+                videoDetailItem.setDescription(item.getDescription());
+                videoDetailItem.setId(item.getId());
+                videoDetailItem.setCategory_id(item.getCategory_id());
+                videoDetailItem.setPlay_count(item.getPlay_count());
+                videoDetailItem.setVideoItems(item.getVideos());
+                // 视频来源
+                videoDetailItem.setBucket(item.getBucket());
+                videoDetailItem.setReid(item.getReId());
+                videoDetailItem.setSource(item.getSource());
+                videoDetailItem.setFromMainContentType(item.getContentType());
+                videoDetailItem.setDetailImage(item.getImgage());
 
-            if("0".equals(ChaoJiShiPinMainActivity.isCheck) || "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
-                Intent intent = new Intent(getActivity(), ChaoJiShiPinVideoDetailActivity.class);
+                if ("0".equals(ChaoJiShiPinMainActivity.isCheck) || "0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
+                    Intent intent = new Intent(getActivity(), ChaoJiShiPinVideoDetailActivity.class);
 
-                intent.putExtra("videoDetailItem", videoDetailItem);
-                intent.putExtra("ref", pageid);
-                intent.putExtra("seid", seid);
-                //点击上报
-                startActivity(intent);
-            }else{
-                Intent webintent = new Intent(getActivity(),PlayActivityFroWebView.class);
-                webintent.putExtra("url", item.getVideos().get(0).getPlay_url());
-                webintent.putExtra("title", item.getVideos().get(0).getTitle());
-                webintent.putExtra("site", item.getSource());
-                webintent.putExtra("videoDetailItem", videoDetailItem);
-                startActivity(webintent);
+                    intent.putExtra("videoDetailItem", videoDetailItem);
+                    intent.putExtra("ref", pageid);
+                    intent.putExtra("seid", seid);
+                    //点击上报
+                    startActivity(intent);
+                } else {
+                    Intent webintent = new Intent(getActivity(), PlayActivityFroWebView.class);
+                    webintent.putExtra("url", item.getVideos().get(0).getPlay_url());
+                    webintent.putExtra("title", item.getVideos().get(0).getTitle());
+                    webintent.putExtra("site", item.getSource());
+                    webintent.putExtra("videoDetailItem", videoDetailItem);
+                    startActivity(webintent);
+                }
+            }
+        } else {
+            if (mLiveItemLists != null && mLiveItemLists.size() > 0) {
+                LiveDataEntity item = mLiveItemLists.get(position - 1);
+                if (null != item) {
+                    LogUtil.e(Utils.LIVE_TAG, "channelName is " + item.getChannelName() + " and channelId is " + item.getChannelId());
+                    requestLiveStreamData(item);
+                }
             }
         }
     }
-
 
 
     private boolean isContainItem(String aid) {
@@ -698,7 +769,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     }
 
     void buidlParam() {
-        token=UserLoginState.getInstance().getUserInfo().getToken();
+        token = UserLoginState.getInstance().getUserInfo().getToken();
         MainActivityAlbum item = mAlbumLists.get(mparentId);
         detail = new VideoDetailItem();
         detail.setTitle(item.getTitle());
@@ -814,7 +885,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
             public void onResponse(AddFavorite result, boolean isCachedData) {
                 if (result != null && result.getCode() == 0) {
                     //doSaveLocal();
-                    if(mainActivityChannelAdapter.menuStates!=null){
+                    if (mainActivityChannelAdapter.menuStates != null) {
                         mainActivityChannelAdapter.menuStates.get(mparentId).setIsDelete(false);
                         mainActivityChannelAdapter.menuStates.get(mparentId).setIsSave(true);
                         mainActivityChannelAdapter.menuStates.get(mparentId).setIsSare(false);
@@ -934,5 +1005,244 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
         mainActivityAlbum.setReId(mAlbumLists.get(0).getReId());
 
         UploadStat.uploadstat(mainActivityAlbum, "4", pageid, ChaojishipinSplashActivity.pageid, "-", "-", "-", "-", "-",vid);
+    }
+
+    /**
+     * 请求首页直播数据
+     */
+    private void requestLiveData() {
+        HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_LIVE_DATA_TAG);
+        HttpApi.
+                getLiveChannelDataRequest()
+                .start(new RequestLiveListerer(), ConstantUtils.REQUEST_LIVE_DATA_TAG);
+    }
+
+    private class RequestLiveListerer implements RequestListener<LiveDataInfo> {
+        @Override
+        public void onResponse(LiveDataInfo result, boolean isCachedData) {
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!liveDataInfo is " + result);
+            mXListView.onRefreshComplete();
+            hideErrorView(mRootView);
+            mTopToast.setVisibility(View.VISIBLE);
+            if (null != result) {
+                if (null != mLiveItemLists)
+                    mLiveItemLists.clear();
+                mLiveItemLists = (ArrayList) result.getRows();
+                if (null != mLiveItemLists && mLiveItemLists.size() > 0) {
+                    LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!!!!!!reQMode is " + reQMode);
+                    if (reQMode == 0) {
+                        //下拉刷新
+                    } else if (reQMode == 3 || reQMode == 4) {
+                        //切换频道
+                    }
+//                    if (isAdded()) {
+//                        topToast.setText(getString(R.string.sarrs_toast_notice_normal_start) + mLiveItemLists.size() + getString(R.string.sarrs_toast_notice_normal_end));
+//                        topToast.show(1000);
+//                    }
+                    if (null != mLiveactivitychanneladapter) {
+                        mLiveactivitychanneladapter.setmLiveItemList(mLiveItemLists);
+                        mLiveactivitychanneladapter.notifyDataSetChanged();
+                    }
+                } else {
+//                    topToast.setText(getString(R.string.sarrs_toast_notice_nodata));
+//                    topToast.show(1000);
+                    if (null != mLiveactivitychanneladapter) {
+                        mLiveItemLists.clear();
+                        mLiveactivitychanneladapter.setmLiveItemList(mLiveItemLists);
+                        mLiveactivitychanneladapter.notifyDataSetChanged();
+                    }
+                }
+            } else {
+//                topToast.setText(getString(R.string.sarrs_toast_notice_nodata));
+//                topToast.show(1000);
+                if (null != mLiveactivitychanneladapter) {
+                    mLiveItemLists.clear();
+                    mLiveactivitychanneladapter.setmLiveItemList(mLiveItemLists);
+                    mLiveactivitychanneladapter.notifyDataSetChanged();
+                }
+            }
+        }
+
+        @Override
+        public void netErr(int errorCode) {
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!requestLiveData netErr and  errorCode is " + errorCode);
+            mXListView.onRefreshComplete();
+            showErrorView(mRootView);
+        }
+
+        @Override
+        public void dataErr(int errorCode) {
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!requestLiveData dataErr and  errorCode is " + errorCode);
+            mXListView.onRefreshComplete();
+            mTopToast.setText(getString(R.string.sarrs_toast_notice_no_result));
+            mTopToast.show(1000);
+        }
+    }
+
+    /**
+     * 判断是进入直播频道
+     *
+     * @return
+     */
+    private boolean isLiveChannel() {
+        if (null != slidingMenuLeft)
+            return ConstantUtils.LIVE_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type());
+        else {
+            slidingMenuLeft = ((ChaoJiShiPinMainActivity) getActivity()).getSlidingMenuLeft();
+            if (null != slidingMenuLeft)
+                return ConstantUtils.LIVE_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type());
+        }
+        return false;
+    }
+
+    /**
+     * 设置listView刷新模式
+     */
+    private void setListViewRefreshMode() {
+        if (!isLiveChannel())
+            setListViewMode();
+        else
+            setLiveListViewMode();
+    }
+
+    /**
+     * 根据频道id返回流地址
+     *
+     * @param item
+     */
+    private void requestLiveStreamData(LiveDataEntity item) {
+        LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!! requestLiveStreamData called !!!!!!!!!!!!!!");
+        HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_LIVE_STREAM_DATA_TAG);
+        HttpApi.getLiveStreamUrlRequest(item.getChannelId()).start(new RequestLiveStreamListener(item), ConstantUtils.REQUEST_LIVE_STREAM_DATA_TAG);
+    }
+
+    private class RequestLiveStreamListener implements RequestListener<LiveStreamInfo> {
+        private LiveDataEntity item;
+
+        public RequestLiveStreamListener(LiveDataEntity item) {
+            this.item = item;
+        }
+
+        @Override
+        public void onResponse(LiveStreamInfo result, boolean isCachedData) {
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!liveStreamInfo is " + result);
+            if (null != result) {
+                if (null != result.getRows() && result.getRows().size() > 0) {
+                    if (null != mLiveStreamLists)
+                        mLiveStreamLists.clear();
+                    setLivePlayStreamList(result.getRows());
+                    String title = "";
+                    if (null != item.getPrograms() && item.getPrograms().size() > 0) {
+                        title = item.getPrograms().get(0).getTitle();
+                    }
+                    excuteLivePlayLogic(title, mLivePlayStreams);
+                } else {
+                    requestStreamDataFail(item);
+                }
+            } else {
+                requestStreamDataFail(item);
+            }
+        }
+
+        @Override
+        public void netErr(int errorCode) {
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!requestLiveStreamData netErr and errorCode is " + errorCode);
+            requestStreamDataFail(item);
+        }
+
+        @Override
+        public void dataErr(int errorCode) {
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!requestLiveStreamData dataErr and errorCode is " + errorCode);
+            requestStreamDataFail(item);
+        }
+    }
+
+    /**
+     * 流地址列表排序(升序)
+     *
+     * @param list
+     */
+    private List<LiveStreamEntity> sortLiveStreamList(List<LiveStreamEntity> list) {
+        Collections.sort(list, new Comparator<LiveStreamEntity>() {
+            @Override
+            public int compare(LiveStreamEntity lhs, LiveStreamEntity rhs) {
+                return Integer.valueOf(lhs.getRate()) >= Integer.valueOf(rhs.getRate()) ? 1 : -1;
+            }
+        });
+        return list;
+    }
+
+    /**
+     * 请求直播流地址失败
+     *
+     * @param item
+     */
+    private void requestStreamDataFail(LiveDataEntity item) {
+        if (null != item) {
+            if (null != item.getStreams() && item.getStreams().size() > 0) {
+                if (null != mLiveStreamLists)
+                    mLiveStreamLists.clear();
+                setLivePlayStreamList(item.getStreams());
+            } else {
+                // 无需处理
+            }
+            String title = "";
+            if (null != item.getPrograms() && item.getPrograms().size() > 0) {
+                title = item.getPrograms().get(0).getTitle();
+            }
+            excuteLivePlayLogic(title, mLivePlayStreams);
+        } else {
+            // 无需处理
+        }
+    }
+
+    /**
+     * 设置直播播放url(忽略掉720P播放地址)
+     */
+    private void setLivePlayUrl(List<LiveStreamEntity> list) {
+        mLiveStreamLists = (ArrayList) sortLiveStreamList(list);
+        LogUtil.e(Utils.LIVE_TAG, "###############after sort mLiveStreamLists is " + mLiveStreamLists);
+        LiveStreamEntity firstStreamEntity = mLiveStreamLists.get(0);
+        if (mLiveStreamLists.size() > 1 && "1800".equalsIgnoreCase(firstStreamEntity.getRate())) {
+            mLivePlayUrl = mLiveStreamLists.get(1).getStreamUrl();
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!mLiveStreamName is " + mLiveStreamLists.get(1).getStreamName());
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!mLivePlayUrl is " + mLivePlayUrl);
+        } else {
+            mLivePlayUrl = firstStreamEntity.getStreamUrl();
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!mLiveStreamName is " + firstStreamEntity.getStreamName());
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!mLivePlayUrl is " + mLivePlayUrl);
+        }
+    }
+
+    /**
+     * 直播流地址排序
+     *
+     * @param list
+     */
+    private void setLivePlayStreamList(List<LiveStreamEntity> list) {
+        mLiveStreamLists = (ArrayList) sortLiveStreamList(list);
+        LogUtil.e(Utils.LIVE_TAG, "###############after sort mLiveStreamLists is " + mLiveStreamLists);
+        if (null != mLivePlayStreams)
+            mLivePlayStreams.clear();
+        for (LiveStreamEntity entity : mLiveStreamLists) {
+            mLivePlayStreams.add(0, entity.getStreamUrl());
+        }
+    }
+
+    /**
+     * 直播
+     */
+    private void excuteLivePlayLogic(String title, List<String> streams) {
+        LivePlayData playData = new LivePlayData();
+        playData.setTitle(title);
+        playData.setLiveStreams(streams);
+        LogUtil.e(Utils.LIVE_TAG, "###############curPlay title is " + title);
+        LogUtil.e(Utils.LIVE_TAG, "###############curPlayStreams size is " + streams.size() + " and streams is " + streams);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Utils.LIVE_PLAY_DATA, playData);
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), ChaojishipinLivePlayActivity.class);
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
     }
 }

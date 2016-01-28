@@ -10,10 +10,19 @@ public class DownloadFolderJob {
 	private String mMediaId;
 	private int index;//文件夹索引，key值
 	private SparseArray<DownloadJob> mDownloadJobs;
-	
+	private boolean isCheck;
+
 	public DownloadFolderJob() {
 	}
-	
+
+	public void setCheck(boolean bo){
+		isCheck = bo;
+	}
+
+	public boolean isCheck(){
+		return isCheck;
+	}
+
 	public DownloadFolderJob(String mMediaName, String mMediaId, int index) {
 		this.mMediaName = mMediaName;
 		this.mMediaId = mMediaId;

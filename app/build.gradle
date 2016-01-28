@@ -19,13 +19,13 @@ android {
         applicationId "com.chaojishipin.sarrs"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 13
-        versionName "1.1.2"
+        versionCode 14
+        versionName "1.2.0"
         // dex突破65535的限制
         multiDexEnabled true
         // 默认是官方的渠道
         //
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE:"00000_official"]
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "00000_official"]
 
     }
 
@@ -76,27 +76,27 @@ android {
             // 混淆
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig  signingConfigs.release
+            signingConfig signingConfigs.release
             // 多渠道
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
                         // 输出apk名称为sarrs_v1.0_2015-01-15_wandoujia.apk
-                        def fileName = "sarrs_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        def fileName = "sarrs_v${defaultConfig.versionName}__${releaseTime()}_${variant.productFlavors[0].name}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
 
             }// all
         } // release
-     }// buildType end
+    }// buildType end
 
     // 遍历 替换渠道ID
     productFlavors {
-        for (int i = 0 ; i < channelArray.size(); i++) {
+        for (int i = 0; i < channelArray.size(); i++) {
             def channel = channelArray[i]
-            "${channel}"{
+            "${channel}" {
                 manifestPlaceholders = [UMENG_CHANNEL_VALUE: channel]
             }
         }

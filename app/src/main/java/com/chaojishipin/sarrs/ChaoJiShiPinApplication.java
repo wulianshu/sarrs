@@ -13,13 +13,12 @@ import android.util.Log;
 
 import com.chaojishipin.sarrs.dao.DBHelper;
 import com.chaojishipin.sarrs.dao.DatabaseManager;
-import com.chaojishipin.sarrs.download.download.DownloadManager;
-import com.chaojishipin.sarrs.download.service.DownloadService;
 import com.chaojishipin.sarrs.manager.NetworkManager;
 import com.chaojishipin.sarrs.thirdparty.ShareConstants;
 import com.chaojishipin.sarrs.thirdparty.umeng.UMengAnalysis;
 import com.chaojishipin.sarrs.utils.ChannelUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogoImageLoader;
 import com.chaojishipin.sarrs.utils.SarrsManager;
 import com.chaojishipin.sarrs.utils.Utils;
@@ -56,11 +55,6 @@ public class
 
     private static DisplayImageOptions defaultoptions;
     private IWXAPI mApi;
-
-    /**
-     * 下载管理类
-     */
-    private DownloadManager mDownloadManager;
     /**
      * 下载限速
      */
@@ -96,23 +90,12 @@ public class
                 initImageLoader();
                 // 注册微信授权认证
                 regToWx();
-
-                CrashHandler crashHandler = CrashHandler.getInstance();
-                // 注册crashHandler
-                crashHandler.init(getApplicationContext());
             }
         }
-//        mInstatnce = this;
-//        NetworkManager.getInstance();
-        mDownloadManager = new DownloadManager(getApplicationContext());
-//        activityStack = new Stack<Activity>();
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        // 注册crashHandler
+        crashHandler.init(getApplicationContext());
         DatabaseManager.initializeInstance(new DBHelper(getApplicationContext()));
-//        new Handler().postDelayed(new Runnable() {
-//            public void run() {
-//                //execute the task
-//                startNetworkObserveService();
-//            }
-//        }, 3000);
         startNetworkObserveService();
     }
 
@@ -208,39 +191,6 @@ public class
 
     public static ChaoJiShiPinApplication getInstatnce() {
         return mInstatnce;
-    }
-
-    public DownloadManager getDownloadManager() {
-        return mDownloadManager;
-    }
-//    public Stack<Activity> getActivityStack() {
-//        return activityStack;
-//    }
-
-//    public void setActivityStack(Activity activity) {
-//        this.activityStack.add(activity);
-//    }
-
-//    public Activity getActivity() {
-//        if (null != activityStack) {
-//            for (int i = 0; i < activityStack.size(); i++) {
-//                if (activityStack.get(i) != null) {
-//                    return activityStack.get(i);
-//                }
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public void popActivity() {
-//        if (activityStack != null && activityStack.size() > 0)
-//            activityStack.remove(activityStack.size());
-//    }
-
-    public void startCheckSDCardFreeSizeService() {
-        Intent intent = new Intent(this, DownloadService.class);
-        intent.setAction(DownloadService.CHECK_SDCARD_FREESIZE);
-        startService(intent);
     }
 
     public boolean isSpeedCut() {

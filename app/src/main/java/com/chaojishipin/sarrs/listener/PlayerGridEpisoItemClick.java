@@ -2,13 +2,16 @@ package com.chaojishipin.sarrs.listener;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.adapter.PlayerGridEpisodeAdapter;
 import com.chaojishipin.sarrs.adapter.VideoDetailChildrenEpisodeAdapter;
 import com.chaojishipin.sarrs.adapter.VideoDetailFuScreeenExpandListAdapter;
 import com.chaojishipin.sarrs.bean.PlayData;
 import com.chaojishipin.sarrs.bean.VideoItem;
+import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 
@@ -57,30 +60,31 @@ public class PlayerGridEpisoItemClick implements AdapterView.OnItemClickListener
         switch (parent.getId()){
             case R.id.video_detail_expand_grid:
                 LogUtil.e("Grid", "expand pn" + parentId);
-                /*if(position/6>0){
-                    pageForMiddle=position/6+1+parentId*10;
-                }else{
-                    pageForMiddle=1;
-                }*/
-                   oldposition=position;
-                   oldItems=fenyeList.get(parentId);
-                    currentEpiso=fenyeList.get(parentId).get(position).getOrder();
-                for(int i=0;i< fenyeList.get(parentId).size();i++){
-                    if(i==position){
-                        fenyeList.get(parentId).get(i).setIsPlay(true);
-                    }else{
-                        fenyeList.get(parentId).get(i).setIsPlay(false);
-                    }
-                }
-                if(childAdapter!=null){
-                childAdapter.setFenyeList(fenyeList);
-                childAdapter.notifyDataSetChanged();
-            }
-                PlayData p=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                EventBus.getDefault().post(p);
-                LogUtil.e("POST ", "expand position" + position);
-                LogUtil.e("POST "," expand key : "+parentId);
-                // 执行更新中间布局逻辑
+                   if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())||fenyeList.get(parentId).get(position).isLocal()){
+                       oldposition=position;
+                       oldItems=fenyeList.get(parentId);
+                       currentEpiso=fenyeList.get(parentId).get(position).getOrder();
+                       for(int i=0;i< fenyeList.get(parentId).size();i++){
+                           if(i==position){
+                               fenyeList.get(parentId).get(i).setIsPlay(true);
+                           }else{
+                               fenyeList.get(parentId).get(i).setIsPlay(false);
+                           }
+                       }
+                       if(childAdapter!=null){
+                           childAdapter.setFenyeList(fenyeList);
+                           childAdapter.notifyDataSetChanged();
+                       }
+                       PlayData p=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                       EventBus.getDefault().post(p);
+                       LogUtil.e("POST ", "expand position" + position);
+                       LogUtil.e("POST "," expand key : "+parentId);
+                       // 执行更新中间布局逻辑
+
+                   }else{
+                       Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
+
+                   }
 
 
 
@@ -90,22 +94,28 @@ public class PlayerGridEpisoItemClick implements AdapterView.OnItemClickListener
             case R.id.video_detail_expand_list:
                 LogUtil.e("child", "click grid" + position);
                 LogUtil.e("child", "click grid" + position);
-                oldposition=position;
-                oldItems=fenyeList.get(parentId);
-                currentEpiso=fenyeList.get(parentId).get(position).getOrder();
-                for(int i=0;i< fenyeList.get(parentId).size();i++){
-                    if(i==position){
-                        fenyeList.get(parentId).get(i).setIsPlay(true);
-                    }else{
-                        fenyeList.get(parentId).get(i).setIsPlay(false);
+                if(NetworkUtil.isNetworkAvailable(ChaoJiShiPinApplication.getInstatnce())||fenyeList.get(parentId).get(position).isLocal()){
+                    oldposition=position;
+                    oldItems=fenyeList.get(parentId);
+                    currentEpiso=fenyeList.get(parentId).get(position).getOrder();
+                    for(int i=0;i< fenyeList.get(parentId).size();i++){
+                        if(i==position){
+                            fenyeList.get(parentId).get(i).setIsPlay(true);
+                        }else{
+                            fenyeList.get(parentId).get(i).setIsPlay(false);
+                        }
                     }
+                    if(childAdapter!=null){
+                        childAdapter.setFenyeList(fenyeList);
+                        childAdapter.notifyDataSetChanged();
+                    }
+                    PlayData p2=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
+                    EventBus.getDefault().post(p2);
+                }else{
+                    Toast.makeText(ChaoJiShiPinApplication.getInstatnce(), ChaoJiShiPinApplication.getInstatnce().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
+
                 }
-                if(childAdapter!=null){
-                    childAdapter.setFenyeList(fenyeList);
-                    childAdapter.notifyDataSetChanged();
-                }
-                PlayData p2=new PlayData(fenyeList,parentId,position, ConstantUtils.PLAYER_FROM_DETAIL_ITEM);
-                EventBus.getDefault().post(p2);
+
                 break;
         }
     }

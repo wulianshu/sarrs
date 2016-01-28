@@ -93,7 +93,7 @@ public class HistoryRecordListViewAdapter<LetvBaseBean>  extends CommonAdapter<L
         } else {
             holder = (ViewHolder) convertView.getTag();
 //            if (holder.save_item.getLeft() != 0)
-//                holder.save_item.layout(0, holder.save_item.getTop(), holder.save_item.getRight(), holder.save_item.getBottom());
+//            holder.save_item.layout(0, holder.save_item.getTop(), holder.save_item.getRight(), holder.save_item.getBottom());
 //            holder.save_item.smoothCloseMenu();
         }
         HistoryRecord record = (HistoryRecord) mDatas.get(position);

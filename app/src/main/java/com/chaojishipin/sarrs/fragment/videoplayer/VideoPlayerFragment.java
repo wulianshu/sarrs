@@ -516,6 +516,12 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
             case R.id.full_screen:
                 //Local  本地播放禁止半屏
                 if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+                    if(mActivity.getSCRREN()== ChaoJiShiPinVideoDetailActivity.SCREEN.HALF){
+                        mActivity.setSCREEN(ChaoJiShiPinVideoDetailActivity.SCREEN.FULL);
+                        mActivity.setFullScreen();
+                        mActivity.statusBarShow(false);
+
+                    }
                    return;
                 }else{
                     // 竖屏-半屏
@@ -754,11 +760,8 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
          reloadData();
         //WIFI
         if (netType == NetWorkUtils.NETTYPE_WIFI) {
-//            reloadData();
             mVideoPlayerController.hideNetView();
-//            mVideoPlayerController.resetPlaystate(false);
             mVideoPlayerController.showWIFINetView();
-//            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.player_net_wifi), Toast.LENGTH_SHORT).show();
             //流量
 
         } else if (netType == NetWorkUtils.NETTYPE_GSM) {
@@ -786,13 +789,14 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
                LogUtil.e("xll","播放本地断开网络！");
             }else{
-                if(mActivity.isExistLocalEpiso()){
+                // 当前播放剧集是不是本地
+                if(mVideoPlayerController!=null&&mVideoPlayerController.getCurrentVideoItem()!=null&&mVideoPlayerController.getCurrentVideoItem().isLocal()){
                     // 展示剧集、下一集、更多按钮
                     mVideoPlayerController.setSelectVisibile(true);
                     showEpisode();
                     showPlayNext();
 
-                    LogUtil.e("v1.1.2","has local episo excute local play ");
+                    LogUtil.e("v1.1.2","current local episo excute local play ");
                 }else{
                     mVideoPlayerController.showNoNetView();
                     mVideoPlayerController.playerPause();

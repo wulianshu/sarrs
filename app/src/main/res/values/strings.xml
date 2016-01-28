@@ -341,4 +341,10 @@
     <string name="resource">来源:</string>
     <string name="no_net_no_delete">网络不可用不能执行删除操作</string>
     <string name="double_click2top">双击回顶部</string>
+
+    <!--直播相关-->
+    <string name="live_television">卫视节目</string>
+    <string name="live_other">其他</string>
+    <string name="liveing_status">直播中</string>
+    <string name="live_other_status">其他状态</string>
 </resources>

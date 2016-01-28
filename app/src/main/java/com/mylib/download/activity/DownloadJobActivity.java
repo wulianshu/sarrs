@@ -1,4 +1,4 @@
-package com.chaojishipin.sarrs.download.activity;
+package com.mylib.download.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -11,10 +11,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -41,7 +40,6 @@ import com.chaojishipin.sarrs.activity.ChaoJiShiPinBaseActivity;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
 import com.chaojishipin.sarrs.activity.DownLoadListActivity;
 import com.chaojishipin.sarrs.adapter.VideoInfoAdapter;
-import com.chaojishipin.sarrs.bean.PlayData;
 import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.bean.VideoPlayerNotifytData;
@@ -51,10 +49,9 @@ import com.chaojishipin.sarrs.download.download.Constants;
 import com.chaojishipin.sarrs.download.download.ContainSizeManager;
 import com.chaojishipin.sarrs.download.download.DownloadEntity;
 import com.chaojishipin.sarrs.download.download.DownloadFolderJob;
+import com.chaojishipin.sarrs.download.download.DownloadHelper;
 import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
-import com.chaojishipin.sarrs.download.download.DownloadManager;
-import com.chaojishipin.sarrs.download.download.DownloadObserver;
 import com.chaojishipin.sarrs.download.download.DownloadUtils;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.fragment.videoplayer.PlayerUtils;
@@ -64,28 +61,26 @@ import com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuItem;
 import com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuLayout;
 import com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuListView;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
+import com.chaojishipin.sarrs.utils.StoragePathsManager;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.letv.component.utils.NetWorkTypeUtils;
+import com.mylib.download.DownloadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements DownloadObserver, OnClickListener,
-        OnItemClickListener, OnItemLongClickListener {
+public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements OnClickListener,
+        OnItemClickListener, OnItemLongClickListener, DownloadUtil.DownloadEndListener {
     public final static String pageid = "00S0020017_2";
     private LinearLayout mDelLayout;
-//  private GestureOverlayView mGesture;
-    private DownloadManager mDownloadManager;
 
     public void setmListView(SwipeMenuListView mListView) {
         this.mListView = mListView;
     }
-
-//  private ViewFlipper mViewFlipper;
-//  private ListView mListView;
 
     private SwipeMenuListView mListView;
     public int index;
@@ -107,7 +102,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
     private String mediaName;
     private boolean isFromBackground = false;//按home键，从后台切换回来
     private RelativeLayout memory_info;
-    private SparseArray<DownloadJob> jobs = null;//放入updateListView的数据
+    private SparseArray<DownloadJob> jobs = new SparseArray<>(); //null;//放入updateListView的数据
 
     public SparseArray<DownloadJob> getJobs() {
         return jobs;
@@ -138,6 +133,8 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         this.mAllPauseState = mAllPauseState;
     }
 
+    private DownloadUtil mUtil;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -163,12 +160,9 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         iv_download_back.setOnClickListener(this);
         mDelLayout = (LinearLayout) findViewById(R.id.delete_layout);
         mDelLayout.setOnClickListener(this);
-        mDownloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
         download_no_item = (RelativeLayout) findViewById(R.id.download_no_item);
         mListView = (SwipeMenuListView) findViewById(R.id.DownloadListView);
         title2layout = (RelativeLayout) findViewById(R.id.bottomlayout);
-//        mListView.setOnItemClickListener(this);
-//        mListView.setOnItemLongClickListener(this);
         Intent intent = getIntent();
         index = intent.getIntExtra("index", 0);
 
@@ -187,7 +181,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         mLeftButton = (ImageView) findViewById(R.id.leftButtonLayout);
         mLeftButton.setOnClickListener(this);
         initCheckTabPopWindow();
-//        ChaoJiShiPinApplication.getInstatnce().setActivityStack(this);
         title2layout.setVisibility(View.VISIBLE);
 
         //获取按钮的状态
@@ -214,8 +207,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                         getApplicationContext());
                 // set item background
                 deleteItem.setBackground(R.drawable.download_swipe_menu_selector);
-//                deleteItem.setBackground(new ColorDrawable(Color.rgb(0x44, 0x44,
-//                        0x44)));
                 // set item width
                 deleteItem.setWidth(Utils.dip2px(75));
                 // set a icon
@@ -246,28 +237,21 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             public void onSwipeStart(int position) {
                 // swipe start
                 Log.d("swipe", "postion is " + position);
-//                if(holder!=null && ajob!=null) {
-//                    holder.getProgressBar().setProgress(ajob.getProgress());
-//                    holder.getProgressText().setText(ajob.getRate());
-//                    holder.getDownloadLength().setText(DownloadUtils.getDownloadedSize(ajob.getDownloadedSize()) + "M/" + DownloadUtils.getDownloadedSize(ajob.getTotalSize()) + "M");
-//                }
             }
 
             @Override
             public void onSwipeEnd(int position) {
                 // swipe end
-//                if(holder!=null && ajob!=null) {
-//                    holder.getProgressBar().setProgress(ajob.getProgress());
-//                    holder.getProgressText().setText(ajob.getRate());
-//                    holder.getDownloadLength().setText(DownloadUtils.getDownloadedSize(ajob.getDownloadedSize()) + "M/" + DownloadUtils.getDownloadedSize(ajob.getTotalSize()) + "M");
-//                }
-//                mListView.getSwipeMenuLayout().setIsswiping(false);
                 checkSwipeStatus();
             }
         });
 
         mListView.setOnItemClickListener(this);
-        ViewGroup root=(ViewGroup) this.getWindow().getDecorView();  //获取本Activity下的获取最外层控件
+        getList();
+        adapter = new DownloadJobAdapter(jobs, this, index);
+        mListView.setAdapter(adapter);
+
+        mUtil = new DownloadUtil(this, mListView);
     }
 
     private void checkSwipeStatus() {
@@ -282,13 +266,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             tv_download_edit.setText(getResources().getString(R.string.edit));
     }
 
-    private void updateAllPauseState() {
-        if (ismAllPauseState()) {//存在非暂停状态
-        } else {
-        }
-
-    }
-
     @Override
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
 
@@ -296,13 +273,13 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
 
     @Override
     protected void onPause() {
-        mHandler.removeCallbacks(mUpdateTimeTask);
-        mDownloadManager.deregisterDownloadObserver(this);
+        mUtil.onPause();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        mUtil.onResume();
         if (index == -1) {
             title.setText(R.string.downloadingTitle);
             tv_download_title.setText(R.string.downloadingTitle);
@@ -311,11 +288,10 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             tv_download_title.setText(mediaName);
             showAvailableSpace();
         }
-        mDownloadManager.registerDownloadObserver(this);
-        mDownloadManager.notifyObservers();
         recalculate();
         isFromBackground = false;
         registerCheckNetwork();
+        updatebuttons(-1);
         super.onResume();
     }
 
@@ -336,119 +312,27 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
      * 从后台按home切换回来，需要重新计算删除选中数量
      */
     private void recalculate() {
-        if (isFromBackground && null != adapter && index == -1) {//在下载文件夹中
+        if (isFromBackground && null != adapter && index == -1 && jobs != null) {//在下载文件夹中
             int num = 0;
-            ArrayList<DownloadJob> jobsList = mDownloadManager.getProvider().getQueuedDownloads();
-            if (jobsList != null) {
-                for (int i = 0; i < jobsList.size(); i++) {
-                    if (jobsList.get(i).getCheck()) {
-                        num++;
-                    }
-                }
+            int size = jobs.size();
+            for(int i=0; i<size; i++){
+                if(jobs.valueAt(i).getCheck())
+                    ++num;
             }
             adapter.deletedNum = num;
             setTitle();
         }
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            updateListView();
-        }
-    };
-
-    private void updateListView() {
-        LogUtil.e("wulianshu","updateListView.........");
-
-        if (null == mDownloadManager || null == mListView) {
-            return;
-        }
-        if (index == -1) {//进入下载文件夹
-            ArrayList<DownloadJob> jobsList = mDownloadManager.getProvider().getQueuedDownloads();
-            jobs = new SparseArray<DownloadJob>();
-
-            setmAllPauseState(false);//每次刷新前，重置
-            for (int i = 0; i < jobsList.size(); i++) {
-                jobs.append(jobsList.get(i).getEntity().getAddTime(), jobsList.get(i));
-                if (jobsList.get(i).getStatus() == DownloadJob.DOWNLOADING) {
-                    setmAllPauseState(true);//有不是暂停的状态
-//                    if (mListView.getSwipeMenuLayout() != null && mListView.getSwipeMenuLayout().isOpen()) {
-//                        if (adapter != null) {
-//                            Log.d("isOpen", "open");
-//                            adapter.setIsShowSwipe(true);
-//                        }
-//                    } else if (mListView.getSwipeMenuLayout() != null && !mListView.getSwipeMenuLayout().isOpen()) {
-//                        if (adapter != null) {
-//                            Log.d("isOpen", "close");
-//                            adapter.setIsShowSwipe(false);
-//                        }
-//                    }
-                    Log.d("refresh", "isdowning");
-//                    ChaoJiShiPinApplication.getInstatnce().startCheckSDCardFreeSizeService();//启动检查sd卡容量}
-                }
-
-            }
-
-//            updateAllPauseState();
-        } else {//进入完成文件夹
-            SparseArray<DownloadFolderJob> folderJobs = mDownloadManager.getProvider().getFolderJobs();
-
+    private void getList(){
+        //TODO,从数据库取所有未完成的下载
+        if(index < 0)
+            jobs = DataUtils.getInstance().getDownloadJobArray();
+        else{
+            SparseArray<DownloadFolderJob> folderJobs = DataUtils.getInstance().getFolderJobs();
             if (null != folderJobs && index < folderJobs.size()) {
                 jobs = folderJobs.valueAt(index).getDownloadJobs();
             }
-        }
-        try {
-            if (null != mListView.getAdapter() && mListView.getAdapter() instanceof DownloadJobAdapter) {
-                adapter = (DownloadJobAdapter) mListView.getAdapter();
-            }
-            if (adapter != null && jobs != null && jobs.size() == adapter.getCount()) {
-                for(int i=0;i<jobs.size();i++){
-                      ajob =  jobs.get(jobs.keyAt(i));
-//                    Log.e("DownloadJobActivity",jobs.keyAt(i)+"");
-                    if(ajob.getStatus() == DownloadJob.DOWNLOADING && adapter.downloadingview != null){
-
-                        if(lastjob != null && !lastjob.getEntity().getGlobaVid().equals(ajob.getEntity().getGlobaVid()) ){
-                            LogUtil.e("wulianshu", "adapter ........ notify");
-                            adapter.notifyDataSetChanged();
-                        }
-                        lastjob = ajob;
-                        if(mListView.getSwipeMenuLayout()!=null && mListView.getSwipeMenuLayout().getState()== SwipeMenuLayout.STATE_OPEN){
-                            mListView.getSwipeMenuLayout().smoothOpenMenu();
-                        }
-                        holder = (DownloadJobAdapter.ViewHolder) adapter.downloadingview.getTag();
-//                      if(mListView.getSwipeMenuLayout().isFling()|| mListView.getSwipeMenuLayout().isClose()) {
-                        if(holder.getDownloadName().getText().equals(ajob.getEntity().getDisplayName())) {
-//                          LogUtil.e("wulianshu", "界面更新正常。。。。。。。。。。");
-                            holder.getProgressBar().setProgressDrawable(getResources().getDrawable(R.drawable.progress_style_download));
-                            holder.getProgressBar().setProgress(ajob.getProgress());
-                            holder.getProgressText().setText(ajob.getRate());
-                            if(ajob.getEntity().getDownloadType().equals(DownloadInfo.M3U8)){
-                                holder.getDownloadLength().setText(getResources().getString(R.string.compulate_size));
-                            }else{
-                                holder.getDownloadLength().setText(DownloadUtils.getDownloadedSize(ajob.getDownloadedSize()) + "M/" + DownloadUtils.getDownloadedSize(ajob.getTotalSize()) + "M");
-                            }
-                        }
-                        return;
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                return;
-            } else if (adapter != null && jobs != null && jobs.size() != adapter.getCount()) {
-                adapter.setList(jobs);
-                adapter.notifyDataSetChanged();
-                return;
-            } else if (jobs != null) {
-
-//                adapter = new DownloadJobAdapter(jobs, this, index);
-                mListView.setAdapter(adapter);
-                //初始化 第一个和第二个按钮
-                updatebuttons();
-            }
-            setupListView(jobs.size());
-        } catch (java.lang.ClassCastException ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -468,32 +352,29 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         return false;
     }
 
-    private void popIfContinueDownloadDialog(DownloadJob job, DownloadJobAdapter.ViewHolder holder) {
-        if (!NetWorkTypeUtils.isWifi(this)) {
+    private void popIfContinueDownloadDialog(DownloadJob job) {
+        if (!NetWorkTypeUtils.isWifi(this) && job.getStatus() != DownloadJob.DOWNLOADING) {
             if (job.isCurrentPathExist()) {
-                checkIfContinueDownloadDialog(job, holder);
+                checkIfContinueDownloadDialog(job);
             }
         } else {
-            start(job, holder);
+            start(job);
         }
     }
 
-    public void start(DownloadJob job, DownloadJobAdapter.ViewHolder holder) {
+    public void start(DownloadJob job) {
         if (!job.isCurrentPathExist()) {
         } else {
             if (null != job && null != job.getEntity()) {
                 if (TextUtils.isEmpty(job.getEntity().getPath()) && !TextUtils.isEmpty(job.getmDestination())) {
                     job.getEntity().setPath(job.getmDestination());
                 }
-                job.start();
-                if (null != holder) {
-//                    holder.getProgressText().setText("0.0KB/s");
-                }
+                DataUtils.getInstance().download(job);
             }
         }
     }
 
-    private void checkIfContinueDownloadDialog(final DownloadJob job, final DownloadJobAdapter.ViewHolder holder) {
+    private void checkIfContinueDownloadDialog(final DownloadJob job) {
         if (NetworkUtil.reportNetType(this) == NetworkUtil.TYPE_MOBILE) {
             Builder customBuilder = new Builder(DownloadJobActivity.this);
             customBuilder
@@ -503,7 +384,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
-                                    start(job, holder);
+                                    start(job);
                                     adapter.notifyDataSetChanged();
                                     dialog.dismiss();
                                 }
@@ -526,8 +407,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                     });
             Dialog dialog = customBuilder.create();
             dialog.show();
-        } else {
-           // ToastUtil.showShortToast(this, R.string.nonet_tip);
         }
     }
 
@@ -536,75 +415,40 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         DownloadJobAdapter.ViewHolder holder = (DownloadJobAdapter.ViewHolder) ((SwipeMenuLayout) view).getContentView().getTag();
         //可编辑状态
 
-        if (adapter.deleteState) {
+        if (adapter.isEditable()) {
             DownloadJobAdapter.ViewHolder viewholder = (DownloadJobAdapter.ViewHolder) ((SwipeMenuLayout) view).getContentView().getTag();
-
-            if (adapter.mChecked.get(position)) {
+            if (jobs.valueAt(position).getCheck()) {
                 viewholder.getBtnDelete().setChecked(false);
-//              viewholder.getBtnDelete().setBackgroundDrawable(this.getResources().getDrawable(R.drawable.radiobutton_white_bg));
-                adapter.mChecked.set(position, false);
+                viewholder.getBtnDelete().setBackgroundDrawable(this.getResources().getDrawable(R.drawable.radiobutton_white_bg));
                 jobs.valueAt(position).setCheck(false);
-                adapter.deletedNum = adapter.deletedNum - 1;
+                adapter.deletedNum -= 1;
             } else {
                 viewholder.getBtnDelete().setChecked(true);
-//              viewholder.getBtnDelete().setBackgroundDrawable(this.getResources().getDrawable(R.drawable.radiobutton_red_bg));
-                adapter.mChecked.set(position, true);
+                viewholder.getBtnDelete().setBackgroundDrawable(this.getResources().getDrawable(R.drawable.radiobutton_red_bg));
                 jobs.valueAt(position).setCheck(true);
-                adapter.deletedNum = adapter.deletedNum + 1;
+                adapter.deletedNum += 1;
             }
-            adapter.notifyDataSetChanged();
-            updatebuttons();
+            updatebuttons(-1);
             //不可编辑状态
         } else {
-//          taskstate = "";
-            DownloadJob job = adapter.getItem(position);
-            switch (job.getStatus()) {
-                case DownloadJob.NO_USER_PAUSE:
-                    if (ContainSizeManager.getInstance().getFreeSize() > Utils.SDCARD_MINSIZE) {//sd卡容量大于500m，可以添加
-                        popIfContinueDownloadDialog(job, holder);
-                    } else {
-                        ToastUtil.showShortToast(DownloadJobActivity.this, R.string.sdcard_nospace);
-                    }
-                    break;
-                case DownloadJob.PAUSE:
-                    if (ContainSizeManager.getInstance().getFreeSize() > Utils.SDCARD_MINSIZE) {//sd卡容量大于500m，可以添加
-                        popIfContinueDownloadDialog(job, holder);
-                    } else {
-                        ToastUtil.showShortToast(DownloadJobActivity.this, R.string.sdcard_nospace);
-                    }
-                    break;
-                case DownloadJob.WAITING:
-                    job.cancel();
-                    holder.getProgressText().setText("已暂停");
-                    break;
-                case DownloadJob.DOWNLOADING:
-                    job.pauseByUser();
-                    holder.getProgressText().setText("已暂停");
-                    break;
-
-            }
-            updatebuttons();
-
             // 多剧集播放
             if (index >= 0) {
-                Intent intent = new Intent(this, ChaoJiShiPinVideoDetailActivity.class);
+                // 设置观看状态
                 DownloadEntity downloadEntity = adapter.getItem(position).getEntity();
-//                jobs.get(position).getEntity();
-                DownloadManager mDownloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
-                SparseArray<DownloadFolderJob> jobs = mDownloadManager.getDownloadFolderJobs();
+                DataUtils.getInstance().setIfWatch(downloadEntity, "true");
+                downloadEntity.setIfWatch("true");
+                View v = view.findViewById(R.id.ifwatch);
+                if(v != null)
+                    v.setVisibility(View.GONE);
+
+                Intent intent = new Intent(this, ChaoJiShiPinVideoDetailActivity.class);
+
+                SparseArray<DownloadFolderJob> jobs = DataUtils.getInstance().getFolderJobs();
                 int key = jobs.keyAt(index);
                 DownloadFolderJob folderJob = jobs.get(key);
                 VideoItem item = VideoInfoAdapter.wrapDownloadEntity(downloadEntity);
-                /*   PlayData playData = null;
-                if (item != null) {
-                    ArrayList<LocalVideoEpisode>localVideoEpisodes= mDownloadManager.getLocalVideoEpisodes(folderJob);
-                    playData = new PlayData(localVideoEpisodes, ConstantUtils.PLAYER_FROM_DOWNLOAD, item.getSource(), item.getOrder());
-                    // playData = new PlayData(item.getTitle(), item.getGvid(), ConstantUtils.PLAYER_FROM_DOWNLOAD,item.getSource());
-                }
-                playData.setIsLocalVideo(true);
-                intent.putExtra(Utils.PLAY_DATA, playData);*/
 
-                ArrayList<LocalVideoEpisode>localVideoEpisodes= mDownloadManager.getLocalVideoEpisodes(folderJob);
+                ArrayList<LocalVideoEpisode>localVideoEpisodes= DataUtils.getInstance().getLocalVideoEpisodes(folderJob);
                 intent.putExtra(Utils.Medea_Mode, ConstantUtils.MediaMode.LOCAL);
                 intent.putExtra("position",position);
                 VideoDetailItem videoDetailItem = new VideoDetailItem();
@@ -626,62 +470,29 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 intent.putExtra("videoDetailItem", videoDetailItem);
                 intent.putExtra("ref",pageid);
                 startActivity(intent);
-                // 设置观看状态
-                mDownloadManager.setIfWatch(downloadEntity, "true");
-                downloadEntity.setIfWatch("true");
-            }
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    private List<DownloadJob> getCompletedJobList() {
-        SparseArray<DownloadFolderJob> folderJobs = mDownloadManager.getProvider().getFolderJobs();
-        SparseArray<DownloadJob> jobs = null;
-        List<DownloadJob> result = new ArrayList<DownloadJob>();
-        if (null != folderJobs && index < folderJobs.size() && index >= 0) {
-            jobs = folderJobs.valueAt(index).getDownloadJobs();
-            for (int i = 0; i < jobs.size(); i++) {
-                if (jobs.valueAt(i).getProgress() == 100) {
-                    result.add(jobs.valueAt(i));
-                }
+            }else{
+                DownloadJob job = adapter.getItem(position);
+                popIfContinueDownloadDialog(job);
             }
         }
-
-        return result;
     }
 
     @Override
-    public void onDownloadChanged(DownloadManager manager) {
-        mHandler.post(mUpdateTimeTask);
-    }
-
-    @Override
-    public void onDownloadEnd(DownloadManager manager, DownloadJob job) {
-        if(index!=-1){
-            if(mDownloadManager.getProvider().getFolderJobs().valueAt(index).getDownloadJobs()!=null && adapter!=null) {
-                jobs = mDownloadManager.getProvider().getFolderJobs().valueAt(index).getDownloadJobs();
-                adapter.notifyDataSetChanged();
+    public void onDownloadEnd(DownloadJob job) {
+        if(jobs == null || jobs.size() == 0 || adapter == null)
+            return;
+        int len = jobs.size();
+        for(int i=0; i<len; i++){
+            if(jobs.valueAt(i).getEntity().getId().equalsIgnoreCase(job.getEntity().getId())){
+                jobs.removeAt(i);
+                break;
             }
-//            if (adapter.deletedNum > 0) {
-//                adapter.deletedNum--;
-//                setTitle();
-//            }
         }
-        else if (index == -1 && adapter !=null) {
-            SparseArray<DownloadJob> jobList = adapter.getList();
-            int i = jobList.indexOfValue(job);
-            if (adapter.mChecked.get(i)) {
-                if (adapter.deletedNum > 0) {
-                    adapter.deletedNum--;
-                    setTitle();
-                }
-            }
-            adapter.mChecked.remove(i);
-        }
-        showAvailableSpace();
-        ArrayList<DownloadJob> jobsList = mDownloadManager.getProvider().getQueuedDownloads();
-        if (jobsList.size() == 0 && index == -1)
+        adapter.notifyDataSetChanged();
+        if (jobs.size() == 0 && index == -1)
             finish();
+        else
+            showAvailableSpace();
     }
 
     @Override
@@ -691,61 +502,43 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 break;
             //第二个按钮
             case R.id.confirm_delete:
-                if (null != adapter) {
-//                    if (index == -1) {
-//                    可编辑   删除选中的文件
-                    if (adapter.deleteState) {
-                        if (adapter.deletedNum > 0) {
-                            deleteTip();
-                        } else {
-                            Toast.makeText(DownloadJobActivity.this, "还未选择删除项", Toast.LENGTH_SHORT);
-                        }
-                        //不可编辑  全部暂停
+                if(adapter == null)
+                    return;
+                if (adapter.isEditable()) {
+                    if (adapter.deletedNum > 0) {
+                        deleteTip(-1);
                     } else {
-                        for (DownloadJob job : mDownloadManager.getQueuedDownloads()) {
-                            if (null != job && job.getStatus() == DownloadJob.DOWNLOADING) {
-                                job.pauseByUser();
-                            }
-                            if (null != job && job.getStatus() == DownloadJob.WAITING) {
-                                job.cancel();
-                            }
-                            mDownloadManager.notifyObservers();
-                        }
+                        Toast.makeText(DownloadJobActivity.this, "还未选择删除项", Toast.LENGTH_SHORT);
                     }
+                } else {
+                    DataUtils.getInstance().pauseAllDownload();
                 }
-                adapter.notifyDataSetChanged();
-                updatebuttons();
+                updatebuttons(0);
                 break;
             //第一个按钮
             case R.id.all_select:
                 //可编辑
-                if (adapter.deleteState) {
+                if (adapter.isEditable()) {
                     downloadVideoSelected();
+                    adapter.notifyDataSetChanged();
                     //不可编辑
                 } else {
                     if (ContainSizeManager.getInstance().getFreeSize() > Utils.SDCARD_MINSIZE) {//sd卡容量大于500m，可以添加
-                        for (DownloadJob job : mDownloadManager.getQueuedDownloads()) {
-                            if (null != job && (job.getStatus() == DownloadJob.NO_USER_PAUSE || job.getStatus() == DownloadJob.PAUSE)) {
-                                if (job.getExceptionType() != DownloadJob.NO_SD
-                                        && job.getExceptionType() != DownloadJob.FILE_NOT_FOUND) {
-                                    job.start();
-                                }
-                            }
+                        int size = jobs.size();
+                        for(int i=0; i<size; i++){
+                            DownloadJob job = jobs.valueAt(i);
+                            DataUtils.getInstance().startDownload(job);
                         }
                     } else {
                         ToastUtil.showShortToast(DownloadJobActivity.this, R.string.sdcard_nospace);
                     }
                 }
-                adapter.notifyDataSetChanged();
-                updatebuttons();
+                updatebuttons(jobs.size());
                 break;
             case R.id.iv_download_back:
                 this.finish();
                 break;
             case R.id.tv_download_edit:
-                for(int i=0;i<adapter.mChecked.size();i++){
-                    adapter.mChecked.set(i,false);
-                }
                 SwipeMenuLayout mSwipe = null;
                 mSwipe = mListView.getSwipeMenuLayout();
                 if (mSwipe != null) {
@@ -766,7 +559,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 VideoPlayerNotifytData notifytData = new VideoPlayerNotifytData();
                 notifytData.setIsFirst(false);
                 notifytData.setPosition(0);
-                //notifytData.setLastKey(0);
                 notifytData.setKey(0);
                 notifytData.setType(ConstantUtils.PLAYER_FROM_FULLSCREEN_EPISO_TAG_CLICK);
                 intent.putExtra("mediaNotifyData", notifytData);
@@ -781,16 +573,12 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
     private void checkEditSwipeStatus() {
         if (index != -1) {
             // 编辑--》完成
-            if (adapter.deleteState) {
+            if (adapter.isEditable()) {
                 mListView.setIsOpenStatus(true);
                 download_more_tip.setVisibility(View.VISIBLE);
                 iv_download_more.setVisibility(View.VISIBLE);
                 mConfirm_delete.setVisibility(View.GONE);
                 all_select.setVisibility(View.GONE);
-
-                for (int i = 0; i < adapter.mChecked.size(); i++) {
-                    adapter.mChecked.set(i, false);
-                }
                 resetCheck();
                 adapter.deletedNum = 0;
                 tv_download_edit.setText(getResources().getString(R.string.edit));
@@ -809,66 +597,46 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             //未下载成功的
             if (index == -1) {
                 //可编辑除状态
-                if (adapter.deleteState) {
+                if (adapter.isEditable()) {
                     mListView.setIsOpenStatus(true);
                     all_select.setText(getResources().getString(R.string.allstart));
                     mConfirm_delete.setText(R.string.allpause);
                     tv_download_edit.setText(getResources().getString(R.string.edit));
-                    adapter.setIsshowRadiobutton(false);
                     cancelDelete(false);
-                    //选择按钮的状态还原 选中个数还原
-                    for (int i = 0; i < adapter.mChecked.size(); i++) {
-                        adapter.mChecked.set(i, false);
-                    }
-                    resetCheck();
-                    adapter.deletedNum = 0;
-                    updatebuttons();
                     //回到原来的状态
                 } else {
                     mListView.setIsOpenStatus(false);
-                    adapter.setIsshowRadiobutton(true);
                     tv_download_edit.setText(getResources().getString(R.string.complete));
                     mConfirm_delete.setText(R.string.delete_up);
                     all_select.setText(R.string.check_all);
                     cancelDelete(true);
-                    updatebuttons();
                 }
                 //已经下载好的
             } else {
                 //可编辑
-                if (adapter.deleteState) {
+                if (adapter.isEditable()) {
                     mListView.setIsOpenStatus(true);
-//                          title2layout.setVisibility(View.GONE);
                     tv_download_edit.setText(getResources().getString(R.string.edit));
                     cancelDelete(false);
-                    updatebuttons();
                 } else {
                     mListView.setIsOpenStatus(false);
-//                          title2layout.setVisibility(View.VISIBLE);
-                    adapter.setIsshowRadiobutton(true);
                     adapter.notifyDataSetChanged();
                     cancelDelete(true);
-                    updatebuttons();
                 }
             }
         }
         adapter.notifyDataSetChanged();
     }
 
-    private void onClickBackButton() {
-        if (null != adapter && adapter.deleteState) {
+    private boolean onClickBackButton() {
+        if (null != adapter && adapter.isEditable()) {
             cancelDelete(false);
-            if (null != adapter.mChecked && adapter.mChecked.size() > 0) {
-                for (int i = 0; i < adapter.mChecked.size(); i++) {
-                    adapter.mChecked.set(i, false);
-                }
-            } else {
-
-            }
+            resetCheck();
             adapter.notifyDataSetChanged();
-            return;
+            return false;
         }
         finish();
+        return true;
     }
 
     @Override
@@ -884,19 +652,16 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
      * 改变是否是删除状态，重置选中状态
      */
     private void cancelDelete(boolean deleteState) {
-        adapter.deleteState = deleteState;
+        adapter.setEditable(deleteState);
         title.setVisibility(View.VISIBLE);
         adapter.deletedNum = 0;
         resetCheck();
-        if (deleteState) {
-
-        } else {
-            toggleConinuePlayButton(mediaId);
-        }
+        adapter.notifyDataSetChanged();
+        updatebuttons(-1);
     }
 
     public void setTitle() {
-        if(adapter.deleteState) {
+        if(adapter.isEditable()) {
             if (adapter.deletedNum == 0) {
                 title.setVisibility(View.VISIBLE);
                 mConfirm_delete.setText(R.string.delete_up);
@@ -932,57 +697,18 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
 
     private void downloadVideoSelected() {
         if (adapter.deletedNum != adapter.getCount()) {
-            mConfirm_delete.setText(R.string.delete_up);
-            all_select.setText(R.string.cancel_all);
-            mConfirm_delete.setTextColor(getResources().getColor(R.color.color_FF1E27));
-            all_select.setTextColor(getResources().getColor(R.color.color_FF1E27));
-            for (int i = 0; i < adapter.mChecked.size(); i++) {
-                if (i < adapter.getCount()) {
-                    adapter.mChecked.set(i, true);
-                }
-            }
             allCheck();
-            adapter.deletedNum = adapter.getCount();
-            updatebuttons();
+            adapter.deletedNum = jobs.size();
+            updatebuttons(-1);
         } else {
-//			title.setVisibility(View.VISIBLE);
-//			mUserDeletecount.setVisibility(View.GONE);
-//			mDeleteIcon.setBackgroundResource(R.drawable.pic_delete_normal1);
-            mConfirm_delete.setText(R.string.delete_up);
-            mConfirm_delete.setTextColor(getResources().getColor(R.color.all_select));
-            // 用户选择取消全选则用户当前选中项为0
-            for (int i = 0; i < adapter.mChecked.size(); i++) {
-                adapter.mChecked.set(i, false);
-            }
             resetCheck();
             adapter.deletedNum = 0;
-            updatebuttons();
+            updatebuttons(-1);
         }
-//		if (mCheckAllPopWindow.isShowing()) {
-//			mCheckAllPopWindow.dismiss();
-//		}
         adapter.notifyDataSetChanged();
-        mDownloadManager.notifyObservers();
     }
 
-//    private void downloadVideoSelected() {
-//        if (adapter.deletedNum != adapter.getCount()) {
-//            String content = getString(R.string.delete_up) + "(" + adapter.getCount() + ")";
-//            mConfirm_delete.setText(content);
-//            mConfirm_delete.setTextColor(getResources().getColor(R.color.confirm_delete_color));
-//            allCheck();
-//            adapter.deletedNum = adapter.getCount();
-//        } else {
-//            mConfirm_delete.setText(R.string.delete_up);
-//            mConfirm_delete.setTextColor(getResources().getColor(R.color.all_select));
-//            adapter.deletedNum = 0;
-//            resetCheck();
-//            adapter.deletedNum = 0;
-//        }
-//        mDownloadManager.notifyObservers();
-//    }
-
-    private void deleteTip() {
+    private void deleteTip(final int position) {
         try {
             Builder builder = new Builder(this);
             builder.setTitle(R.string.tip);
@@ -993,25 +719,13 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                     dialog.dismiss();
                     if (null == adapter.getList() || adapter.getList().size() <= 0) {
                         ToastUtil.toastPrompt(DownloadJobActivity.this, R.string.undefind_delete_file, 0);
-                        if (index == -1) {
-                            if (null != adapter) {
-                                for (int i = 0; i < adapter.mChecked.size(); i++) {
-                                    adapter.mChecked.set(i, false);
-                                }
-                            }
-                        } else {
-
-                        }
                         tv_download_edit.setText(getResources().getString(R.string.edit));
                         return;
                     }
-                    DeleteDownloadfile();
+                    deleteDownloadFile(position);
                     if (index == -1) {
                         mConfirm_delete.setText(getResources().getString(R.string.allpause));
                         all_select.setText(getResources().getString(R.string.allstart));
-
-                    } else {
-
                     }
                     tv_download_edit.setText(getResources().getString(R.string.edit));
                 }
@@ -1030,104 +744,44 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         }
     }
 
-    private void DeleteDownloadfile() {
+    private void deleteDownloadFile(final int index) {
         showLoadingView(DownloadJobActivity.this, false, R.string.deleting);
-        executeDelete();
-        mHandler.sendEmptyMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
+        new Thread(){
+            public void run(){
+                ArrayList<Integer> list = executeDelete(index);
+                Message msg = mHandler.obtainMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
+                msg.obj = list;
+                mHandler.sendMessage(msg);
+            }
+        }.start();
     }
 
     private void deleteOneItem(int position) {
         showLoadingView(DownloadJobActivity.this, false, R.string.deleting);
-//		LogUtils.d("dd","删除之前---"+downloadList.size()+"");
-        mDownloadManager.deregisterDownloadObserver(this);
-        SparseArray<DownloadJob> jobs = adapter.getList();
-        DownloadJob job = jobs.valueAt(position);
-        int key = 0;
-        if (index == -1) {
-            key = job.getEntity().getAddTime();
-        } else {
-            key = job.getIndex();
-        }
-
-        mDownloadManager.deleteDownload(job);
-        jobs.delete(key);
-        adapter.deletedNum--;
-
-        if (jobs.size() == 0 && index != -1) {
-            SparseArray<DownloadFolderJob> folderJobs = mDownloadManager.getProvider().getFolderJobs();
-            int localKey = folderJobs.keyAt(position);
-            mDownloadManager.getDownloadFolderJobs().delete(localKey);
-        }
-        mDownloadManager.startNextTask();
-        mHandler.sendEmptyMessage(Constants.MESSAGE_DELETE_DOWNLOAD_FILE);
-//        tv_download_edit.setText(getResources().getString(R.string.edit));
-//        mListView.setIsOpenStatus(true);
+        deleteDownloadFile(position);
     }
 
-//    class executeDelete extends AsyncTask<Object, Object, Object> {
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            showLoadingView(DownloadJobActivity.this, false, R.string.deleting);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object result) {
-//            super.onPostExecute(result);
-//            cancelLoadingView();
-//            ToastUtil.toastPrompt(DownloadJobActivity.this, R.string.delete_success, 0);
-//            if (mSizeManager != null) {
-//                mSizeManager.ansynHandlerSdcardSize();
-//            }
-//            cancelDelete(false);
-//            if (adapter.getCount() <= 1) {
-//                onClickBackButton();
-//            } else {
-//                mDownloadManager.registerDownloadObserver(DownloadJobActivity.this);
-//                mDownloadManager.notifyObservers();
-//            }
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object... params) {
-//            executeDelete();
-//            return null;
-//        }
-//
-//    }
-
-    protected void executeDelete() {
-        ArrayList<DownloadJob> downloadList = ChaoJiShiPinApplication.getInstatnce()
-                .getDownloadManager().getAllDownloads();
-//		LogUtils.d("dd","删除之前---"+downloadList.size()+"");
-        mDownloadManager.deregisterDownloadObserver(this);
-        SparseArray<DownloadJob> jobs = adapter.getList();
-        ArrayList<Integer> keys = new ArrayList<Integer>();
-        for (int pos = 0; pos < jobs.size(); pos++) {
-            if (jobs.valueAt(pos).getCheck()) {
-                DownloadJob job = jobs.valueAt(pos);
-                if (index == -1) {
-                    keys.add(job.getEntity().getAddTime());
-                } else {
-                    keys.add(job.getIndex());
+    protected ArrayList<Integer> executeDelete(int index) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if(index >= 0) {
+            DownloadJob j = jobs.valueAt(index);
+            list.add(jobs.keyAt(index));
+            DataUtils.getInstance().deleteDownloadFile(j);
+            if(j.getCheck()) {
+                --adapter.deletedNum;
+            }
+        }else{
+            int len = jobs.size();
+            for(int i=0; i<len; i++){
+                DownloadJob j = jobs.valueAt(i);
+                if(j.getCheck()) {
+                    list.add(jobs.keyAt(i));
+                    DataUtils.getInstance().deleteDownloadFile(j);
+                    --adapter.deletedNum;
                 }
-
             }
         }
-        for (int i : keys) {
-            DownloadJob job = jobs.get(i);
-            mDownloadManager.deleteDownload(job);
-            jobs.delete(i);
-            adapter.deletedNum--;
-        }
-        if (jobs.size() == 0 && index != -1) {
-            SparseArray<DownloadFolderJob> folderJobs = mDownloadManager.getProvider().getFolderJobs();
-            int key = folderJobs.keyAt(index);
-            mDownloadManager.getDownloadFolderJobs().delete(key);
-        }
-        ArrayList<DownloadJob> downloadList2 = ChaoJiShiPinApplication.getInstatnce()
-                .getDownloadManager().getAllDownloads();
-        mDownloadManager.startNextTask();
+        return list;
     }
 
     public void showLoadingView(Context context, boolean isCouldCancel, int strId) {
@@ -1152,11 +806,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             mTipDialog.cancel();
         }
     }
-
-    private void toggleConinuePlayButton(String mid) {
-        // 如果播放历史中存在本剧集中的影片
-    }
-
 
     /**
      * qinguoli
@@ -1205,6 +854,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
     protected void onDestroy() {
         super.onDestroy();
         resetCheck();
+        mUtil.destroy();
     }
 
     @Override
@@ -1218,21 +868,14 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
             case Constants.MESSAGE_DELETE_DOWNLOAD_FILE:
                 cancelLoadingView();
                 ToastUtil.toastPrompt(DownloadJobActivity.this, R.string.delete_success, 0);
-
                 showAvailableSpace();
-                cancelDelete(false);
-                if (adapter.getCount() < 1) {
-                    onClickBackButton();
-                } else {
-                    if (index != -1) {
-//                            title2layout.setVisibility(View.GONE);
+                if(msg.obj instanceof ArrayList){
+                    for(Integer i : (ArrayList<Integer>)msg.obj){
+                        jobs.remove(i);
                     }
-                    mDownloadManager.registerDownloadObserver(DownloadJobActivity.this);
-                    mDownloadManager.notifyObservers();
                 }
-//                adapter = new DownloadJobAdapter(jobs, DownloadJobActivity.this, index);
-                mListView.setAdapter(adapter);
-
+                if(onClickBackButton())
+                    return;
                 if (index == -1) {
                     iv_download_more.setVisibility(View.GONE);
                     download_more_tip.setVisibility(View.GONE);
@@ -1264,9 +907,6 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 jobs.valueAt(i).setCheck(false);
             }
         }
-//        for(int i=0;i<adapter.getCount();i++){
-//            DownloadJobAdapter.ViewHolder holder = adapter.get
-//        }
     }
 
     /**
@@ -1280,10 +920,10 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
         }
     }
 
-    public void updatebuttons() {
+    public void updatebuttons(int num) {
         if (index == -1) {
             //可编辑
-            if (adapter.deleteState) {
+            if (adapter.isEditable()) {
                 //已经全选
                 if (adapter.deletedNum == adapter.getCount()) {
                     all_select.setText(getResources().getString(R.string.deselect_all));
@@ -1313,7 +953,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 //不可编辑
             } else {
                 //全部开始  全部暂停
-                int downloadtype = downloadType();
+                int downloadtype = downloadType(num);
                 //全部暂停
                 if (downloadtype == -1) {
                     all_select.setText(getResources().getString(R.string.allstart));
@@ -1366,32 +1006,20 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements Dow
                 mConfirm_delete.setTextColor(getResources().getColor(R.color.color_ff1E27));
                 mConfirm_delete.setClickable(true);
             }
-
         }
     }
 
     //-1 全部暂停 1 全部开始  0 有开始也有暂停
-    public int downloadType() {
-        ArrayList<DownloadJob> jobs = mDownloadManager.getProvider().getQueuedDownloads();
-        int type = -1;
-        boolean falg_stop = false;
-        boolean flag_downloading = false;
-        for (int i = 0; i < jobs.size(); i++) {
-            if (jobs.get(i).getStatus() == DownloadJob.DOWNLOADING || jobs.get(i).getStatus() == DownloadJob.WAITING) {
-                flag_downloading = true;
-            } else if (jobs.get(i).getStatus() == DownloadJob.PAUSE || jobs.get(i).getStatus() == DownloadJob.NO_USER_PAUSE) {
-                falg_stop = true;
-            }
-        }
-        //有暂停也有下载
-        if (falg_stop && flag_downloading) {
-            return 0;
-            //全部暂停
-        } else if (falg_stop && !flag_downloading) {
-            return -1;
-            //全部开始
-        } else {
-            return 1;
-        }
+    private int downloadType(int number) {
+        int num;
+        if(number >= 0)
+            num = number;
+        else
+            num = DataUtils.getInstance().getDownloadingJobNum();
+        if(num == jobs.size())
+            return 1;       //全部开始
+        else if(num > 0)
+            return 0;       //有暂停也有下载
+        return -1;          //全部暂停
     }
 }

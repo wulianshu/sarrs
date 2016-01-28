@@ -30,8 +30,6 @@ import com.chaojishipin.sarrs.bean.VideoPlayerNotifytData;
 import com.chaojishipin.sarrs.download.activity.DownloadActivity;
 import com.chaojishipin.sarrs.download.dao.DownloadDao;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
-import com.chaojishipin.sarrs.download.download.DownloadManager;
-import com.chaojishipin.sarrs.download.download.DownloadObserver;
 import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
@@ -41,6 +39,7 @@ import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.widget.PinnedHeaderExpandableListView;
+import com.mylib.download.DownloadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,9 @@ import java.util.List;
 /**
  * Created by wulianshu on 2015/9/1.
  */
-public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ExpandableListView.OnGroupClickListener, INetWorkObServe, DownloadObserver {
+public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener, ExpandableListView.OnGroupClickListener,
+        INetWorkObServe, DownloadUtil.DownloadEndListener {
     private ImageView iv_download_back;
     private TextView tv_video_name;
     private TextView tv_download_manager;
@@ -59,15 +60,15 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
     private VideoDetailIndex indexItem;
     private final String TAG = "DownLoadActivity";
     private SparseArray<ArrayList<VideoItem>> fenyeList = new SparseArray<ArrayList<VideoItem>>();
-    private SparseArray<SparseArray<Boolean>> downloadstatulist = new SparseArray<SparseArray<Boolean>>();
     private VideoDetailItem mVideoDetailItem;
     private NetWorkStateReceiver netWorkStateReceiver;
     private RelativeLayout relativeLayout;
     private List<String> titlelist;
-    private DownloadManager downloadManager;
 //    private int expandFlag = -1;//控制列表的展开
     private int from;
-    SparseArray<Boolean> alist = new SparseArray<Boolean>();
+    protected SparseArray<Boolean> alist = new SparseArray<Boolean>();
+    private DownloadUtil mUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         full(false);
@@ -76,8 +77,8 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
         setTitleBarVisibile(false);
         setContentView(R.layout.activity_download_layout);
         initView();
+        mUtil = new DownloadUtil(this, null);
         registeListener();
-        downloadManager = ChaoJiShiPinApplication.getInstatnce().getDownloadManager();
         //接收数据
         initData();
     }
@@ -99,16 +100,7 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
             tv_download_manager.setVisibility(View.VISIBLE);
         else if (ConstantUtils.From_More_Down == from)
             tv_download_manager.setVisibility(View.GONE);
-        //界面重新加载需要重新跟新下载状态
-        //获取当前页的下载状态
-        SparseArray<Boolean> alist = new SparseArray<Boolean>();
-        alist = DownloadDao.updateDownloadedFlagByDB(fenyeList.get(indexItem.getPn()), alist);
-        downloadstatulist.append(indexItem.getPn(), alist);
-        madapter.setDownloadstatulist(downloadstatulist);
         madapter.notifyDataSetChanged();
-        downloadManager.registerDownloadObserver(DownLoadListActivity.this);
-        downloadManager.notifyObservers();
-
         super.onResume();
     }
 
@@ -175,16 +167,9 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
             if (fenyeList.get(indexItem.getPn()) == null) {
                 requestVideoDetailByMediaAuto(mVideoDetailItem, indexItem);
             } else {
-                //剧集信息已经加载  但是下载状态需要更新
-                SparseArray<Boolean> alist = new SparseArray<Boolean>();
-                alist = DownloadDao.updateDownloadedFlagByDB(fenyeList.get(indexItem.getPn()), alist);
-                downloadstatulist.append(indexItem.getPn(), alist);
-                madapter.setDownloadstatulist(downloadstatulist);
                 mVideoDetailItem.setVideoItems(fenyeList.get(i));
                 madapter.setVideoDetailItem(mVideoDetailItem);
-                synchronized (madapter) {
-                    madapter.notify();
-                }
+                madapter.notifyDataSetChanged();
             }
         }
         lv_juji.smoothScrollByOffset(i);
@@ -218,18 +203,7 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
     }
 
     @Override
-    public void onDownloadChanged(DownloadManager manager) {
-
-    }
-
-    @Override
-    public void onDownloadEnd(DownloadManager manager, DownloadJob job) {
-        //界面重新加载需要重新跟新下载状态
-        downloadstatulist.clear();
-        SparseArray<Boolean> alist = new SparseArray<Boolean>();
-        alist = DownloadDao.updateDownloadedFlagByDB(fenyeList.get(indexItem.getPn()), alist);
-        downloadstatulist.append(indexItem.getPn(), alist);
-        madapter.setDownloadstatulist(downloadstatulist);
+    public void onDownloadEnd(DownloadJob job) {
         madapter.notifyDataSetChanged();
     }
 
@@ -251,13 +225,8 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
             }
             ArrayList<VideoItem> list = (ArrayList<VideoItem>) result.getVideoItems();
             fenyeList.append(indexItem.getPn(), list);
-            //获取VideoItem对应的下载记录
-            SparseArray<Boolean> alist = new SparseArray<Boolean>();
-            alist = DownloadDao.updateDownloadedFlagByDB(list, alist);
-            downloadstatulist.append(indexItem.getPn(), alist);
             mVideoDetailItem.setVideoItems(list);
             madapter.setVideoDetailItem(mVideoDetailItem);
-            madapter.setDownloadstatulist(downloadstatulist);
             titlelist = result.getPage_titles();
             madapter.setTitlelist(titlelist);
             madapter.setData(fenyeList);
@@ -280,6 +249,8 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mUtil != null)
+            mUtil.destroy();
     }
 
     @Override
@@ -342,7 +313,6 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
 
     @Override
     protected void onPause() {
-        downloadManager.deregisterDownloadObserver(this);
         super.onPause();
         unRegisterReceiver();
     }
@@ -360,5 +330,4 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
     }
-
 }

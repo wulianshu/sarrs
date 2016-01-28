@@ -1,9 +1,12 @@
 package com.chaojishipin.sarrs.utils;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -81,6 +84,7 @@ public class StoragePathsManager {
 
     private String finalExterpath="";
     static StoragePathsManager instanse;
+    private Context context;
 
     private StoragePathsManager(){
         init();
@@ -100,18 +104,23 @@ public class StoragePathsManager {
         File beforeFile=new File(beforePath);
         LogUtil.e(LOG_TAG,"before path "+beforePath);
         if(beforeFile.exists()){
-            File[] beforemovies=  beforeFile.listFiles();
-            for(File beforeChild:beforemovies){
+//            File[] beforemovies=  beforeFile.listFiles();
+//            for(File beforeChild:beforemovies){
+//
+//                boolean candele= beforeChild.delete();
+//
+//                LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete process");
+//                if(candele){
+//                    LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete ok");
+//                }else{
+//                    LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete error");
+//                }
+//
+//
+//            }
+           recursionDeleteFile(beforeFile);
 
-                boolean candele= beforeChild.delete();
 
-                LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete process");
-                if(candele){
-                    LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete ok");
-                }else{
-                    LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete error");
-                }
-            }
         }else{
             LogUtil.e(LOG_TAG,"before path not exsits  ");
         }
@@ -123,20 +132,26 @@ public class StoragePathsManager {
         File beforeFile=new File(beforePath);
         LogUtil.e(LOG_TAG, "before path " + beforePath);
         if(beforeFile.exists()){
-            File[] beforemovies=  beforeFile.listFiles();
-            for(File beforeChild:beforemovies){
-
-                boolean candele= beforeChild.delete();
-
-                LogUtil.e(LOG_TAG,"v1.1.0 path exsits delete process");
-                if(candele){
-                    LogUtil.e(LOG_TAG,"v1.1.0 path exsits delete ok");
-                }else{
-                    LogUtil.e(LOG_TAG,"v1.1.0 path exsits delete error");
-                }
-            }
+              recursionDeleteFile(beforeFile);
         }else{
-            LogUtil.e(LOG_TAG,"before path not exsits  ");
+            LogUtil.e(LOG_TAG, "before path not exsits  ");
+        }
+    }
+    public void recursionDeleteFile(File file){
+        if(file.isFile()){
+            file.delete();
+            return;
+        }
+		if(file.isDirectory()){
+            File[] childFile = file.listFiles();
+            if(childFile == null || childFile.length == 0){
+                file.delete();
+                return;
+            }
+            for (File f : childFile){
+                recursionDeleteFile(f);
+            }
+            file.delete();
         }
     }
 
@@ -145,14 +160,21 @@ public class StoragePathsManager {
         String s2 = Build.MODEL;
         if(TextUtils.isEmpty(s1) || TextUtils.isEmpty(s2))
             ;
-        else if("xiaomi".equalsIgnoreCase(s1) && s2.toLowerCase().contains("hm note")){
+//        else if("xiaomi".equalsIgnoreCase(s1) && s2.toLowerCase().contains("hm note")){
             isHM = true;
-        }
-//        isHM = true;
-        reset();
+            reset();
+ //       }
+
         getExternalSDpath();
     }
 
+	public void deleteallDownloadPath(){
+        getExternalSDpath();
+        deleV1_0_1Moviepath();
+        deleteV_1_1_0Moviepath();
+        deleV1_1_1moviepath();
+    }
+	
     public String getExternalSDpath(){
         if(!TextUtils.isEmpty(finalExterpath) && useful(finalExterpath, true) > 0){
             if(isHM)
@@ -171,7 +193,7 @@ public class StoragePathsManager {
      *  获取sdcard （多个外置以及包含内置sdcard情况下取sdcard路径）
      *
      * */
-    public String getSDpath(){
+    private String getSDpath(){
         LogUtil.e(LOG_TAG, "init");
         List<String>pathList=new ArrayList<>();
         if(!SPUtil.getInstance().getBoolean("init",false)){
@@ -256,17 +278,8 @@ public class StoragePathsManager {
         File exFile=new File(expath);
         if(exFile.exists()){
             LogUtil.e(LOG_TAG,"ext path exsits  "+expath);
-            File [] exFileArray =exFile.listFiles();
-            for(File chileExFile:exFileArray){
-                boolean childCandel=  chileExFile.delete();
-                if(childCandel){
-                    LogUtil.e(LOG_TAG,"ext path exsits delete ok");
-                }else{
-                    LogUtil.e(LOG_TAG,"ext path exsits delete error");
-                }
-            }
         }else{
-            LogUtil.e(LOG_TAG, "ext path not exsits ");
+            LogUtil.e(LOG_TAG,"ext path not exsits ");
         }
     }
 
@@ -356,6 +369,23 @@ public class StoragePathsManager {
         return null;
     }
 
+    private void test(String file, String conent) {
+        BufferedWriter out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(file, true)));
+            out.write(conent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private long useful(String path, boolean child) {
         try {
             if(TextUtils.isEmpty(path) || !path.startsWith("/"))
@@ -365,8 +395,9 @@ public class StoragePathsManager {
                 try {
                     file = mkDirs(path, child);
                     if(file == null)
-                        return -1;
+                        file = new File(path, NEW_DIR);
                     file = new File(file, System.currentTimeMillis() + "");
+                    test(file.getAbsolutePath(), "aaaaaaaa");
                     FileOutputStream fout = new FileOutputStream(file);
                     fout.write("a".getBytes());
                     fout.close();

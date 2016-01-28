@@ -31,6 +31,8 @@ public class SlidingMenuLeft implements LetvBaseBean {
     private String icon_select;
     //个人信息
 
+    private String version; // 直播小红点版本号
+
     // 推荐列表
     public String getContent_type() {
         return content_type;
@@ -72,5 +74,12 @@ public class SlidingMenuLeft implements LetvBaseBean {
         this.sid = sid;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }
 

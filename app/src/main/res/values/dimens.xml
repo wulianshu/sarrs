@@ -4,7 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="baseactivity_title_height">44dip</dimen>
     <dimen name="baseactivity_title_size">18sp</dimen>
-    <dimen name ="shape_width">1dip</dimen>
+    <dimen name="shape_width">1dip</dimen>
     <dimen name="shape_corner_r">5dip</dimen>
     <dimen name="btn_no_net_look_height">44dip</dimen>
     <dimen name="btn_no_net_look_width">200dip</dimen>
@@ -80,10 +80,13 @@
     <dimen name="sarrs_dimen_8dp">8dp</dimen>
     <dimen name="sarrs_dimen_8.5dp">8.5dp</dimen>
     <dimen name="sarrs_dimen_12dp">12dp</dimen>
+    <dimen name="sarrs_dimen_31.5dp">31.5dp</dimen>
+    <dimen name="sarrs_dimen_48.5dp">48.5dp</dimen>
     <dimen name="ranklist_subtitle_textsize">12dp</dimen>
     <dimen name="ranklist_subtitlt2title">12dp</dimen>
     <dimen name="ranklist_subtitle2subtitle">5dp</dimen>
     <dimen name="sarrs_dimen_13dp">13dp</dimen>
+    <dimen name="sarrs_dimen_13.3dp">13.3dp</dimen>
     <dimen name="sarrs_dimen_14dp">14dp</dimen>
     <dimen name="sarrs_dimen_14.5dp">14.5dp</dimen>
     <dimen name="sarrs_dimen_15dp">15dp</dimen>
@@ -114,17 +117,30 @@
     <dimen name="sarrs_dimen_24dp">24dp</dimen>
     <dimen name="sarrs_dimen_26.5dp">26.5dp</dimen>
     <dimen name="sarrs_dimen_37dp">37dp</dimen>
+    <dimen name="sarrs_dimen_38dp">38dp</dimen>
+    <dimen name="sarrs_dimen_7.3dp">7.3dp</dimen>
+    <dimen name="sarrs_dimen_7.7dp">7.7dp</dimen>
+    <dimen name="sarrs_dimen_8.7dp">8.7dp</dimen>
+    <dimen name="sarrs_dimen_32.3dp">32.3dp</dimen>
+    <dimen name="sarrs_dimen_3.7dp">3.7dp</dimen>
+    <dimen name="sarrs_dimen_6.7dp">6.7dp</dimen>
+    <dimen name="sarrs_dimen_1.7dp">1.7dp</dimen>
     <dimen name="sarrs_dimen_9dp">9dp</dimen>
     <dimen name="sarrs_dimen_10dp">10dp</dimen>
+    <dimen name="sarrs_dimen_13.5dp">13.5dp</dimen>
+    <dimen name="sarrs_dimen_4.5dp">4.5dp</dimen>
     <dimen name="sarrs_dimen_10.5dp">10.5dp</dimen>
     <dimen name="sarrs_dimen_11dp">11dp</dimen>
     <dimen name="sarrs_dimen_11.5dp">11.5dp</dimen>
     <dimen name="sarrs_dimen_7dp">7dp</dimen>
     <dimen name="sarrs_dimen_0.5dp">0.5dp</dimen>
+    <dimen name="sarrs_dimen_0.7dp">0.7dp</dimen>
+    <dimen name="sarrs_dimen_3.3dp">3.3dp</dimen>
     <dimen name="sarrs_dimen_120dp">120dp</dimen>
     <dimen name="sarrs_dimen_172.5dp">172.5dp</dimen>
     <dimen name="sarrs_dimen_180dp">180dp</dimen>
     <dimen name="sarrs_dimen_200dp">200dp</dimen>
+    <dimen name="sarrs_dimen_250dp">250dp</dimen>
     <dimen name="sarrs_dimen_55dp">55dp</dimen>
     <dimen name="sarrs_dimen_74dp">74dp</dimen>
     <dimen name="sarrs_dimen_90dp">90dp</dimen>
@@ -151,9 +167,9 @@
     <dimen name="mediacontorller_play_seekbar_minheight">2dp</dimen>
     <dimen name="mediacontorller_play_seekbar_thumboffset">2dp</dimen>
     <dimen name="playloading_icon_marginTop">70dp</dimen>
-    <dimen name ="playloading_tip_text_maringtop">10dp</dimen>
-    <dimen name ="mediacontorller_play_bottom_epsiode_width">64dp</dimen>
-    <dimen name="dimen_mediacontroller_margintop">-23dip</dimen>
+    <dimen name="playloading_tip_text_maringtop">10dp</dimen>
+    <dimen name="mediacontorller_play_bottom_epsiode_width">64dp</dimen>
+    <dimen name="dimen_mediacontroller_margintop">23dip</dimen>
 
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!--播放器-->

@@ -52,6 +52,7 @@ import com.chaojishipin.sarrs.utils.UpgradeHelper;
 import com.chaojishipin.sarrs.utils.Utils;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -59,7 +60,7 @@ import java.util.ArrayList;
  *
  * @des 应用启动页
  */
-public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity implements
+public class ChaojishipinSplashActivity extends Activity implements
         SurfaceHolder.Callback, View.OnClickListener, View.OnTouchListener {
     private long startTime;
     public static final String pageid = "00S002000_1";
@@ -102,6 +103,7 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
     private RelativeLayout mBottom;
 
     private UpgradeInfo mUpdateData;
+    private Handler mHandler;
 
     private float sX;
     private float sY;
@@ -135,13 +137,12 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
             LogUtil.e(TAG, "request interset start time is " + startTime);
             getInterestRecommentRequest(UserLoginState.getInstance().getUserInfo().getToken());
         }
-        /*else
-            redirectToHome();*/
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new UIHandler(this);
         initView();
         SPUtil.getInstance().putString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, Utils.getScreenWidth(this) + "");
         SPUtil.getInstance().putString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, Utils.getScreenHeight(this) + "");
@@ -151,14 +152,17 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         String current_version_name = Utils.getClientVersionName();
         SharedPreferences sharedPreferences = getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
         String last_version_name =  sharedPreferences.getString("version_name","");
+        if (isFrist) {
+            if("".equals(last_version_name)){
+                StoragePathsManager.getInstanse().deleteallDownloadPath();
+            }
+            setListener();
+        }
         if(!current_version_name.equals(last_version_name)){
             StoragePathsManager.getInstanse().getExternalSDpath();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("version_name",current_version_name);
             editor.commit();
-        }
-        if (isFrist) {
-            setListener();
         }
         initData();
     }
@@ -223,20 +227,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         mStartWatch.setOnTouchListener(this);
         mStartWatchBtn.setOnClickListener(this);
         mStartWatch.setOnClickListener(this);
-    }
-
-    @Override
-    public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
-
-    }
-
-    @Override
-    protected View setContentView() {
-        return null;
-    }
-
-    @Override
-    protected void handleInfo(Message msg) {
     }
 
     private void initData() {
@@ -804,31 +794,6 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         anima.setFillAfter(true);
     }
 
-    // 视频淡出动画
-//    private void showVideoHideAnim() {
-//        mLayout.clearAnimation();
-//        AlphaAnimation anima = new AlphaAnimation(1f, 0f);
-//        anima.setDuration(3000);
-//        mLayout.startAnimation(anima);
-//        anima.setFillAfter(true);
-//        anima.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//                stop();
-//                redirectToHome();
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//            }
-//        });
-//    }
-
     private void stop() {
         if (player != null && player.isPlaying()) {
             player.stop();
@@ -949,5 +914,25 @@ public class ChaojishipinSplashActivity extends ChaoJiShiPinBaseActivity impleme
         config.setToDefaults();
         res.updateConfiguration(config,res.getDisplayMetrics() );
         return res;
+    }
+
+    protected static class UIHandler extends Handler {
+        private final WeakReference<ChaojishipinSplashActivity> mFragmentView;
+
+        UIHandler(ChaojishipinSplashActivity view) {
+            this.mFragmentView = new WeakReference<ChaojishipinSplashActivity>(view);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ChaojishipinSplashActivity service = mFragmentView.get();
+            if (service != null) {
+                try {
+                    super.handleMessage(msg);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

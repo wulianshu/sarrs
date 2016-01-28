@@ -82,6 +82,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Created by zhangshuo on 2015/6/1.
  */
 public class Utils {
+    public final static String LIVE_TAG = "live";
     public static final String VIDEO_TITLE = "title";
     public final static int SDCARD_MINSIZE = 500; //1.48G--1515.52   1335--1.3037   1500--1.46G    // 9.04G--->9256.96M
     public static final int GET_JS_RESULT = 300;
@@ -89,6 +90,7 @@ public class Utils {
 
     public static final String PLAY_3G_NET = "3G_play";
     public static final String PLAY_DATA = "play_data";
+    public static final String LIVE_PLAY_DATA = "live_play_data";
     public static final String Medea_Mode = "media";
     /**
      * SD 卡路径
@@ -1074,5 +1076,15 @@ public class Utils {
         }
         wb.removeAllViews();
         wb.destroy();
+    }
+	
+	/**
+     * 按照指定格式返回今天日期字符串
+     *
+     * @param format 格式
+     * @return
+     */
+    public static String getTodayStr(String format) {
+        return new SimpleDateFormat(format, Locale.getDefault()).format(new Date());
     }
 }

@@ -119,7 +119,7 @@ public class RankListFragment extends MainBaseFragment implements PullToRefreshS
      * @auth daipei
      */
     public void buildDrawingCacheAndIntent() {
-        SearchActivity.launch(getActivity());
+        SearchActivity.launch(getActivity(), "");
     }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {

@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.utils.DataUtils;
+import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -76,14 +78,16 @@ public class ContainSizeManager {
         free = DownloadHelper.getSdcardStorage(path.replace("/" + Utils.getDownLoadFolder(), "")) / 1024;
         if (df != null)
             freeStr = df.format(free);
+        LogUtil.e("wulianshu","freeStr:"+freeStr);
     }
 
     // SDCard\kuaikan程序所占的空间大小（单位：GB，2位精度）
     public void countFunshionSize() {
         String path = DownloadHelper.getDownloadPath().replace("/" + Utils.getDownLoadFolder(), "");
-        kuaikan = DownloadHelper.getSdUsedStorage(path) / 1024;
+        kuaikan = DownloadHelper.getSdUsedStorage(path)/1024;
         if (df != null)
             kuaikanStr = df.format(kuaikan);
+        LogUtil.e("wulianshu","yiyong:"+kuaikanStr);
     }
 
     /**
@@ -107,7 +111,6 @@ public class ContainSizeManager {
         countFreeSizeForSetting(path);
         String freesize = free >= 1 ? freeStr + "GB" : Double.parseDouble(freeStr) * 1024 + "MB";
         return freesize;
-
     }
 
     public void ansynHandlerSdcardSize() {
@@ -192,25 +195,17 @@ public class ContainSizeManager {
             Log.d("wym", "return");
             return;
         }
-        final DownloadProvider mDownloadProvider = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getProvider();
-        final ArrayList<DownloadJob> jobsList = mDownloadProvider.getQueuedDownloads();
+        final int num = DataUtils.getInstance().getDownloadJobNum();
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (jobsList.size() != 0) {
+                if (num > 0) {
                     Log.d("wym", "freeSize is " + getFreeSize());
                     if (getFreeSize() <= Utils.SDCARD_MINSIZE) {
                         Intent intent = new Intent();
                         intent.setAction(DownloadBroadcastReceiver.SDCARD_NOSPACE_ACTION);
                         ChaoJiShiPinApplication.getInstatnce().getApplicationContext().sendBroadcast(intent);
-                        if (jobsList.size() == 0) {
-                            mTimer.cancel();
-                            mTimer = null;
-                        }
-//						Message message = new Message();
-//		                message.what = 1;
-//		                doActionHandler.sendMessage(message);
                     }
                 } else {
                     mTimer.cancel();

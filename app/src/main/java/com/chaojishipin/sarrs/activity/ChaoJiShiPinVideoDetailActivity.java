@@ -49,6 +49,7 @@ import com.chaojishipin.sarrs.fragment.videoplayer.httpd.M3u8Httpd;
 import com.chaojishipin.sarrs.receiver.NetWorkStateReceiver;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.SPUtil;
@@ -290,13 +291,10 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         if (mVideoPlayerFragment != null) {
             // 从除缓存界面进入播放页
             if(this.getMediaType()==MeDiaType.ONLINE){
-
-                    LogUtil.e("v1.1.2","has not local episo excute local play ");
+                    LogUtil.e("v1.1.2","online mode excute");
+                    //LogUtil.e("v1.1.2","has not local episo excute local play ");
                     mVideoPlayerFragment.setPlayerControllerBarState(netType);
                     mVideoBottomFragment.reLoadData();
-
-
-
             }
         }
         if (mVideoBottomFragment != null) {
@@ -320,7 +318,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         addDetailFragment();
         addVideoPlayerFragment();
         initData();
-        if(this.getMediaType()==MeDiaType.LOCAL||(!NetworkUtil.isNetworkAvailable(this)&&isLocalEpisoSize)){
+        if(this.getMediaType()==MeDiaType.LOCAL||(!NetworkUtil.isNetworkAvailable(this)&&isExits)){
             // 点击下载管理跳回本地播放
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
@@ -381,7 +379,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
            }
          }
 
-         if(isExits&&locals!=null&&locals.size()>0){
+         if(isExits&&locals!=null&&locals.size()>1){
              isLocalEpisoSize=true;
          }else{
              isLocalEpisoSize=false;
@@ -471,7 +469,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
           aid=null;
       }
       String path;
-      SparseArray<DownloadFolderJob> folderJobs = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getDownloadFolderJobs();
+      SparseArray<DownloadFolderJob> folderJobs = DataUtils.getInstance().getFolderJobs();
       ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>();
       SparseArray<DownloadJob> jobDs=null;
       for (int i = 0; i < folderJobs.size(); i++) {
@@ -547,7 +545,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
 
     public   ArrayList<LocalVideoEpisode> getAllLocalEpisodes(){
-        ArrayList<DownloadJob> jobs=ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads();
+        ArrayList<DownloadJob> jobs=DataUtils.getInstance().getCompletedDownloads();
         String path;
         if(jobs==null){
             LogUtil.e("xll","v1_1_2  local null");
@@ -877,7 +875,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
            // LogUtil.e("v1.1.2","from local");
             return MeDiaType.LOCAL;
         } else{
-            if(!NetworkUtil.isNetworkAvailable(this)&&isLocalEpisoSize){
+            if(!NetworkUtil.isNetworkAvailable(this)&&isExits){
                 return MeDiaType.LOCAL;
             }else{
                 return MeDiaType.ONLINE;

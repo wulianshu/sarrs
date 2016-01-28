@@ -14,6 +14,7 @@ import android.widget.ToggleButton;
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
+import com.chaojishipin.sarrs.utils.DataUtils;
 
 
 public class SettingManage {
@@ -135,12 +136,11 @@ public class SettingManage {
 			return ;
 		}
 	if(NetworkUtil.reportNetType(mContext) == NetworkUtil.TYPE_MOBILE && !isChecked &&
-				ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getQueuedDownloads().size()>0){
+				DataUtils.getInstance().getDownloadJobNum() > 0){
 			checkIfContinueDownloadDialog(isChecked);		
 		}else{
 			sendBroadCast(isChecked);
 		}
-		
 	}
 	
 	private void checkIfContinueDownloadDialog(final boolean isChecked) {

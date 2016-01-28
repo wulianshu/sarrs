@@ -1,11 +1,13 @@
 package com.chaojishipin.sarrs.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +40,7 @@ import com.chaojishipin.sarrs.thirdparty.UserLoginState;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ChannelUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.JsonUtil;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
@@ -50,6 +53,9 @@ import com.chaojishipin.sarrs.utils.Utils;
 import com.chaojishipin.sarrs.widget.TitleActionBar;
 import com.ibest.thirdparty.share.presenter.ShareManager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,23 +111,12 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         if (UserLoginState.getInstance().isLogin()) {
             requestHistoryRecordData(UserLoginState.getInstance().getUserInfo().getToken());
         }
-//        ExecutorService executorService = Executors.newSingleThreadExecutor();
-//        for (int i = 0; i < 100; ++i) {
-//            final int j = i;
-//            executorService.execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if(j==0){
-//                        try {
-//                            Thread.sleep(5000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    LogUtil.e("test", "j = " + j);
-//                }
-//            });
-//        }
+
+        new Thread(){
+            public void run(){
+                test();
+            }
+        }.start();
     }
 
     private void initData() {
@@ -131,7 +126,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         mUpgradeHelper = new UpgradeHelper(mContext);
         // 获取升级信息
         mUpgradeData = (UpgradeInfo) mIntent.getExtras().get(UpgradeHelper.UPGRADE_DATA);
-        isfirst =  mIntent.getBooleanExtra(UpgradeHelper.IS_FIRST,true);
+        isfirst = mIntent.getBooleanExtra(UpgradeHelper.IS_FIRST, true);
 //      mUpgradeData.setIscheck("1");
         Log.d("upgrade", " get " + mUpgradeData);
         // 再次请求
@@ -157,7 +152,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 //            }
             SharedPreferences sharedPreferences = ChaoJiShiPinMainActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            if(result !=null) {
+            if (result != null) {
                 if (ChaojishipinSplashActivity.isFrist) {
                     edit.putString("ischeck", result.getIscheck());
                     edit.commit();
@@ -169,17 +164,18 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                     //本次审核状态
                     ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
                     //上次是非审核状态之后永远都是非审核状态  而且要保存侧滑菜单的状态
-                    if("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)){
+                    if ("0".equals(ChaoJiShiPinMainActivity.lasttimeCheck)) {
                         edit.putString("ischeck", "0");
                         edit.commit();
-                        ChaoJiShiPinMainActivity.isCheck = result.getIscheck();;
-                    }else{
-                        edit.putString("ischeck",result.getIscheck());
+                        ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
+                        ;
+                    } else {
+                        edit.putString("ischeck", result.getIscheck());
                         ChaoJiShiPinMainActivity.isCheck = result.getIscheck();
                         edit.commit();
                     }
                 }
-            }else{
+            } else {
                 //为空为审核状态
                 edit.putString("ischeck", "1");
                 edit.commit();
@@ -329,25 +325,25 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 SharedPreferences sharedPreferences = ChaoJiShiPinMainActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 String channel_list = JsonUtil.toJSONString(result);
-                editor.putString(SlidingMenuFragment.CHANNEL_LIST,channel_list);
+                editor.putString(SlidingMenuFragment.CHANNEL_LIST, channel_list);
                 editor.commit();
-                for (int i = 0;i<slidings_lv.size();i++){
-                    if( ((SlidingMenuLeft)slidings_lv.get(i)).getContent_type().equals("10") ){
+                for (int i = 0; i < slidings_lv.size(); i++) {
+                    if (((SlidingMenuLeft) slidings_lv.get(i)).getContent_type().equals("10")) {
                         break;
-                    }else{
-                        slidings_gv.add((SlidingMenuLeft)slidings_lv.get(i));
+                    } else {
+                        slidings_gv.add((SlidingMenuLeft) slidings_lv.get(i));
                     }
                 }
-                for(int i=0;i<slidings_gv.size();i++){
+                for (int i = 0; i < slidings_gv.size(); i++) {
                     slidings_lv.remove(0);
                 }
-                if(slidings_gv.size()>0) {
+                if (slidings_gv.size() > 0) {
                     slidingMenuFragment.mLeftMenuGridView.setVisibility(View.VISIBLE);
                     slidingMenuFragment.showSlidingGVMenu(slidings_gv);
-                }else{
+                } else {
                     slidingMenuFragment.mLeftMenuGridView.setVisibility(View.GONE);
                 }
-                if(slidings_lv.size()>0) {
+                if (slidings_lv.size() > 0) {
                     slidingMenuFragment.showSlidingMenu(slidings_lv);
                 }
                 slidingMenuFragment.showSlidingMenu(result);
@@ -372,15 +368,15 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     public void onTitleLeftClick(View v) {
         //用户点击了菜单栏按钮
         SharedPreferences sharedPreferences = this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
-        String data =sharedPreferences.getString(SlidingMenuFragment.CHANNEL_LIST,"");
-        if("0".equals(lasttimeCheck) &&"1".equals(isCheck) && null != mSlidingMenu && !TextUtils.isEmpty(data) || !NetWorkUtils.isNetAvailable()){
+        String data = sharedPreferences.getString(SlidingMenuFragment.CHANNEL_LIST, "");
+        if ("0".equals(lasttimeCheck) && "1".equals(isCheck) && null != mSlidingMenu && !TextUtils.isEmpty(data) || !NetWorkUtils.isNetAvailable()) {
             slidingMenuFragment.loadLocalmenuData();
             mSlidingMenu.toggle();
             return;
         }
         if (null != mSlidingMenu) {
-            boolean isInit=   SPUtil.getInstance().getBoolean(ConstantUtils.SliddingMenuInit,false);
-            if(slidingMenuFragment!=null&&!isInit&&NetWorkUtils.isNetAvailable()){
+            boolean isInit = SPUtil.getInstance().getBoolean(ConstantUtils.SliddingMenuInit, false);
+            if (slidingMenuFragment != null && !isInit && NetWorkUtils.isNetAvailable()) {
                 LogUtil.e("xll", "request sliding menu");
                 HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_SLDINGMENU_LETF_TAG);
                 HttpApi.getSlidingMenuLeftRequest().start(new RequestSlidingMenuLeftListener(), ConstantUtils.REQUEST_SLDINGMENU_LETF_TAG);
@@ -394,6 +390,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         LogUtil.e(TAG, "cid" + slidingMenuLeft.getCid());
         LogUtil.e(TAG, "content_type" + slidingMenuLeft.getContent_type());
         LogUtil.e(TAG, "title" + slidingMenuLeft.getTitle());
+        LogUtil.e(TAG, "version" + slidingMenuLeft.getVersion()); //直播红点版本号
         title = slidingMenuLeft.getTitle();
         mTitleActionBar.setTitle(title);
         // TODO
@@ -455,7 +452,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         switch (view.getId()) {
             case R.id.main_fragment_user_setting:
                 mTitleActionBar.setRightEditButtonVisibility(false);
-                Intent intent = new Intent(this,SettingActivity.class);
+                Intent intent = new Intent(this, SettingActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -479,8 +476,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 //            mSlidingMenu.showContent(true);
 //        }
 //        setEditMenuText(this.getString(R.string.edit));
-          Intent intent = new Intent(this,DownloadActivity.class);
-          startActivity(intent);
+        Intent intent = new Intent(this, DownloadActivity.class);
+        startActivity(intent);
     }
 
     public void setEditMenuText(String text) {
@@ -490,7 +487,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     public void updateDeleteIcon() {
         mTitleActionBar.setmRightButtonVisibility(false);
-        if (ChaoJiShiPinApplication.getInstatnce().getDownloadManager().getCompletedDownloads().size() > 0) {
+        if (DataUtils.getInstance().getCompletedDownloads().size() > 0) {
             mTitleActionBar.setRightEditButtonVisibility(true);
         } else {
             mTitleActionBar.setRightEditButtonVisibility(false);
@@ -546,19 +543,19 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
                 for (HistoryRecord historyRecord : uploadlist) {
                     UploadRecord aupload = new UploadRecord();
                     // TODO 吴联暑 check下 add by xll
-                    if(!TextUtils.isEmpty(historyRecord.getCategory_id().trim())){
+                    if (!TextUtils.isEmpty(historyRecord.getCategory_id().trim())) {
                         aupload.setCid(Integer.parseInt(historyRecord.getCategory_id().trim()));
                     }
                     aupload.setVid(historyRecord.getGvid());
                     aupload.setSource(historyRecord.getSource());
-                    if(!TextUtils.isEmpty(historyRecord.getPlay_time())){
+                    if (!TextUtils.isEmpty(historyRecord.getPlay_time())) {
                         aupload.setPlayTime(Integer.parseInt(historyRecord.getPlay_time()));
                     }
 
                     aupload.setAction(0);
                     aupload.setDurationTime(historyRecord.getDurationTime());
                     aupload.setPid(historyRecord.getId());
-                    if(!TextUtils.isEmpty(historyRecord.getTimestamp())){
+                    if (!TextUtils.isEmpty(historyRecord.getTimestamp())) {
                         aupload.setUpdateTime(Long.parseLong(historyRecord.getTimestamp()));
                     }
                     uploadRecordList.add(aupload);
@@ -571,12 +568,12 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         @Override
         public void netErr(int errorCode) {
             //网络异常 4000秒后重新获取数据直到播放记录获取正常为止
-           new Handler().postDelayed(new Runnable() {
-               @Override
-               public void run() {
-                   requestHistoryRecordData(UserLoginState.getInstance().getUserInfo().getToken());
-               }
-           }, 4000);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    requestHistoryRecordData(UserLoginState.getInstance().getUserInfo().getToken());
+                }
+            }, 4000);
         }
 
         @Override
@@ -587,10 +584,10 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     @Override
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
-         LogUtil.e("xll", "MainActivity netType " + netType);
-//        if(netType!=-1){
-//            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
-//        }
+        LogUtil.e("xll", "MainActivity netType " + netType);
+        if (netType != -1) {
+            UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
+        }
 
     }
 
@@ -607,13 +604,12 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 //                .start( new UpoloadHistoryRecordListener(), ConstantUtils.UPLOAD_HISTORY_RECORD);
     }
 
-    private void back()
-    {
-            this.finish();
-            AllActivityManager.getInstance().finishAllActivity();
+    private void back() {
+        this.finish();
+        AllActivityManager.getInstance().finishAllActivity();
     }
 
-    private long lastclicktime=0;
+    private long lastclicktime = 0;
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if(keyCode == KeyEvent.KEYCODE_BACK) {
@@ -682,14 +678,14 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     @Override
     public void onBackPressed() {
-            long currenttime =  System.currentTimeMillis();
-            if (currenttime - lastclicktime<2000l){
-                back();
-            }else{
-                ToastUtil.showShortToast(this, getResources().getString(R.string.again_click_exist));
-                lastclicktime = System.currentTimeMillis();
-                return;
-            }
+        long currenttime = System.currentTimeMillis();
+        if (currenttime - lastclicktime < 2000l) {
+            back();
+        } else {
+            ToastUtil.showShortToast(this, getResources().getString(R.string.again_click_exist));
+            lastclicktime = System.currentTimeMillis();
+            return;
+        }
         super.onBackPressed();
     }
     public void setmTitleActionBarTitle(String title){
@@ -697,5 +693,28 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     }
     public void ResetmTitleActionBarTitle(){
         mTitleActionBar.setTitle(title);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void test(){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
+            return;
+        File[] fs = this.getExternalFilesDirs("files");
+        if(fs == null)
+            return;
+        for(File f : fs){
+          write(f);
+        }
+    }
+
+    private void write(File f){
+        try{
+            FileOutputStream fout = new FileOutputStream(new File(f, System.currentTimeMillis() + ".txt"));
+            fout.write("abc".getBytes());
+            fout.flush();
+            fout.close();
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
     }
 }

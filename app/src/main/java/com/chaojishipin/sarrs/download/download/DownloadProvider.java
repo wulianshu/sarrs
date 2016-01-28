@@ -21,60 +21,54 @@ import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.manager.NetworkManager;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.chaojishipin.sarrs.widget.PopupDialog;
 import com.sina.weibo.sdk.utils.LogUtil;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class DownloadProvider {
-    private SparseArray<DownloadFolderJob> folderJobs;
-    private ArrayList<DownloadJob> mQueuedJobs;
-    private ArrayList<DownloadJob> mCompletedJobs;
-    private ArrayList<DownloadJob> downloadingQueue;
 
-    private DownloadManager mDownloadManager;
+    private SparseArray<DownloadFolderJob> folderJobs = new SparseArray<DownloadFolderJob>();
+    private ArrayList<DownloadJob> mCompleteList = new ArrayList<>();
+    private ArrayList<DownloadJob> mUnCompleteList = new ArrayList<>();
+    private Set<String> mCompleteGvidSet = new HashSet<>();
+    private Set<String> mUnCompleteGvidSet = new HashSet<>();
 
     private DownloadDao mDownloadDao;
+    private static DownloadProvider mProvider;
 
-    private Handler mHandler;
-    private int num = 0;
-    private Runnable mRunnable;
-//    private Context context;
+    public static synchronized DownloadProvider getInstance(){
+        if(mProvider == null)
+            mProvider = new DownloadProvider();
+        return mProvider;
+    }
 
-    public DownloadProvider(DownloadManager mDownloadManager) {
-        this.mDownloadManager = mDownloadManager;
-
-        mQueuedJobs = new ArrayList<DownloadJob>();
-        mCompletedJobs = new ArrayList<DownloadJob>();
+    private DownloadProvider() {
         mDownloadDao = new DownloadDaoImpl();
-
         loadOldDownloads();
     }
 
     public ArrayList<DownloadJob> getAllDownloads() {
-        ArrayList<DownloadJob> allDownloads = new ArrayList<DownloadJob>();
-        allDownloads.addAll(mCompletedJobs);
-        allDownloads.addAll(mQueuedJobs);
-//		mCompletedJobs.clear();
-//		ArrayList<DownloadJob> list = mDownloadDao.getAllDownloadJobs();
-//		for (DownloadJob dJob : list) {
-//			if (dJob.getProgress() == 100) {
-//				mCompletedJobs.add(dJob);
-//			}
-//		}
-        return allDownloads;
+        ArrayList<DownloadJob> list = new ArrayList<>();
+        list.addAll(mCompleteList);
+        list.addAll(mUnCompleteList);
+        return list;
     }
 
     public ArrayList<DownloadJob> getCompletedDownloads() {
-        return mCompletedJobs;
+        return mCompleteList;
     }
 
     public ArrayList<DownloadJob> getQueuedDownloads() {
-        return mQueuedJobs;
+        return mUnCompleteList;
     }
 
     public SparseArray<DownloadFolderJob> getFolderJobs() {
@@ -98,44 +92,44 @@ public class DownloadProvider {
         return 0;
     }
 
-    public boolean loadOldDownloads() {
-        ArrayList<DownloadJob> oldDownloads = mDownloadDao.getAllDownloadJobs();
-        if (null == folderJobs) {
-            folderJobs = new SparseArray<DownloadFolderJob>();
-        }
+    public boolean updateDownloadEntity(DownloadJob downloadJob) {
+        return mDownloadDao.add(downloadJob.getEntity());
+    }
 
-        downloadingQueue = new ArrayList<DownloadJob>();
-        for (DownloadJob dJob : oldDownloads) {
-            if (dJob.getProgress() == 100) {
-                mCompletedJobs.add(dJob);
-                SparseArrayUtils.put(dJob, folderJobs);
-            } else {
-                if (dJob.getStatus() == DownloadJob.PAUSE) {
-//					SparseArrayUtils.put(dJob, folderJobs);
-                    dJob.setDownloadManager(mDownloadManager);
-                    mQueuedJobs.add(dJob);
-                } else {
-                    dJob.getEntity().setIndex(dJob.getIndex());
-                    /**
-                     *
-                     */
-                    downloadingQueue.add(dJob);
-//						mDownloadManager.download(dJob.getEntity());
+    public void updateDownloads(DownloadJob job){
+        if(folderJobs == null) {
+            loadOldDownloads();
+            return;
+        }
+        if(job.getStatus() == DownloadJob.COMPLETE) {
+            SparseArrayUtils.put(job, folderJobs);
+            mCompleteList.add(job);
+            for(DownloadJob j : mUnCompleteList){
+                if(j.getEntity().getId().equalsIgnoreCase(job.getEntity().getId())) {
+                    mUnCompleteList.remove(j);
+                    break;
                 }
             }
+            mCompleteGvidSet.add(job.getEntity().getGlobaVid());
+            mUnCompleteGvidSet.remove(job.getEntity().getGlobaVid());
         }
-        if (downloadingQueue.size() > 0) {
-            if (NetworkUtil.reportNetType(ChaoJiShiPinApplication.getInstatnce()) == NetworkUtil.TYPE_WIFI) {
-                addToDownload();
-            } else {
-//				showConfirm();
-                showMobileNetworkDialog();
+    }
 
-
-                return false;
+    public boolean loadOldDownloads() {
+        ArrayList<DownloadJob> oldDownloads = mDownloadDao.getAllDownloadJobs();
+        mCompleteList.clear();
+        mUnCompleteList.clear();
+        mCompleteList.addAll(oldDownloads);
+        for (DownloadJob dJob : oldDownloads) {
+            if(dJob.getStatus() == DownloadJob.COMPLETE) {
+                SparseArrayUtils.put(dJob, folderJobs);
+                mCompleteList.add(dJob);
+                mCompleteGvidSet.add(dJob.getEntity().getGlobaVid());
+            }else {
+                mUnCompleteList.add(dJob);
+                mUnCompleteGvidSet.add(dJob.getEntity().getGlobaVid());
             }
         }
-        mDownloadManager.notifyObservers(); // 更新UI界面
         return true;
     }
 
@@ -149,8 +143,8 @@ public class DownloadProvider {
             if (ContainSizeManager.getInstance().getFreeSize() <= Utils.SDCARD_MINSIZE) {
                 downloadJob.setStatus(DownloadJob.PAUSE);
             }
-            mQueuedJobs.add(downloadJob);
-            mDownloadManager.notifyObservers();
+            mUnCompleteList.add(downloadJob);
+            mUnCompleteGvidSet.add(downloadJob.getEntity().getGlobaVid());
             return true;
         } else {
             return false;
@@ -163,200 +157,39 @@ public class DownloadProvider {
 
     public void setIfWatch(DownloadEntity entity, String ifWatch) {
         mDownloadDao.setIfWatch(entity, ifWatch);
-//		LogUtils.d("dd", "原来=="+getAllDownloads().size());
-        updateDownloads();
     }
 
     public boolean selectDownloadJobByMid(String mid) {
         return mDownloadDao.selectDownloadJobByMid(mid);
     }
 
-    private void updateDownloads() {
-        ArrayList<DownloadJob> oldDownloads = mDownloadDao.getAllDownloadJobs();
-        if (null == folderJobs) {
-            folderJobs = new SparseArray<DownloadFolderJob>();
-        }
-//		LogUtils.d("dd",mCompletedJobs.size()+"");
-        folderJobs.clear();
-        for (DownloadJob dJob : oldDownloads) {
-            if (dJob.getProgress() == 100) {
-//				int index = mCompletedJobs.indexOf(dJob);
-//				if(-1 != index)
-//					mCompletedJobs.set(index, dJob);
-//					
-//				ArrayList<DownloadJob> downloadList = MoviesApplication.getInstance()
-//						.getDownloadManager().getAllDownloads();
-//				LogUtils.d("dd","11---"+downloadList.size()+"");
-                SparseArrayUtils.put(dJob, folderJobs);
-//				ArrayList<DownloadJob> downloadList2 = MoviesApplication.getInstance()
-//						.getDownloadManager().getAllDownloads();
-//				LogUtils.d("dd","22----"+downloadList2.size()+"");
-//				LogUtils.d("dd", "现在=="+getAllDownloads().size());
-            } else {
-//				if(dJob.getStatus()==DownloadJob.PAUSE){
-//					SparseArrayUtils.put(dJob, folderJobs);
-//					dJob.setDownloadManager(mDownloadManager);
-//					mQueuedJobs.add(dJob);
-//				}else{
-//					dJob.getEntity().setIndex(dJob.getIndex());
-//					mDownloadManager.download(dJob.getEntity());
-//				}
-
-            }
-        }
-        mDownloadManager.notifyObservers(); // 更新UI界面
-    }
-
-    public boolean updateDownloadEntity(DownloadJob downloadJob) {
-        return mDownloadDao.add(downloadJob.getEntity());
-    }
-
     public void removeDownload(DownloadJob job) {
-        if (job.getProgress() < 100) {
-            if (job.getStatus() == DownloadJob.DOWNLOADING)
-                job.pauseOnOther(DownloadJob.PAUSE);
-            mQueuedJobs.remove(job);
-        } else {
-            for (DownloadJob downloadJob : mCompletedJobs) {
-                if (job.getEntity().getGlobaVid().equals(downloadJob.getEntity().getGlobaVid())) {
-                    mCompletedJobs.remove(downloadJob);
-                    break;
-                }
+        mDownloadDao.remove(job);
+        List<DownloadJob> list;
+        if(job.getStatus() == DownloadJob.COMPLETE) {
+            list = mCompleteList;
+            mCompleteGvidSet.remove(job.getEntity().getGlobaVid());
+        }else {
+            list = mUnCompleteList;
+            mUnCompleteGvidSet.remove(job.getEntity().getGlobaVid());
+        }
+        for(DownloadJob j : list){
+            if(j.getEntity().getId().equalsIgnoreCase(j.getEntity().getId())){
+                list.remove(j);
+                break;
             }
         }
-        mDownloadDao.remove(job);
-    }
-
-    public void downloadCompleted(DownloadJob job) {
-//		LogUtils.i("dyf", "下载成功：downloadCompleted");
-        mQueuedJobs.remove(job);
-        mCompletedJobs.add(job);
-        SparseArrayUtils.put(job, folderJobs);
-        mDownloadDao.setStatus(job.getEntity(), DownloadJob.COMPLETE);
-        mDownloadManager.notifyObservers();
-//		if(job.getCheck()){//如果下载完成的job，是删除界面中被勾选的，那么回调，通知被勾选数量自减。
-        mDownloadManager.notifyDownloadEnd(job);
-//		}
+//        SparseArrayUtils.remove(job, folderJobs);
     }
 
     public ArrayList<DownloadJob> getDownloadJobsByMid(String mid) {
         return mDownloadDao.getDownloadJobsByMid(mid);
     }
 
-    public void addToDownload()
-    {
-        if (downloadingQueue != null && downloadingQueue.size() > 0)
-        {
-            for (DownloadJob job : downloadingQueue) {
-                mDownloadManager.download(job.getEntity());
-            }
-            downloadingQueue.clear();
-        }
-    }
-
     public boolean needContinueDownload() {
-        if (downloadingQueue != null && downloadingQueue.size() > 0)
+        if (mUnCompleteList != null && mUnCompleteList.size() > 0)
             return true;
-
-        if (mQueuedJobs != null && mQueuedJobs.size() > 0)
-        {
-            for (DownloadJob job : mQueuedJobs
-                    ) {
-                if (job.getStatus() == DownloadJob.NO_USER_PAUSE
-                        || job.getStatus() == DownloadJob.WAITING
-                        || job.getStatus() == DownloadJob.DOWNLOADING)
-                {
-                    return true;
-                }
-            }
-        }
-
         return false;
-    }
-
-    public void continueDownload() {
-        if (downloadingQueue != null) {
-            int noUserPauseCount = 0;
-//            DownloadJob firstWaitingJob = null;
-            for (DownloadJob job : downloadingQueue) {
-                if (job.getStatus() == DownloadJob.NO_USER_PAUSE) {
-
-                    if (noUserPauseCount == 0) {
-//                        mDownloadManager.download(job.getEntity());
-                        job.start();
-                    }else {
-                        job.setStatus(DownloadJob.WAITING);
-                    }
-                    noUserPauseCount++;
-                }
-            }
-            downloadingQueue.clear();
-            mDownloadManager.notifyObservers();
-        }
-    }
-
-    public void pauseDownloadingJob() {
-
-//        if (downloadingQueue != null) {
-//            for (DownloadJob job : downloadingQueue) {
-//                job.setStatus(DownloadJob.NO_USER_PAUSE);
-//                mQueuedJobs.add(job);
-//            }
-//        }
-
-        if (mQueuedJobs != null && mQueuedJobs.size() > 0)
-        {
-            if (downloadingQueue == null)
-            {
-                downloadingQueue = new ArrayList<>();
-            }
-            for (DownloadJob job: mQueuedJobs
-                 ) {
-                if (job.getStatus() == DownloadJob.DOWNLOADING)
-                {
-                    job.allPause();
-                    job.setStatus(DownloadJob.NO_USER_PAUSE);
-                    downloadingQueue.add(job);
-                }else if (job.getStatus() == DownloadJob.NO_USER_PAUSE)
-                {
-                    downloadingQueue.add(job);
-                }
-            }
-        }
-//        if (downloadingQueue != null && downloadingQueue.size() > 0)
-//        {
-//            for (DownloadJob job : downloadingQueue
-//                 ) {
-//                mQueuedJobs.remove(job);
-//            }
-//        }
-
-        mDownloadManager.notifyObservers();
-    }
-
-    public void pauseAllJobs()
-    {
-        if (mQueuedJobs != null && mQueuedJobs.size() > 0)
-        {
-            for (DownloadJob job : mQueuedJobs
-                    ) {
-                job.setStatus(DownloadJob.PAUSE);
-                mDownloadDao.setStatus(job.getEntity(), DownloadJob.PAUSE);
-//                mQueuedJobs.add(job);
-            }
-        }else if (mQueuedJobs == null || mQueuedJobs.size() == 0) {
-            if (downloadingQueue != null && downloadingQueue.size() > 0) {
-                for (DownloadJob job : downloadingQueue
-                     ) {
-                    job.setStatus(DownloadJob.PAUSE);
-                    mDownloadDao.setStatus(job.getEntity(), DownloadJob.PAUSE);
-                    mQueuedJobs.add(job);
-                }
-                downloadingQueue.clear();
-            }
-
-        }
-        mDownloadManager.notifyObservers();
     }
 
     public void updateDatabaseValue(DownloadEntity entity, String key, String value) {
@@ -367,24 +200,23 @@ public class DownloadProvider {
         mDownloadDao.updateValue(entity, key, value);
     }
 
-    private void showMobileNetworkDialog()
-    {
-        NetworkInfo networkInfo = NetWorkUtils.getAvailableNetWorkInfo();
-        if (networkInfo != null && networkInfo.isAvailable() && networkInfo.getType() != ConnectivityManager.TYPE_WIFI) {
-            PopupDialog.showMobileNetworkAlert(buttonClick);
-        }
+    public HashMap<String, DownloadJob> getDownloadJobsMap(){
+        return mDownloadDao.getDownloadJobsMap();
     }
 
-    PopupDialog.PopupButtonClickInterface buttonClick = new PopupDialog.PopupButtonClickInterface() {
-        @Override
-        public void onLeftClick() {
-            addToDownload();
-        }
+    public int getDownloadJobNum(){
+        return mDownloadDao.getDownloadJobNum();
+    }
 
-        @Override
-        public void onRightClick() {
-            pauseAllJobs();
-        }
-    };
+    public int getAllDownloadJobNum(){
+        return mDownloadDao.getAllDownloadJobNum();
+    }
 
+    public Set<String> getCompleteGvidSet(){
+        return mCompleteGvidSet;
+    }
+
+    public Set<String> getmUnCompleteGvidSet(){
+        return mUnCompleteGvidSet;
+    }
 }

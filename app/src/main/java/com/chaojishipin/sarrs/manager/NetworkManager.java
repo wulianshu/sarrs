@@ -16,6 +16,7 @@ import com.chaojishipin.sarrs.interfaces.INetWorkObServe;
 import com.chaojishipin.sarrs.receiver.NetWorkStateReceiver;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
+import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.widget.PopupDialog;
 
@@ -74,14 +75,13 @@ public class NetworkManager implements INetWorkObServe {
 //                LogUtil.e("xll", "base net wifi execute childactivity");
                 if (isHasNetWork) {
                     dismissDialog();
-                    ChaoJiShiPinApplication.getInstatnce().getDownloadManager().continueDownload();
+                    DataUtils.getInstance().startAllDownload();
                 }
             }else{
                 if (isHasNetWork)
                 {
                     processMobileDownload();
                 }
-
             }
             //判断什么网络类型
         }
@@ -89,51 +89,15 @@ public class NetworkManager implements INetWorkObServe {
 
     private void processMobileDownload()
     {
-        boolean result = ChaoJiShiPinApplication.getInstatnce().getDownloadManager().needContinueDownload();
+        boolean result = DataUtils.getInstance().needContinueDownload();
         if(result) {
-            ChaoJiShiPinApplication.getInstatnce().getDownloadManager().pauseDownloadingJob();
+            DataUtils.getInstance().pauseAllDownload();
             isContinudownload();
         }
     }
 
     private void isContinudownload(){
-//        Context context = ChaoJiShiPinApplication.getInstatnce();
         PopupDialog.showMobileNetworkAlert(buttonClick);
-//        if (customBuilder != null)
-//            return;
-//        customBuilder = new AlertDialog.Builder(AllActivityManager.getInstance().getCurrentActivity());
-//        customBuilder
-//                .setTitle(R.string.tip)
-//                .setMessage(R.string.wireless_tip)
-//                .setPositiveButton(R.string.continue_download,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog,
-//                                                int which) {
-//
-//                                ChaoJiShiPinApplication.getInstatnce().getDownloadManager().continueDownload();
-//
-//                                dismissDialog();
-//                            }
-//                        })
-//                .setNegativeButton(R.string.pause_download,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog,
-//                                                int which) {
-//                                ChaoJiShiPinApplication.getInstatnce().getDownloadManager().pauseAllJobs();
-//                                dismissDialog();
-//                            }
-//                        })
-//                .setOnKeyListener(new DialogInterface.OnKeyListener() {
-//                    @Override
-//                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-//                        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//                            dialog.dismiss();
-//                        }
-//                        return false;
-//                    }
-//                });
-//        dialog = customBuilder.create();
-//        dialog.show();
     }
 
     private void dismissDialog()
@@ -148,17 +112,12 @@ public class NetworkManager implements INetWorkObServe {
     PopupDialog.PopupButtonClickInterface buttonClick = new PopupDialog.PopupButtonClickInterface() {
         @Override
         public void onLeftClick() {
-            ChaoJiShiPinApplication.getInstatnce().getDownloadManager().continueDownload();
+            DataUtils.getInstance().startAllDownload();
         }
 
         @Override
         public void onRightClick() {
-            ChaoJiShiPinApplication.getInstatnce().getDownloadManager().pauseAllJobs();
-//            Intent intent = new Intent();
-//            intent.setAction(BROADCAST_ACTION);
-//            intent.putExtra("name", "qqyumidi");
-//            sendBroadcast(intent);
+            DataUtils.getInstance().pauseAllDownload();
         }
     };
-
 }

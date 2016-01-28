@@ -17,6 +17,9 @@ public class Constants
 	public static final int MESSAGE_DELETE_FILE = 3001;
 	public static final int MESSAGE_DELETE_ALLFILES = 3002;
 	public static final int MESSAGE_DELETE_DOWNLOAD_FILE = 3003;
+
+	public static final int MESSAGE_UPDATE_UI = 4000;
+	public static final String MESSAGE_DOWNLOAD_FINISH = "letv_download_finish";
 	
 	public static final String V3 = "v3";
 	

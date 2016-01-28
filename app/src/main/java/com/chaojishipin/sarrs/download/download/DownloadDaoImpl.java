@@ -12,6 +12,7 @@ import android.util.SparseArray;
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class DownloadDaoImpl implements DownloadDao {
@@ -151,17 +152,23 @@ public class DownloadDaoImpl implements DownloadDao {
 		
 		return result;
 	}
-	
-	@Override
-	public ArrayList<DownloadJob> getAllDownloadJobs() {
+
+	private Cursor getListCursor(int type){
+		Cursor cursor = null;
+		if(type == 0)
+			cursor = mDb.query(TABLE_DOWNLOAD, null, null, null, null, null, null);
+		else if(type == 1)
+			cursor = mDb.query(TABLE_DOWNLOAD, null, "downloaded=?", new String[]{String.valueOf(DownloadJob.COMPLETE)}, null, null, null);
+		return cursor;
+	}
+
+	private ArrayList<DownloadJob> getDownloadJobList(int type){
 		ArrayList<DownloadJob> jobs = new ArrayList<DownloadJob>();
 		if (null == mDb )
 			return jobs;
-
 		Cursor cursor = null;
 		try {
-			cursor = mDb.query(TABLE_DOWNLOAD, null, null, null, null, null, null);
-			
+			cursor = getListCursor(type);
 			if (cursor.moveToFirst()) {
 				int i = 0;
 				while (!cursor.isAfterLast()) {
@@ -175,10 +182,81 @@ public class DownloadDaoImpl implements DownloadDao {
 		} finally {
 			closeCursor(cursor);
 		}
-		
 		return jobs;
 	}
 	
+	@Override
+	public ArrayList<DownloadJob> getAllDownloadJobs() {
+		return getDownloadJobList(0);
+	}
+
+	@Override
+	public ArrayList<DownloadJob> getAllCompleteJobs() {
+		return getDownloadJobList(1);
+	}
+
+	@Override
+	public HashMap<String, DownloadJob> getDownloadJobsMap() {
+		HashMap<String, DownloadJob> map = new HashMap<>();
+		Cursor cursor = null;
+		try{
+			if (null == mDb )
+				return map;
+//		public Cursor query(String table, String[] columns, String selection,
+//				String[] selectionArgs, String groupBy, String having,
+//				String orderBy) {
+			cursor = mDb.query(TABLE_DOWNLOAD, null, "downloaded<>?", new String[]{String.valueOf(DownloadJob.COMPLETE)}, null, null, null);
+			if(cursor != null && cursor.moveToFirst()){
+				int i = 0;
+				do{
+					DownloadJob job = new DownloadEntityDBBuilder().build(cursor, ++i);
+					map.put(job.getEntity().getId(), job);
+				}while(cursor.moveToNext());
+			}
+		}catch(Throwable e){
+			e.printStackTrace();
+		}finally {
+			closeCursor(cursor);
+		}
+		return map;
+	}
+
+	@Override
+	public int getDownloadJobNum(){
+		Cursor cursor = null;
+		try {
+			String sql = "select count(*) as c from " + TABLE_DOWNLOAD + " where downloaded <>'1'";
+			cursor = mDb.rawQuery(sql, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int count = cursor.getInt(0);
+				return count;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+		return 0;
+	}
+
+	@Override
+	public int getAllDownloadJobNum(){
+		Cursor cursor = null;
+		try {
+			String sql = "select count(*) as c from " + TABLE_DOWNLOAD;
+			cursor = mDb.rawQuery(sql, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int count = cursor.getInt(0);
+				return count;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+		return 0;
+	}
+
 	@Override
 	public void remove(DownloadJob job) {
 		if (mDb == null) {
@@ -187,7 +265,8 @@ public class DownloadDaoImpl implements DownloadDao {
 		
 		try{
 			String[] whereArgs = { "" + job.getEntity().getId() };
-			mDb.delete(TABLE_DOWNLOAD, "hashId=?", whereArgs);
+			int result = mDb.delete(TABLE_DOWNLOAD, "hashId=?", whereArgs);
+			System.currentTimeMillis();
 		}catch(Exception e){
 			e.printStackTrace();
 		}

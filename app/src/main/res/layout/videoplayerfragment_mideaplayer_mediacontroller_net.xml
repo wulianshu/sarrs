@@ -32,7 +32,7 @@
              android:layout_below="@+id/controller_net_error"
              android:layout_width="150dp"
              android:layout_height="36dp"
-             android:visibility="gone"
+             android:visibility="visible"
              android:layout_marginTop="20dp"
              android:layout_centerInParent="true"
              android:textColor="@color/color_c5242b"
@@ -40,7 +40,6 @@
              android:background="@drawable/selector_videoplayer_net_error_play"
              android:textSize="@dimen/font_15"
              >
-
          </Button>
          <Button
              android:id="@+id/controller_net_error_setting"
