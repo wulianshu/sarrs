@@ -217,7 +217,7 @@ public class VideoDetailBottomExpandListAdapter extends BaseAdapter{
 
             ArrayList<VideoItem> cachedData = fenyeList.get(position);
             if(cachedData != null){
-                holder.expandeIndicator.setImageResource(R.drawable.sarrs_pic_videodetail_arrow_btn_up);
+                holder.expandeIndicator.setImageResource(R.drawable.arrow_up_download_activity);
                 holder.tagContainer.setSelected(true);
                 if(cid.equalsIgnoreCase(String.valueOf(ConstantUtils.MAIN_DATA_TYPE_1))||cid.equalsIgnoreCase(String.valueOf(ConstantUtils.MAIN_DATA_TYPE_3))){
                     // 依据分页更新剧集点击样式
@@ -251,7 +251,7 @@ public class VideoDetailBottomExpandListAdapter extends BaseAdapter{
                     holder.tagContainer.setVisibility(View.GONE);
                 }*/
             }else{
-                holder.expandeIndicator.setImageResource(R.drawable.sarrs_pic_videodetail_arrow_btn_down);
+                holder.expandeIndicator.setImageResource(R.drawable.arrow_down_download_activity);
                 holder.tagContainer.setSelected(false);
                 holder.episodesGrid.setVisibility(View.GONE);
                 holder.episodesList.setVisibility(View.GONE);
@@ -259,7 +259,7 @@ public class VideoDetailBottomExpandListAdapter extends BaseAdapter{
 
             }
         }else{
-            holder.expandeIndicator.setImageResource(R.drawable.sarrs_pic_videodetail_arrow_btn_down);
+            holder.expandeIndicator.setImageResource(R.drawable.arrow_down_download_activity);
             holder.tagContainer.setSelected(false);
             holder.episodesGrid.setVisibility(View.GONE);
             holder.episodesList.setVisibility(View.GONE);

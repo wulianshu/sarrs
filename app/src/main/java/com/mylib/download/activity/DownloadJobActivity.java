@@ -303,8 +303,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements OnC
 
     private void showAvailableSpace() {
         if (ContainSizeManager.getInstance() != null) {
-            ContainSizeManager.getInstance().setView(this);
-            ContainSizeManager.getInstance().ansynHandlerSdcardSize();
+            ContainSizeManager.getInstance().ansynHandlerSdcardSize(this);
         }
     }
 

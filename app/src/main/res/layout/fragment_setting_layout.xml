@@ -72,6 +72,36 @@
 
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/setting_sdpath"
+        android:layout_width="match_parent"
+        android:background="@color/color_ffffff"
+        android:layout_marginTop="@dimen/shape_width"
+        android:layout_height="@dimen/btn_no_net_look_height"
+        >
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:text="@string/setting_sdpath"
+            android:layout_marginLeft="@dimen/main_smal_feed_poster_info_margin_left">
+        </TextView>
+
+        <TextView
+            android:id="@+id/setting_sd_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/main_smal_feed_poster_info_margin_left"
+            android:text="        "
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/main_smal_feed_poster_info_margin_left"
+            android:textColor="@color/color_999999"
+            >
+
+        </TextView>
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:id="@+id/setting_about_us"
         android:layout_width="match_parent"
         android:background="@color/color_ffffff"

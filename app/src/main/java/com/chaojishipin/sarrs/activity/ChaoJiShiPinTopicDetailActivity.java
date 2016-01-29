@@ -18,7 +18,9 @@ import com.chaojishipin.sarrs.fragment.TopicDetailFragment;
 import com.chaojishipin.sarrs.listener.onRetryListener;
 import com.chaojishipin.sarrs.swipe.SwipeMenu;
 import com.chaojishipin.sarrs.thirdparty.share.ShareDataConfig;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.widget.PullToRefreshSwipeListView;
 import com.ibest.thirdparty.share.presenter.ShareManager;
 
@@ -154,4 +156,15 @@ public class ChaoJiShiPinTopicDetailActivity extends ChaoJiShiPinBaseActivity im
         }
     }
 
+    @Override
+    protected void onResume() {
+        UmengPagePath.beginpage(ConstantUtils.AND_TOPIC_DETAIL,this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_TOPIC_DETAIL,this);
+        super.onPause();
+    }
 }

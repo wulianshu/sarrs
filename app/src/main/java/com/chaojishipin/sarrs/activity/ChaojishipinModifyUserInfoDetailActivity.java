@@ -44,6 +44,7 @@ import com.chaojishipin.sarrs.thirdparty.BaseUserInfo;
 import com.chaojishipin.sarrs.thirdparty.LoginListener;
 import com.chaojishipin.sarrs.thirdparty.UIs;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LocalImageLoader;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
@@ -62,7 +63,8 @@ import java.util.Locale;
 
 public class ChaojishipinModifyUserInfoDetailActivity extends ChaoJiShiPinBaseActivity implements View.OnClickListener, LoginListener, AdapterView.OnItemClickListener {
     // 返回、确定按钮
-    private Button mConfirm, mBack;
+    private Button  mBack;
+    private TextView mConfirm;
     // titlebar 标题
     private TextView mTitle;
     //跳入模式
@@ -93,7 +95,7 @@ public class ChaojishipinModifyUserInfoDetailActivity extends ChaoJiShiPinBaseAc
         mode = getIntent().getIntExtra("mode", 0);
         mBack = (Button) findViewById(R.id.register_activity_notify_back);
         mTitle = (TextView) findViewById(R.id.register_activity_title);
-        mConfirm = (Button) findViewById(R.id.register_activity_titlebar_right_btn);
+        mConfirm = (TextView) findViewById(R.id.register_activity_titlebar_right_btn);
         mConfirm.setVisibility(View.VISIBLE);
         // 修改昵称
         if (mode == 0) {
@@ -562,7 +564,18 @@ public class ChaojishipinModifyUserInfoDetailActivity extends ChaoJiShiPinBaseAc
             mode = intent.getIntExtra("mode", -1);
             // 修改头像，先上传头像获取地址，然后将地址修改到用户信息
             HttpApi.uploadFile(mHeadUrl).start(new RequestUploadHeaderListener());
-
         }
+    }
+
+    @Override
+    protected void onResume() {
+        UmengPagePath.beginpage(ConstantUtils.ANDROID_EDIT_USERINFO,this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.ANDROID_EDIT_USERINFO,this);
+        super.onPause();
     }
 }

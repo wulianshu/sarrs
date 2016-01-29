@@ -235,7 +235,7 @@ public class CutView extends View {
 //				BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
 //				bitmapOptions.inSampleSize = 2;
 //				bitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
-//				bitmap = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(picuri), null, bitmapOptions);
+//				bitmap = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(picuri), null, Options);
 
                 matrix.postTranslate(translateX, translateY);
                 canvas.setMatrix(matrix);
@@ -251,7 +251,7 @@ public class CutView extends View {
                 path.addCircle(circleCenterX, circleCenterY, circleRadius,
                         Direction.CCW);
                 canvas.clipPath(path, Region.Op.DIFFERENCE);
-                canvas.drawColor(getResources().getColor(R.color.color_33000000));
+                canvas.drawColor(getResources().getColor(R.color.color_99000000));
 
 				/*DashPathEffect dashStyle = new DashPathEffect(new float[] { 10,
                         5, 5, 5 }, 2);*/

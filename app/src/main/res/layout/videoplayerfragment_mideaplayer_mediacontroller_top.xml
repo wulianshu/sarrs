@@ -3,13 +3,14 @@
     android:id="@+id/video_player_top_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_b2000000">
+    android:background="@color/color_b2000000"
+    >
 
     <RelativeLayout
         android:id="@+id/top_small"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_videoplayer_title_marginleft"
-        android:background="@color/color_00000000">
+        >
 
         <TextView
             android:id="@+id/tv_video_title"
@@ -25,7 +26,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text=""
-            android:textColor="@color/color_b2ffffff"
+            android:textColor="@color/color_ffffff"
             android:textSize="@dimen/sarrs_text_15sp" />
 
     </RelativeLayout>

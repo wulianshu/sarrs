@@ -49,10 +49,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
                 android:gravity="center"
+                android:singleLine="true"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/ranklist_subtitle_textsize" />
             <TextView
                 android:id="@+id/rank2"
+                android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
                 android:gravity="center"
@@ -61,6 +63,7 @@
                 android:textSize="@dimen/ranklist_subtitle_textsize" />
             <TextView
                 android:id="@+id/rank3"
+                android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
                 android:gravity="center"

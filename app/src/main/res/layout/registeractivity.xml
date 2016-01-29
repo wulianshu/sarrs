@@ -91,7 +91,7 @@
          android:gravity="center"
          android:textSize="18sp"
          android:textColor="@color/color_ffffff"
-         android:background="@color/color_D5D5D5"
+         android:background="@drawable/next_step"
          android:layout_centerHorizontal="true"
          android:layout_marginTop="23dp"
          android:layout_below="@+id/register_activity_input"

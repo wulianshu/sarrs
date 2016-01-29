@@ -16,6 +16,8 @@ import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinBaseActivity;
 import com.chaojishipin.sarrs.download.fragment.DownloadFragment;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.widget.TitleActionBar;
 
@@ -89,6 +91,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.AND_DOWNLOAD,this);
         initView();
         mEditBtn.setText(getResources().getString(R.string.edit));
         mTitleActionBar.setOnActionBarClickListener(this);
@@ -101,6 +104,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
 
     @Override
     protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_DOWNLOAD,this);
         super.onPause();
     }
 

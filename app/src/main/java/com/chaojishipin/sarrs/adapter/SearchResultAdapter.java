@@ -162,6 +162,11 @@ public class SearchResultAdapter extends BaseAdapter {
 
             TextView categoryName = (TextView) commonViewHolder.getView(R.id.searchactivity_result_layout_item_categoryName);
             categoryName.setText(searchResultDataList.getCategory_name());
+            if(searchResultDataList.getCategory_name().length()<=2){
+                categoryName.setBackgroundResource(R.drawable.sarrs_pic_mainactivity_tag);
+            }else{
+                categoryName.setBackgroundResource(R.drawable.sarrs_pic_mainactivity_tag_3);
+            }
             TextView name = (TextView) commonViewHolder.getView(R.id.searchactivity_result_layout_item_video_name);
             name.setText(searchResultDataList.getTitle());
             TextView play_conut_txt = (TextView) commonViewHolder.getView(R.id.play_conut_txt);

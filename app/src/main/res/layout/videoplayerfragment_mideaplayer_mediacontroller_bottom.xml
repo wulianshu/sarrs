@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/color_b2000000">
 
     <!-- 播放器底部页面 -->
@@ -17,12 +18,12 @@
             android:id="@+id/btn_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/sarrs_pic_videoplayer_pause" />
+            android:src="@drawable/sarrs_pic_videoplayer_pause" />
         <ImageView
             android:id="@+id/btn_play_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/sarrs_pic_videoplayer_next"
+            android:src="@drawable/sarrs_pic_videoplayer_next"
             android:visibility="gone"/>
 
         <RelativeLayout
@@ -35,6 +36,8 @@
             >
 
             <TextView
+                android:layout_marginLeft="@dimen/sarrs_dimen_7dp"
+
                 android:id="@+id/tv_currtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +47,7 @@
                 android:textSize="@dimen/sarrs_text_11sp"/>
 
             <TextView
+                android:layout_marginRight="@dimen/sarrs_dimen_7dp"
                 android:id="@+id/tv_totaltime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,13 +61,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_currtime"
-                android:gravity="center"
                 android:maxHeight="@dimen/mediacontorller_play_seekbar_maxheight"
                 android:minHeight="@dimen/mediacontorller_play_seekbar_minheight"
-                android:progress="8"
+                android:progress="10"
+                android:paddingRight="@dimen/sarrs_dimen_7dp"
+                android:paddingLeft="@dimen/sarrs_dimen_7dp"
                 android:progressDrawable="@drawable/progress_style_play"
                 android:thumb="@drawable/videoplayer_loading_btn"
-                android:thumbOffset="@dimen/mediacontorller_play_seekbar_thumboffset" />
+                />
         </RelativeLayout>
 
         <TextView
@@ -73,7 +78,6 @@
             android:gravity="center"
             android:textColor="@color/color_ffffff"
             android:textSize="@dimen/sarrs_text_15sp"
-            android:background="@color/color_00000000"
             android:text="@string/videodetail_episode"
             android:visibility="gone"/>
 
@@ -81,7 +85,7 @@
             android:id="@+id/full_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/sarrs_pic_full_screen" />
+            android:src="@drawable/sarrs_pic_full_screen" />
 
     </LinearLayout>
     <!--      <LinearLayout

@@ -17,6 +17,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.bean.StorageBean;
 import com.chaojishipin.sarrs.config.SettingManage;
 import com.chaojishipin.sarrs.download.util.DownloadFileUtil;
 import com.chaojishipin.sarrs.utils.LogUtil;
@@ -28,6 +29,7 @@ import com.chaojishipin.sarrs.utils.Utils;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -57,9 +59,33 @@ public class DownloadHelper {
 	 * 
 	 */
 	public static String getDownloadPath(){
-		String str = StoragePathsManager.getInstanse().getExternalSDpath();
-		return str;
-//     return SPUtil.getInstance().getString("sdcard","");
+		String finalpath="";
+		String folderName="/chaojishipin/movies";
+		String userset=SPUtil.getInstance().getString("sdcardbyuser","");
+		String perfect=SPUtil.getInstance().getString("sdcard","");
+        String defaultpath=Environment.getExternalStorageDirectory().getAbsolutePath()+folderName;
+		List<StorageBean> list=StoragePathsManager.getInstanse(ChaoJiShiPinApplication.getInstatnce()).getStoragePaths();
+		for(StorageBean bean:list){
+			if(bean.getPath().equalsIgnoreCase(userset)&&bean.isEnable()){
+				finalpath=userset;
+				LogUtil.e("v1.2.0","download userser path "+bean.getPath());
+			    break;
+			}
+		}
+		// 拔下sd卡
+		if(TextUtils.isEmpty(finalpath)){
+			//清空设置
+			SPUtil.getInstance().putString("sdcardbyuser","");
+			finalpath=perfect;
+
+		}
+
+
+        LogUtil.e("v1.2.0","download path init over  "+finalpath);
+		return finalpath;
+
+
+
 	}
 	
 	/**

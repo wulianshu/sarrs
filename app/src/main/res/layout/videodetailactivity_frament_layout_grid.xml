@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_ffffff"
+    android:gravity="center_vertical"
     >
     <TextView
             android:id="@+id/video_detail_bottom_title"
@@ -34,13 +35,20 @@
             android:textColor="@color/color_666666"
             android:textSize="11sp" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_below="@+id/video_detail_bottom_title"
+        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+        android:background="@color/color_F3F3F3">
+        </View>
              <LinearLayout
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:orientation="vertical"
                  android:layout_marginBottom="10dp"
                  android:background="@color/color_ffffff"
-                 android:layout_below="@+id/video_detail_bottom_title"
+                 android:layout_below="@+id/divider"
                  >
                  <com.chaojishipin.sarrs.widget.NoScrollListView
                      android:id="@+id/videodetail_middle_showlist"

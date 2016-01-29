@@ -97,6 +97,7 @@ public class
         crashHandler.init(getApplicationContext());
         DatabaseManager.initializeInstance(new DBHelper(getApplicationContext()));
         startNetworkObserveService();
+        MobclickAgent.openActivityDurationTrack(false);
     }
 
     public IWXAPI getmApi() {

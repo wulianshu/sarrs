@@ -84,6 +84,9 @@
         <item name="android:textColor">@color/comment_floor_content</item>
         <item name="android:lineSpacingExtra">@dimen/comment_floor_lineSpacing</item>
     </style>
-
+    <style name="setting_animate">
+        <item name="android:windowEnterAnimation">@anim/setting_menu_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/setting_menu_fade_out</item>
+    </style>
 
 </resources>

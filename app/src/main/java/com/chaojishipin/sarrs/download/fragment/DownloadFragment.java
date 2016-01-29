@@ -80,9 +80,13 @@ public class DownloadFragment extends Fragment implements
 
     private void showAvailableSpace() {
         if (ContainSizeManager.getInstance() != null) {
-            ContainSizeManager.getInstance().setView(this.getActivity());
-            ContainSizeManager.getInstance().ansynHandlerSdcardSize();
+            ContainSizeManager.getInstance().ansynHandlerSdcardSize(this.getActivity());
         }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 
     @Override

@@ -57,30 +57,31 @@
             android:src="@drawable/selector_vediodetailfragment_download"></ImageView>
 
     </RelativeLayout>
-
+    <!--间隔条 -->
+    <LinearLayout
+        android:layout_below="@+id/videodetail_action_ln"
+        android:id="@+id/videodetail_bar1"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:background="#F3F3F3"
+        android:orientation="horizontal">
+    </LinearLayout>
     <com.chaojishipin.sarrs.widget.SarrsScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/videodetail_action_ln"
+        android:layout_below="@+id/videodetail_bar1"
         android:background="#FFF">
 
         <RelativeLayout
             android:id="@+id/videodetail_media_bottom_fragment"
             android:layout_width="fill_parent"
             android:layout_height="match_parent">
-            <!--间隔条 -->
-            <LinearLayout
-                android:id="@+id/videodetail_bar1"
-                android:layout_width="fill_parent"
-                android:layout_height="10dp"
-                android:background="#F3F3F3"
-                android:orientation="horizontal">
-            </LinearLayout>
+
 
             <!--专辑详情描述以及 剧集展示 以及评论布局 -->
             <LinearLayout
                 android:id="@+id/videodetail_content"
-                android:layout_below="@+id/videodetail_bar1"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -113,26 +114,26 @@
                     android:background="#F3F3F3"
                     android:orientation="horizontal"></LinearLayout>
                 <!-- 评论列表-->
-                <LinearLayout
-                    android:id="@+id/video_detail_bottom_hot_comments"
+            <LinearLayout
+                android:id="@+id/video_detail_bottom_hot_comments"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+                <TextView
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    >
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="@dimen/sarrs_dimen_44dp"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="left|center"
-                        android:text="@string/comment_title1"
-                        android:textColor="@color/color_666666"
-                        android:textSize="12dp" />
+                    android:layout_height="@dimen/sarrs_dimen_44dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="left|center"
+                    android:text="@string/comment_title1"
+                    android:textColor="@color/color_666666"
+                    android:textSize="12dp" />
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/color_f3f3f3" />
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_f3f3f3" />
                 <com.chaojishipin.sarrs.widget.NoScrollListView
                         android:id="@+id/hot_comment_lv"
                         android:layout_width="fill_parent"
@@ -140,10 +141,10 @@
                         android:divider="#D5D5D5"
                         android:layout_height="wrap_content"/>
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="10dp"
-                        android:background="@color/color_f3f3f3" />
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/color_f3f3f3" />
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/video_detail_bottom_comments_main"
@@ -199,7 +200,6 @@
                 android:id="@+id/videodetail_drop_btn"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/videodetail_bar1"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="2dp"
                 android:background="@drawable/sarrs_pic_videodetail_arrow_btn_down" />

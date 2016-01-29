@@ -17,6 +17,11 @@
             android:scaleType="fitXY"
             app:imageHeight="9"
             app:imageWidth="16" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sarrs_pic_video_player_title_bg"
+            >
 
         <ImageView
 
@@ -48,35 +53,10 @@
             android:src="@drawable/sarrs_pic_topicdetailactivity_loving_normal" />
 
 
-
-        <RelativeLayout
-            android:id="@+id/main_frontview_poster_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/main_frontview_poster"
-            android:background="@color/color_222222">
-
-
-            <TextView
-                android:id="@+id/main_frontview_poster_comment1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sarrs_dimen_10dp"
-                android:layout_marginLeft="@dimen/main_feed_poster_title_margin"
-                android:lineSpacingExtra="@dimen/sarrs_dimen_3dp"
-                android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
-                android:textColor="@color/color_ffffff"
-                android:textSize="@dimen/sarrs_text_12sp" />
-
-            <ImageView
-                android:id="@+id/more_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/selector_main_more"
-                android:focusable="false"
-                android:visibility="gone" />
         </RelativeLayout>
+
+
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -93,7 +73,40 @@
                 android:layout_marginBottom="@dimen/sarrs_dimen_5dp"
                 android:textColor="@color/color_ffffff"
                 android:textSize="@dimen/sarrs_text_18sp" />
-            </RelativeLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/main_frontview_poster_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/main_frontview_poster"
+            android:background="@color/color_222222">
+
+
+            <TextView
+                android:id="@+id/main_frontview_poster_comment1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/main_feed_poster_title_margin"
+                android:lineSpacingExtra="@dimen/sarrs_dimen_3dp"
+                android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
+                android:textColor="@color/color_ffffff"
+                android:textSize="@dimen/sarrs_text_12sp" />
+
+            <ImageView
+                android:id="@+id/more_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_main_more"
+                android:focusable="false"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+
+
+
     </RelativeLayout>
 
 </RelativeLayout>

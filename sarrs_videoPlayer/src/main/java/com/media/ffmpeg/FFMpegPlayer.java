@@ -143,7 +143,7 @@ public class FFMpegPlayer extends MediaPlayer
 	private PowerManager.WakeLock mWakeLock = null;
 	private boolean mScreenOnWhilePlaying;
 	private boolean mStayAwake;
-    private static GLRenderControler    mGlRenderControler;
+    private static GLRenderControler mGlRenderControler;
     private MediaDecoder mVideoDecoder;
     private Context mContext;
 	static
@@ -367,6 +367,7 @@ public class FFMpegPlayer extends MediaPlayer
 		mOnErrorListener = null;
 		mOnInfoListener = null;
 		mOnVideoSizeChangedListener = null;
+		mGlRenderControler = null;
 		_release();
 	}
 

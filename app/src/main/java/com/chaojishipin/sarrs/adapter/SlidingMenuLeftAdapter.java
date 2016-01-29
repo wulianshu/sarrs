@@ -91,28 +91,27 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
                 lastview = commonViewHolder.getmConvertView();
                 last_sliding = (SlidingMenuLeft) getItem(position);
                 title.setTextColor(mContext.getResources().getColor(R.color.color_F8E71C));
-                DisplayImageOptions options1= new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
+                DisplayImageOptions options1 = new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
                         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                        .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),false))
+                        .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(menuLeft.getContent_type(), menuLeft.getCid(), false))
                         .showImageForEmptyUri(R.color.color_e7e7e7)
                         .build();
 
-                DisplayImageOptions options2= new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
+                DisplayImageOptions options2 = new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
                         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                        .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),true))
+                        .bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(Utils.loadUrl(menuLeft.getContent_type(), menuLeft.getCid(), true))
                         .showImageForEmptyUri(R.color.color_00000000)
                         .build();
 
-               if(NetworkUtil.isNetworkAvailable(mContext)){
-                   ImageLoader.getInstance().displayImage(menuLeft.getIcon(), imageView,options1);
-                   ImageLoader.getInstance().displayImage(menuLeft.getIcon_select(), imageView,options2);
-               }else{
-                   imageView.setImageResource(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),true));
-               }
+                if (NetworkUtil.isNetworkAvailable(mContext)) {
+                    ImageLoader.getInstance().displayImage(menuLeft.getIcon(), imageView, options1);
+                    ImageLoader.getInstance().displayImage(menuLeft.getIcon_select(), imageView, options2);
+                } else {
+                    imageView.setImageResource(Utils.loadUrl(menuLeft.getContent_type(), menuLeft.getCid(), true));
+                }
 
-               // imageView.setImageResource(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),true));
-            }
-            else {
+                // imageView.setImageResource(Utils.loadUrl(menuLeft.getContent_type(),menuLeft.getCid(),true));
+            } else {
                 title.setTextColor(Color.WHITE);
                 DisplayImageOptions options1= new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.NONE)
                         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)

@@ -26,6 +26,7 @@ import android.util.SparseArray;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -47,6 +48,7 @@ import com.chaojishipin.sarrs.fragment.videoplayer.VideoPlayerController;
 import com.chaojishipin.sarrs.fragment.videoplayer.VideoPlayerFragment;
 import com.chaojishipin.sarrs.fragment.videoplayer.httpd.M3u8Httpd;
 import com.chaojishipin.sarrs.receiver.NetWorkStateReceiver;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.DataUtils;
@@ -72,6 +74,8 @@ import de.greenrobot.event.EventBus;
  */
 
 public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
+    public static final String PAGE_ID_FULL_SCREEN = "00S002009";
+    public static final String PAGE_ID_NO_FULL_SCREEN ="00S002008";
     public static final String SAVE_CHECK = "saveCheck";
     public static final String SHARE_CANCEL = "shareCancel";
     public static final String PLAY_DATA_ERR = "play_data_err";
@@ -889,13 +893,14 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
     @Override
     protected void onResume() {
-
+        UmengPagePath.beginpage(ConstantUtils.AND_HALF_PLAY,this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        UmengPagePath.endpage(ConstantUtils.AND_HALF_PLAY, this);
         abandonAudioFocus();
     }
 
@@ -917,6 +922,11 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
             m3u8Httpd= null;
         }
         isFullScreen = false;
+
+        View v = this.getWindow().getDecorView();
+        if(v instanceof ViewGroup)
+            ((ViewGroup)v).removeAllViews();
+
            /* sm.unregisterListener(listener);
             sm1.unregisterListener(listener1);*/
 

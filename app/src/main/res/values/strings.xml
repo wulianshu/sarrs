@@ -85,8 +85,13 @@
     <string name="setting_clear_cache">清除缓存</string>
     <string name="setting_download_path">/chaojishipin/download</string>
     <string name="setting_version_upgrade">版本升级</string>
+    <string name="setting_sdpath">离线缓存路径</string>
     <string name="setting_about_us">关于我们</string>
     <string name="setting_version_no">检查新版本</string>
+    <string name="setting_sd_internal">内置卡</string>
+    <string name="setting_internal">内置存储设备</string>
+    <string name="setting_sd_extend">外置存储设备</string>
+    <string name="setting_notice_no_support">暂不支持此存储设备</string>
     <string name="cache_size">5.2M</string>
     <string name="setting_new">最新</string>
     <string name="setting_version">版本</string>

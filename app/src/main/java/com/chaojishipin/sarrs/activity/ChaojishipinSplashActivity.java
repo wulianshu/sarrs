@@ -46,6 +46,7 @@ import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.SPUtil;
+import com.chaojishipin.sarrs.utils.SdCardUtils;
 import com.chaojishipin.sarrs.utils.StoragePathsManager;
 import com.chaojishipin.sarrs.utils.ToastUtil;
 import com.chaojishipin.sarrs.utils.UpgradeHelper;
@@ -154,12 +155,12 @@ public class ChaojishipinSplashActivity extends Activity implements
         String last_version_name =  sharedPreferences.getString("version_name","");
         if (isFrist) {
             if("".equals(last_version_name)){
-                StoragePathsManager.getInstanse().deleteallDownloadPath();
+                StoragePathsManager.getInstanse(this).deleteallDownloadPath();
             }
             setListener();
         }
         if(!current_version_name.equals(last_version_name)){
-            StoragePathsManager.getInstanse().getExternalSDpath();
+            StoragePathsManager.getInstanse(this).getStoragePaths();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("version_name",current_version_name);
             editor.commit();

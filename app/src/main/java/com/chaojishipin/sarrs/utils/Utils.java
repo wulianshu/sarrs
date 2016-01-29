@@ -91,6 +91,9 @@ public class Utils {
     public static final String PLAY_3G_NET = "3G_play";
     public static final String PLAY_DATA = "play_data";
     public static final String LIVE_PLAY_DATA = "live_play_data";
+    public static final String LIVEDATAENTITY = "livedataentity";
+
+
     public static final String Medea_Mode = "media";
     /**
      * SD 卡路径
@@ -270,67 +273,62 @@ public class Utils {
 
 
     /**
-     *  根据cid 展示 图片资源
-     * */
+     * 根据cid 展示 图片资源
+     */
 
-    public static int loadUrl(String contentType,String cid,boolean flag){
-        int reId=0;
-        if(contentType.equalsIgnoreCase("10")){
+    public static int loadUrl(String contentType, String cid, boolean flag) {
+        int reId = 0;
+        if (contentType.equalsIgnoreCase("10")) {
 
-        }else if(contentType.equalsIgnoreCase("7")){
-            switch (Integer.parseInt(cid)){
+        } else if (contentType.equalsIgnoreCase("7")) {
+            switch (Integer.parseInt(cid)) {
                 // 精彩推荐
                 case 0:
-                    reId= flag?R.drawable.main_recoment_press:R.drawable.main_carton_normal;
+                    reId = flag ? R.drawable.main_recoment_press : R.drawable.main_carton_normal;
                     break;
                 // 电视剧
 
                 case 1:
-                    reId=flag?R.drawable.main_dsj_press:R.drawable.main_dsj_normal;
+                    reId = flag ? R.drawable.main_dsj_press : R.drawable.main_dsj_normal;
                     break;
                 // 电影
 
                 case 2:
-                    reId= flag?R.drawable.main_movie_press:R.drawable.main_movie_normal;
+                    reId = flag ? R.drawable.main_movie_press : R.drawable.main_movie_normal;
                     break;
                 // 动漫
 
                 case 3:
-                    reId= flag?R.drawable.main_carton_press:R.drawable.main_carton_normal;
+                    reId = flag ? R.drawable.main_carton_press : R.drawable.main_carton_normal;
 
                     break;
 
 
                 // 综艺
                 case 4:
-                    reId= flag?R.drawable.main_zy_press:R.drawable.main_zy_normal;
+                    reId = flag ? R.drawable.main_zy_press : R.drawable.main_zy_normal;
 
                     break;
                 //纪录片
 
                 case 16:
-                    reId= flag?R.drawable.main_jlp_press:R.drawable.main_jlp_normal;
+                    reId = flag ? R.drawable.main_jlp_press : R.drawable.main_jlp_normal;
 
                     break;
 
             }
             // 专题
-        }else if(contentType.equalsIgnoreCase("8")){
-            reId= flag?R.drawable.main_specail_press:R.drawable.main_specail_normal;
-        }else if(contentType.equalsIgnoreCase("9")){
-            reId= flag?R.drawable.main_rank_press:R.drawable.main_rank_normal;
+        } else if (contentType.equalsIgnoreCase("8")) {
+            reId = flag ? R.drawable.main_specail_press : R.drawable.main_specail_normal;
+        } else if (contentType.equalsIgnoreCase("9")) {
+            reId = flag ? R.drawable.main_rank_press : R.drawable.main_rank_normal;
         }
 
 
-       return reId;
-
-
+        return reId;
 
 
     }
-
-
-
 
 
     /**

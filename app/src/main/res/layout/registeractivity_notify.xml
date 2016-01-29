@@ -15,8 +15,8 @@
         android:id="@+id/black_line"
         android:layout_below="@+id/register_activity_notify_titlebar"
         android:layout_width="fill_parent"
-        android:background="@color/color_999999"
-        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+        android:background="@color/color_cccccc"
+        android:layout_height="@dimen/sarrs_dimen_1dp"
         >
     </View>
    <RelativeLayout
@@ -120,7 +120,7 @@
          android:gravity="center"
          android:textSize="18sp"
          android:textColor="@color/color_ffffff"
-         android:background="@color/color_D5D5D5"
+         android:background="@drawable/next_step"
          android:layout_centerHorizontal="true"
          android:layout_marginTop="23dp"
          android:layout_below="@+id/register_activity_input"

@@ -33,6 +33,7 @@ import com.chaojishipin.sarrs.listener.onRetryListener;
 import com.chaojishipin.sarrs.swipe.SwipeMenu;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
 import com.chaojishipin.sarrs.thirdparty.share.ShareDataConfig;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
@@ -388,4 +389,15 @@ public class ChaoJiShiPinRankListDetailActivity extends ChaoJiShiPinBaseActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        UmengPagePath.beginpage(ConstantUtils.AND_RANK_DETAIL,this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_RANK_DETAIL,this);
+        super.onPause();
+    }
 }

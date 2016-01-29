@@ -41,6 +41,7 @@ import com.chaojishipin.sarrs.interfaces.INetWorkObServe;
 import com.chaojishipin.sarrs.manager.NetworkManager;
 import com.chaojishipin.sarrs.receiver.NetWorkStateReceiver;
 import com.chaojishipin.sarrs.receiver.PackageStartReceiver;
+import com.chaojishipin.sarrs.receiver.SdcardRecever;
 import com.chaojishipin.sarrs.thirdparty.umeng.UMengAnalysis;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
@@ -72,6 +73,8 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
     private TextView mTitle;
 
     protected NetWorkStateReceiver mNetWorkReceiver;
+
+    protected SdcardRecever sdcardRecever;
 
     protected PackageStartReceiver mPkgReceiver;
     /**
@@ -280,12 +283,27 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
         mNetWorkReceiver = new NetWorkStateReceiver();
         mNetWorkReceiver.setmNetWorkObserve(this);
         registerReceiver(mNetWorkReceiver, filter);
+
+        IntentFilter filter2 = new IntentFilter();
+        filter2.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        filter2.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+        filter2.addAction(Intent.ACTION_MEDIA_CHECKING);
+        filter2.addAction(Intent.ACTION_MEDIA_EJECT);  //物理的拔出 SDCARD
+        filter2.addAction(Intent.ACTION_MEDIA_REMOVED);  //完全拔出
+        filter.addDataScheme("file"); // 必须要有此行，否则无法收到广播
+        sdcardRecever=new SdcardRecever();
+        registerReceiver(sdcardRecever, filter2);
     }
 
     private void unRegisterReceiver() {
         if (null != mNetWorkReceiver) {
             unregisterReceiver(mNetWorkReceiver);
             mNetWorkReceiver = null;
+        }
+
+        if (null !=sdcardRecever ) {
+            unregisterReceiver(sdcardRecever);
+            sdcardRecever = null;
         }
     }
 

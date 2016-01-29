@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/save_date"
             android:layout_width="fill_parent"
-            android:layout_marginLeft="28dp"
+            android:layout_marginLeft="10dp"
             android:layout_height="40dp"
             android:textSize="15dp"
             android:visibility="visible"
@@ -180,7 +180,7 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/sarrs_dimen_0.5dp"
+        android:layout_height="@dimen/sarrs_dimen_1dp"
         android:layout_below="@+id/main_feed_small_poster"
         android:background="@color/color_F3F3F3"
         android:visibility="visible">

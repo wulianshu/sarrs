@@ -175,6 +175,11 @@ public class MainActivityChannelAdapter2 extends MyBaseAdapter {
             } else {
                 holder.category.setVisibility(View.VISIBLE);
                 holder.category.setText(mainActivityAlbum.getLable() + "");
+                if(!TextUtils.isEmpty(mainActivityAlbum.getLable()) && mainActivityAlbum.getLable().length()<=2){
+                    holder.category.setBackgroundResource(R.drawable.sarrs_pic_mainactivity_tag);
+                }else{
+                    holder.category.setBackgroundResource(R.drawable.sarrs_pic_mainactivity_tag_3);
+                }
             }
 
             holder.posterTitle.setText(mainActivityAlbum.getTitle() + "");

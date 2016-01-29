@@ -37,6 +37,7 @@ import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.listener.UpoloadHistoryRecordListener;
 import com.chaojishipin.sarrs.manager.HistoryRecordManager;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ChannelUtil;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
@@ -91,6 +92,9 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     //是否为提审状态 默认为提审状态
     public static String isCheck = "1";
     public boolean isfirst;
+    //Umeng页面范文路径上报
+    private String pagename = "And_recmand";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,8 +124,6 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     }
 
     private void initData() {
-
-        StoragePathsManager.getInstanse().getExternalSDpath();
         LogUtil.e("xll_storage", "sdcard path init ok ");
         mUpgradeHelper = new UpgradeHelper(mContext);
         // 获取升级信息
@@ -253,6 +255,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 //        if(!TextUtils.isEmpty(channelname)){
 //            requestUpgradinfo(channelname);
 //        }
+        UmengPagePath.beginpage(pagename,this);
+
         super.onResume();
 
     }
@@ -302,7 +306,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     @Override
     public void onTitleDoubleTap() {
-        if (mainF.getPullSwiteView() != null && mainF.mainActivityChannelAdapter !=null) {
+        if (mainF.getPullSwiteView() != null && mainF.mainActivityChannelAdapter != null) {
             mainF.getPullSwiteView().getRefreshableView().smoothScrollToPosition(0);
 
 //          new  Handler().postDelayed(new Runnable() {
@@ -320,7 +324,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
         @Override
         public void onResponse(SarrsArrayList result, boolean isCachedData) {
-            if(slidingMenuFragment!=null){
+            if (slidingMenuFragment != null) {
                 slidings_lv = result;
                 SharedPreferences sharedPreferences = ChaoJiShiPinMainActivity.this.getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -386,6 +390,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {
+
+
         this.slidingMenuLeft = slidingMenuLeft;
         LogUtil.e(TAG, "cid" + slidingMenuLeft.getCid());
         LogUtil.e(TAG, "content_type" + slidingMenuLeft.getContent_type());
@@ -411,6 +417,60 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
             fragmentTransaction.replace(R.id.content, mainF);
         }
         fragmentTransaction.commitAllowingStateLoss();
+
+        //Umeng页面路径上报
+        //精彩推荐
+        if("7".equals(slidingMenuLeft.getContent_type())) {
+            //精彩推荐
+            if ("0".equals(slidingMenuLeft.getCid())) {
+
+                UmengPagePath.endpage(pagename,this);
+                pagename = ConstantUtils.AND_RECMAND;
+                UmengPagePath.beginpage(pagename, this);
+
+                //电视剧
+            } else if ("1".equals(slidingMenuLeft.getCid())) {
+
+                UmengPagePath.endpage(pagename,this);
+                pagename = ConstantUtils.AND_TELEPLAY;
+                UmengPagePath.beginpage(pagename,this);
+                //电影
+            } else if ("2".equals(slidingMenuLeft.getCid())) {
+                UmengPagePath.endpage(pagename,this);
+                pagename = ConstantUtils.AND_MOVIE;
+                UmengPagePath.beginpage(pagename,this);
+                //动漫
+            } else if ("3".equals(slidingMenuLeft.getCid())) {
+                UmengPagePath.endpage(pagename,this);
+                pagename = ConstantUtils.AND_CARTOON;
+                UmengPagePath.beginpage(pagename,this);
+                //综艺
+            } else if ("4".equals(slidingMenuLeft.getCid())) {
+                UmengPagePath.endpage(pagename,this);
+                pagename = ConstantUtils.AND_VARIETY;
+                UmengPagePath.beginpage(pagename,this);
+                //纪录片
+            } else if ("16".equals(slidingMenuLeft.getCid())) {
+                UmengPagePath.endpage(pagename,this);
+                pagename = ConstantUtils.AND_RECORD;
+                UmengPagePath.beginpage(pagename,this);
+            }
+            //直播
+        }else if ("6".equals(slidingMenuLeft.getContent_type())){
+            UmengPagePath.endpage(pagename,this);
+            pagename = ConstantUtils.AND_LIVE;
+            UmengPagePath.beginpage(pagename,this);
+            //专题
+        }else if("8".equals(slidingMenuLeft.getContent_type())){
+            UmengPagePath.endpage(pagename,this);
+            pagename = ConstantUtils.AND_TOPIC;
+            UmengPagePath.beginpage(pagename,this);
+            //排行版
+        }else if("9".equals(slidingMenuLeft.getContent_type())){
+            UmengPagePath.endpage(pagename,this);
+            pagename = ConstantUtils.AND_RANK;
+            UmengPagePath.beginpage(pagename,this);
+        }
         super.onEventMainThread(slidingMenuLeft);
     }
 
@@ -626,6 +686,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     @Override
     protected void onPause() {
+        UmengPagePath.endpage(pagename,this);
         super.onPause();
     }
 

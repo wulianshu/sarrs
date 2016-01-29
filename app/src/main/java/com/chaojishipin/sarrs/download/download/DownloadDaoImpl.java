@@ -34,6 +34,9 @@ public class DownloadDaoImpl implements DownloadDao {
 
 	private SQLiteDatabase getDb() {
 		try {
+			if(ChaoJiShiPinApplication.getInstatnce()==null){
+				return null;
+			}
 			return ChaoJiShiPinApplication.getInstatnce().openOrCreateDatabase(
 					"download.db", Context.MODE_PRIVATE, null);
 		} catch (Exception e) {
@@ -265,8 +268,7 @@ public class DownloadDaoImpl implements DownloadDao {
 		
 		try{
 			String[] whereArgs = { "" + job.getEntity().getId() };
-			int result = mDb.delete(TABLE_DOWNLOAD, "hashId=?", whereArgs);
-			System.currentTimeMillis();
+			mDb.delete(TABLE_DOWNLOAD, "hashId=?", whereArgs);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -2,6 +2,8 @@ package com.chaojishipin.sarrs.download.download;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,8 +14,10 @@ import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,43 +29,27 @@ import java.util.TimerTask;
  */
 public class ContainSizeManager {
 
-    // 容量相关：
-    // 视图
-    private TextView sdcardView; // 视图
-    private ProgressBar progressBar;
     // 数据
-    //private double funshionSize, freeSize; // 总容量，其他程序容量，风行容量，剩余大小(精度：2位,单位：G)
     private String kuaikanStr, freeStr; // (对应上面的数据的字符串表示)
     private DecimalFormat df;
-    private Activity view;
     private double free;
     private double kuaikan;
+    private Handler mHandler;
 
-    private Timer mTimer;
-
-//    private ContainSizeManager(Activity view) {
-//        df = new DecimalFormat();
-//        df.setMinimumFractionDigits(2);
-//        df.setMaximumFractionDigits(2);
-//        this.view = view;
-//    }
-
-
-    public void setView(Activity view) {
-        this.view = view;
-    }
+    private final int MSG_UPDATE_UI = 0;
 
     private ContainSizeManager() {
         df = new DecimalFormat();
         df.setMinimumFractionDigits(2);
         df.setMaximumFractionDigits(2);
+        mHandler = new MyHandler(this);
     }
 
     private static class Singleton {
         private static final ContainSizeManager INSTANCE = new ContainSizeManager();
     }
 
-    public static final ContainSizeManager getInstance() {
+    public static synchronized final ContainSizeManager getInstance() {
         return Singleton.INSTANCE;
     }
 
@@ -87,7 +75,7 @@ public class ContainSizeManager {
         kuaikan = DownloadHelper.getSdUsedStorage(path)/1024;
         if (df != null)
             kuaikanStr = df.format(kuaikan);
-        LogUtil.e("wulianshu","yiyong:"+kuaikanStr);
+        LogUtil.e("wulianshu", "yiyong:" + kuaikanStr);
     }
 
     /**
@@ -113,105 +101,71 @@ public class ContainSizeManager {
         return freesize;
     }
 
-    public void ansynHandlerSdcardSize() {
-        countFunshionSize();
-        countFreeSize();
-        showView();
-//      anysnUpdateSizeView();
+    public void ansynHandlerSdcardSize(final Activity ac) {
+        new Thread(){
+            public void run(){
+                countFunshionSize();
+                countFreeSize();
+                Message msg = mHandler.obtainMessage(MSG_UPDATE_UI);
+                msg.obj = ac;
+                mHandler.sendMessage(msg);
+            }
+        }.start();
     }
 
-//    public void anysnUpdateSizeView() {
-//        new Thread() {
-//            public void run() {
-//                // 取得相关值
-//                countFunshionSize();
-//                countFreeSize();
-//                showView();
-////                ansynUpdateHandler.post(ansynUpdateUi);
-//            }
-//        }.start();
-//    }
-
-    private void showView() {
+    private void showView(Activity view) {
         // 找到视图并赋值
-        if (null != view)
-            sdcardView = (TextView) view.findViewById(R.id.available_space_tv);
-        if (null != sdcardView) {
-            sdcardView.setText("已用" + kuaikanStr + "G/" + "可用" + freeStr + "G");
-        }
-        if (null != view)
-            progressBar = (ProgressBar) view.findViewById(R.id.available_space_bar);
-        if (null != progressBar && (kuaikan + free) > 0) {
-            double percentage = kuaikan / (kuaikan + free);
-            if (0.0 == percentage) {
-                if (free == 0.0) {
-                    percentage = 10.0;
+        if(view == null || view.isFinishing())
+            return;
+        try{
+            TextView tv = (TextView) view.findViewById(R.id.available_space_tv);
+            if(tv != null)
+                tv.setText("已用" + kuaikanStr + "G/" + "可用" + freeStr + "G");
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.available_space_bar);
+            if(progressBar != null){
+                int percentage;
+                if (kuaikan + free > 0) {
+                    percentage = (int)(kuaikan * 100 / (kuaikan + free));
+                    if (0 == percentage && free < 0.01) {
+                        percentage = 10;
+                    }
+                    progressBar.setProgress(percentage);
+                } else {
+                    progressBar.setProgress(0);
                 }
             }
-            progressBar.setProgress((int) (percentage * 100));
-        } else {
-            if (null != progressBar)
-                progressBar.setProgress(0);
+        }catch(Throwable e){
+            e.printStackTrace();
         }
     }
 
-//}
-
-//Runnable ansynUpdateUi = new Runnable() {
-//
-//    @Override
-//    public void run() {
-//        // 找到视图并赋值
-//        sdcardView = (TextView) view.findViewById(R.id.available_space_tv);
-//        if (null != sdcardView) {
-//            sdcardView.setText("已用" + kuaikanStr + "G/" + "可用" + freeStr + "G");
-//        }
-//        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.available_space_bar);
-//        if (null != progressBar && (kuaikan + free) > 0) {
-//            double percentage = kuaikan / (kuaikan + free);
-//            if (0.0 == percentage) {
-//                if (free == 0.0) {
-//                    percentage = 10.0;
-//                }
-//            }
-//            progressBar.setProgress((int) (percentage * 100));
-//        } else {
-//            progressBar.setProgress(0);
-//        }
-//    }
-//};
-
-//    // 处理容量更新的Handler
-//    @SuppressLint("HandlerLeak")
-//    Handler ansynUpdateHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//        }
-//    };
-
-
-    public void checkSDCard() {
-        if (mTimer != null) {
-            Log.d("wym", "return");
-            return;
+    private void handleInfo(Message msg){
+        switch(msg.what){
+            case MSG_UPDATE_UI:
+                if(msg.obj instanceof Activity)
+                    showView((Activity)msg.obj);
+                break;
         }
-        final int num = DataUtils.getInstance().getDownloadJobNum();
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (num > 0) {
-                    Log.d("wym", "freeSize is " + getFreeSize());
-                    if (getFreeSize() <= Utils.SDCARD_MINSIZE) {
-                        Intent intent = new Intent();
-                        intent.setAction(DownloadBroadcastReceiver.SDCARD_NOSPACE_ACTION);
-                        ChaoJiShiPinApplication.getInstatnce().getApplicationContext().sendBroadcast(intent);
-                    }
-                } else {
-                    mTimer.cancel();
-                    mTimer = null;
+    }
+
+    protected static class MyHandler extends Handler {
+        private final WeakReference<ContainSizeManager> mFragmentView;
+
+        MyHandler(ContainSizeManager view) {
+            this.mFragmentView = new WeakReference<ContainSizeManager>(view);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ContainSizeManager service = mFragmentView.get();
+            if (service != null) {
+                super.handleMessage(msg);
+                try {
+                    service.handleInfo(msg);
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             }
-        }, 5000, 5000);
+        }
     }
 }

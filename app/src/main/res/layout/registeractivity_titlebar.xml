@@ -21,18 +21,17 @@
         android:textColor="@color/color_444444"
         android:layout_centerInParent="true"
         android:text="@string/login_page" />
-    <Button
+    <TextView
         android:layout_width="52dp"
         android:layout_height="30dp"
         android:id="@+id/register_activity_titlebar_right_btn"
         android:text="@string/user_confirm"
+        android:visibility="gone"
         android:gravity="center"
         android:textSize="15sp"
+        android:textColor="@color/edit_tv_color"
         android:layout_marginRight="15dp"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:textColor="@color/color_ffffff"
-        android:background="@color/color_c5242b"
         android:layout_alignParentRight="true"
         />
     </RelativeLayout>

@@ -24,7 +24,7 @@ public class UploadStat {
         HttpApi.
                 click_stat(token, object, acode, pageid, ref, rank, rid_topcid,sa,pn,input, gvid);
     }
-    public static void uploadplaystat(Object object,String ac,String ut,String retry,String play_type,String code_rate,String ref,String timing,String vlen,String seid,String peid) {
+    public static void uploadplaystat(Object object,String ac,String ut,String retry,String play_type,String code_rate,String ref,String timing,String vlen,String seid,String peid,String pageid) {
         //请求频道页数据
         String token ="-";
         if( UserLoginState.getInstance().isLogin()) {
@@ -32,7 +32,7 @@ public class UploadStat {
         }
         HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_UPLOAD_STAT+ac);
         HttpApi.
-                play_stat(object, token, ac, ut, retry, play_type, code_rate, ref, timing, vlen, seid, peid);
+                play_stat(object, token, ac, ut, retry, play_type, code_rate, ref, timing, vlen, seid, peid,pageid);
     }
 
     /**

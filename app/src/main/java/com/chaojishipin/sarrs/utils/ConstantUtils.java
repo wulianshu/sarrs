@@ -109,7 +109,7 @@ public class ConstantUtils {
         public static final String DOMON_3 = "http://rec.chaojishipin.com";
         public static final String DOMON_4 = "http://feedback.chaojishipin.com";
 
-//        public static final String DOMON_3 = "http://10.154.252.65:8080";
+        //        public static final String DOMON_3 = "http://10.154.252.65:8080";
 //        public static final String DOMON_4 = "http://10.154.252.65:8080";
         //public static final String DOMON_5 = "http://10.154.252.65:8080";
         public static final String DOMON_5 = "http://user.chaojishipin.com";
@@ -277,12 +277,49 @@ public class ConstantUtils {
     //直播小红点key值
     public static final String LIVE_PUSH_KEY = "live_push_key";
 
+    //Umeng页面访问路劲上报 页面名称定义
+
+    public final static String  AND_RECMAND = "And_recmand";
+    public final static String  AND_SEARCH_SIRI = "And_search_siri";
+    public final static String  AND_SEARCH_RESULT = "And_search_result";
+    public final static String  AND_SEARCH_INPUTWORD = "And_search_inputword";
+    public final static String  AND_SIDE_VIEW = "And_side_view";
+    public final static String  AND_PLAY_HISTORY = "And_play_history";
+    public final static String  AND_TOPIC = "And_topic";
+    public final static String  AND_TOPIC_DETAIL = "And_topic_detail";
+    public final static String  AND_RANK = "And_rank";
+    public final static String  AND_RANK_DETAIL = "And_rank_detail";
+    public final static String  AND_TELEPLAY = "And_teleplay";
+    public final static String  AND_MOVIE = "And_movie";
+    public final static String  AND_CARTOON = "And_cartoon";
+    public final static String  AND_VARIETY = "And_variety";
+    public final static String  AND_RECORD = "And_record";
+    public final static String  AND_LOGIN = "And_login";
+    public final static String  AND_FAVOR = "And_favor";
+    public final static String  AND_MESSAGE = "And_message";
+    public final static String  AND_DOWNLOAD = "And_download";
+    public final static String  AND_DOWNLOADING = "And_downloading";
+    public final static String  AND_HALF_PLAY = "And_half_play";
+    public final static String  AND_FULL_PLAY = "And_full_play";
+    public final static String  AND_SHARE_VIEW = "AND_SHARE_VIEW";
+    public final static String  AND_PLAY_H5 = "And_play_h5";
+    public final static String  AND_EDIT_USERINFO = "And_edit_userinfo";
+    public final static String  AND_SETTING = "And_setting";
+    public final static String  AND_ABOUT_US = "And_about_us";
+    public final static String  AND_EDIT_HEAD_PORTRAIT = "And_edit_head_portrait";
+    public final static String  AND_EDIT_NICKNAME = "And_edit_nickname";
+    public final static String  AND_EDIT_SEX = "And_edit_sex";
+    public final static String  AND_LIVE = "And_live";
+    public final static String  AND_REGISTER = "And_register";
+    public final static String  ANDROID_EDIT_USERINFO = "Android_edit_userinfo";
+
+
     public interface HttpRequestStatus {
         String STATUSCODE = "200";
         String STATUS = "status";
     }
 
-    public interface ThirdpartySecret{
+    public interface ThirdpartySecret {
         public static final String START = "1@3$545";
         public static final String END = "1@3$545";
 
@@ -298,85 +335,87 @@ public class ConstantUtils {
 
     }
 
-    public interface SarrsMenuInitMode{
+    public interface SarrsMenuInitMode {
 
-        public static final int MODE_DELETE=0;
-        public static final int MODE_DELETE_SAVE_SHARE=1;
-
-    }
-
-   /**
-    * 收藏入口跳到登陆界面
-    * */
-    public interface SaveJumpTologin{
-
-        public static final int VIDEOTAIL_SAVE_LOGIN=0;
-        public static final int SPECIAL_LOGIN=1;
-        public static final int MAINSAVE_LOGIN=2;
-       public static final int MEDIA_LOGIN=3;
+        public static final int MODE_DELETE = 0;
+        public static final int MODE_DELETE_SAVE_SHARE = 1;
 
     }
 
+    /**
+     * 收藏入口跳到登陆界面
+     */
+    public interface SaveJumpTologin {
 
-    public interface ScreenConstants{
+        public static final int VIDEOTAIL_SAVE_LOGIN = 0;
+        public static final int SPECIAL_LOGIN = 1;
+        public static final int MAINSAVE_LOGIN = 2;
+        public static final int MEDIA_LOGIN = 3;
 
-        public static final String SCREEN_WIDTH="width";
-        public static final String SCREEN_HEIGHT="height";
     }
+
+
+    public interface ScreenConstants {
+
+        public static final String SCREEN_WIDTH = "width";
+        public static final String SCREEN_HEIGHT = "height";
+    }
+
     // reqTag
-    public static final String reqTag="reqTag";
+    public static final String reqTag = "reqTag";
 
-    public interface JumpToVideoDetailMode{
-        public static final String FROM_DOWNLOAD="download";
-        public static final String FROM_OTHER="other";
+    public interface JumpToVideoDetailMode {
+        public static final String FROM_DOWNLOAD = "download";
+        public static final String FROM_OTHER = "other";
 
         // 从share等第三方跳到半屏页
-        public static final String FROM_SCHEMA_ALBUM="sarrs1";
-        public static final String FROM_SCHEMA_SINGLE="sarrs2";
+        public static final String FROM_SCHEMA_ALBUM = "sarrs1";
+        public static final String FROM_SCHEMA_SINGLE = "sarrs2";
     }
-   public interface DataType{
-        public static final String ALBUM="1";
-        public static final String SINGLE="2";
 
-   }
-    public static final String SliddingMenuInit="init";
-
-   /**
-    *    防盗链返回 播放格式 os-type 对应  ANDROID ： MP4    IOS ：M3U8
-    *
-    * */
-   public interface OutSiteDateType{
-       public static final String M3U8="IOS";
-       public static final String MP4="ANDROID";
-
-   }
-
-    public  interface ClarityType{
-
-        public static final String REAL="REAL";
-        public static final String SUPER="SUPER";
-        public static final String SUPER2="SUPER2";
-        public static final String HIGH="HIGH";
-        public static final String NORMAL="NORMAL";
+    public interface DataType {
+        public static final String ALBUM = "1";
+        public static final String SINGLE = "2";
 
     }
+
+    public static final String SliddingMenuInit = "init";
+
     /**
-     *   播放清晰度优先级
-     * */
+     * 防盗链返回 播放格式 os-type 对应  ANDROID ： MP4    IOS ：M3U8
+     */
+    public interface OutSiteDateType {
+        public static final String M3U8 = "IOS";
+        public static final String MP4 = "ANDROID";
 
-    public interface Priority{
-        public static final int REAL_M3U8=1;
-        public static final int REAL_MP4=2;
-        public static final int SUPER_M3U8=3;
-        public static final int SUPER_MP4=4;
-        public static final int SUPER2_M3U8=5;
-        public static final int SUPER2_MP4=6;
-        public static final int HIGH_M3U8=7;
-        public static final int HIGH_MP4=8;
-        public static final int NORMAL_M3U8=9;
-        public static final int NORMAL_MP4=10;
+    }
+
+    public interface ClarityType {
+
+        public static final String REAL = "REAL";
+        public static final String SUPER = "SUPER";
+        public static final String SUPER2 = "SUPER2";
+        public static final String HIGH = "HIGH";
+        public static final String NORMAL = "NORMAL";
+
+    }
+
+    /**
+     * 播放清晰度优先级
+     */
+
+    public interface Priority {
+        public static final int REAL_M3U8 = 1;
+        public static final int REAL_MP4 = 2;
+        public static final int SUPER_M3U8 = 3;
+        public static final int SUPER_MP4 = 4;
+        public static final int SUPER2_M3U8 = 5;
+        public static final int SUPER2_MP4 = 6;
+        public static final int HIGH_M3U8 = 7;
+        public static final int HIGH_MP4 = 8;
+        public static final int NORMAL_M3U8 = 9;
+        public static final int NORMAL_MP4 = 10;
     }
 
 
-
- }
+}

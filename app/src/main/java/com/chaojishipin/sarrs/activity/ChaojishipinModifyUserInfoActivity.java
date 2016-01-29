@@ -37,6 +37,7 @@ import com.chaojishipin.sarrs.thirdparty.LoginListener;
 import com.chaojishipin.sarrs.thirdparty.LoginManager;
 import com.chaojishipin.sarrs.thirdparty.UIs;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.JsonUtil;
 import com.chaojishipin.sarrs.utils.LogUtil;
@@ -230,6 +231,7 @@ public class ChaojishipinModifyUserInfoActivity extends ChaoJiShiPinBaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.AND_EDIT_USERINFO,this);
         LogUtil.e("UserInfoActivity", "onResume " + UserLoginState.getInstance().getUserInfo().getAvatar());
         // 头像
         if (UserLoginState.getInstance().getUserInfo().getAvatar() != null) {
@@ -255,6 +257,11 @@ public class ChaojishipinModifyUserInfoActivity extends ChaoJiShiPinBaseActivity
 
     }
 
+    @Override
+    protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_EDIT_USERINFO,this);
+        super.onPause();
+    }
 
     @Override
     protected void handleInfo(Message msg) {

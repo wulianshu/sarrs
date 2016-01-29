@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.Utils;
 
 /**
@@ -42,6 +44,13 @@ public class ChaojishipinAboutUsActivity extends ChaoJiShiPinBaseActivity implem
         tv_curvername.setText(curVerName+getResources().getString(R.string.setting_version));
         tv_title.setText(getResources().getString(R.string.about_us_title));
 
+    }
+
+    @Override
+    protected void onResume() {
+        UmengPagePath.beginpage(ConstantUtils.AND_ABOUT_US,this);
+
+        super.onResume();
     }
 
     @Override
@@ -79,6 +88,7 @@ public class ChaojishipinAboutUsActivity extends ChaoJiShiPinBaseActivity implem
 
     @Override
     protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_ABOUT_US,this);
         System.out.println("onPause");
         super.onPause();
     }

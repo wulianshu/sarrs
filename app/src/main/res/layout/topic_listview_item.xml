@@ -87,7 +87,7 @@
                 android:layout_marginTop="@dimen/sarrs_dimen_7dp"
                 android:textColor="@color/color_666666"
                 android:layout_marginRight="@dimen/sarrs_dimen_10dp"
-                android:layout_marginBottom="@dimen/sarrs_dimen_24dp"
+                android:layout_marginBottom="@dimen/sarrs_dimen_16dp"
                 />
 
         </RelativeLayout>

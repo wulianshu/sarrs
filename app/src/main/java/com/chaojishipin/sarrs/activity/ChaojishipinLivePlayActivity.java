@@ -10,9 +10,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.bean.LiveDataEntity;
 import com.chaojishipin.sarrs.bean.LivePlayData;
 import com.chaojishipin.sarrs.fragment.videoplayer.PlayLiveController;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.TrafficStatsUtil;
 import com.chaojishipin.sarrs.utils.Utils;
@@ -42,6 +46,15 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
 
     public static int mNetType;
 
+    public final static String pageid = "00S002009_1";
+
+    private LiveDataEntity livedataentity;
+
+    private long begintime = 0l;
+    public String getPeid() {
+        return Utils.getDeviceId(ChaoJiShiPinApplication.getInstatnce()) + begintime;
+    }
+
     public enum NetWork {
         WIFI,//1
         GSM, //0
@@ -61,11 +74,33 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ref = getIntent().getExtras().getString("ref");
+        liveDataEntity = (LiveDataEntity) getIntent().getSerializableExtra("livedataentity");
         setContentView(R.layout.activity_liveplayer);
+        begintime = System.currentTimeMillis();
         doNotLockScreen();
         initData();
     }
 
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    private String ref ;
+
+    public LiveDataEntity getLiveDataEntity() {
+        return liveDataEntity;
+    }
+
+    public void setLiveDataEntity(LiveDataEntity liveDataEntity) {
+        this.liveDataEntity = liveDataEntity;
+    }
+
+    private LiveDataEntity liveDataEntity;
     /**
      * 设置当前屏幕不锁屏
      */
@@ -85,6 +120,7 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
         initTrafficStats(mSysAPILevel);
         Intent intent = getIntent();
         mLiveController = new PlayLiveController(this);
+        livedataentity = (LiveDataEntity) intent.getSerializableExtra(Utils.LIVEDATAENTITY);
         if (null != intent && null != intent.getSerializableExtra(Utils.LIVE_PLAY_DATA)) {
             mPlayData = (LivePlayData) intent.getSerializableExtra(Utils.LIVE_PLAY_DATA);
             // 将播放数据提供给播放控制台使用
@@ -141,6 +177,7 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onPause() {
         super.onPause();
+        UmengPagePath.endpage(ConstantUtils.AND_FULL_PLAY, this);
         // 停止播放器页面刷新
         if (null != mLiveController) {
             mLiveController.onPause();
@@ -150,6 +187,7 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.AND_FULL_PLAY,this);
         if (!Utils.getScreenLockStatus() && null != mLiveController) {
             mLiveController.onResume();
         }
@@ -171,6 +209,7 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mLiveController.uploadstat(System.currentTimeMillis()-begintime);
         isFromBackground = false;
     }
 

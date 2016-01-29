@@ -22,8 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
 import com.chaojishipin.sarrs.activity.ChaojishipinLivePlayActivity;
 import com.chaojishipin.sarrs.bean.LivePlayData;
+import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.CDEManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
@@ -64,17 +66,6 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
 
     private LetvVideoViewBuilder mVideoViewBuilder;
 
-    private TextView mTitleName;
-
-    private TextView mNetRate;
-
-    private Button mPlayErrorView;
-
-    private RelativeLayout mMediaControllerTop;
-
-    private RelativeLayout mPlayErrorLayout;
-
-    private LinearLayout mLoadingLayout;
 
     /**
      * 播放器所处的位置
@@ -100,6 +91,21 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
 
     protected PlayerTimer mPlayerTimer;
 
+    private TextView mTitleName;
+    private RelativeLayout mMediaControllerTop;
+
+    /**
+     * 加载相关布局
+     */
+    private TextView mNetRate;
+    private TextView mLoading_tip_text;
+    private LinearLayout mLoadingLayout;
+
+    /**
+     * 播放地址全部无效，加载超时布局
+     */
+    private RelativeLayout mPlayErrorLayout;
+    private Button mPlayErrorView;
     /**
      * 断网布局
      */
@@ -109,6 +115,22 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     private TextView controller_net_error;
     private Button controller_net_error_setting;
 
+   private boolean isNoNet = false; //无网络标示
+    private int retryCount; // 弱网重试机制
+    private String ac="-";
+    private long timing=0; //毫秒  已经播放的视频长度
+    private long begin_time;
+    private long end_time;
+    private long ut;//动作耗时 毫秒
+//    private int vlen;//视频的总长 秒为单位
+    private int retry;//重试次数
+    private int play_type;//播放类型
+    private String code_rate="-";//码流对照表
+    private String ref = "-";
+    private int repeatcount = 0;
+    private String pageid = "00S002009_1";
+    private long startTime = 0l;
+    private boolean isblocked = false;
     public PlayLiveController(ChaojishipinLivePlayActivity mPlayLiveActivity) {
         mActivityLive = mPlayLiveActivity;
         mVideoViewBuilder = LetvVideoViewBuilder.getInstants();
@@ -119,16 +141,18 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
 
     private void initView() {
         mTitleName = (TextView) mActivityLive.findViewById(R.id.tv_video_title);
-        mNetRate = (TextView) mActivityLive.findViewById(R.id.loading_net_rate);
         mMediaControllerTop = (RelativeLayout) mActivityLive.findViewById(R.id.mediacontroller_top);
         mVideoViewPosition = (RelativeLayout) mActivityLive.findViewById(R.id.videoview_position);
+        // 加载相关
+        mNetRate = (TextView) mActivityLive.findViewById(R.id.loading_net_rate);
+        mLoading_tip_text = (TextView) mActivityLive.findViewById(R.id.loading_tip_text);
         mLoadingLayout = (LinearLayout) mActivityLive.findViewById(R.id.layout_loading);
         // 加载超时界面
         mPlayErrorLayout = (RelativeLayout) mActivityLive.findViewById(R.id.videoplayer_load_timeout_layout);
         mPlayErrorView = (Button) mActivityLive.findViewById(R.id.controller_load_timeout_refresh);
         // 断网界面
         controller_net_error_play = (Button) mActivityLive.findViewById(R.id.controller_net_error_play);
-        mNetLayout = (RelativeLayout) mActivityLive.findViewById(R.id.videoplayer_error_layout);
+        mNetLayout = (RelativeLayout) mActivityLive.findViewById(R.id.videoplayer_net_error_layout);
         videoplayer_net_error_icon = (ImageView) mActivityLive.findViewById(R.id.videoplayer_net_error_icon);
         controller_net_error = (TextView) mActivityLive.findViewById(R.id.controller_net_error);
         controller_net_error_setting = (Button) mActivityLive.findViewById(R.id.controller_net_error_setting);
@@ -153,6 +177,7 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     private void setControllerUIIdle() {
         showMediaControll(false);
         setPlayLoadingVisibile(true);
+        setPlayNetLayoutVisibile(false);
         setPlayErrorLayoutVisibile(false);
     }
 
@@ -164,7 +189,9 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     }
 
     public void setmPlayData(LivePlayData playData) {
+        LogUtil.e(Utils.LIVE_TAG, "##########click into live not resume##########");
         this.mPlayData = playData;
+        isNoNet = false;
         if (null != mPlayData) {
             setTitleName(mPlayData.getTitle());
             // 如果当前播放器准备成功，则开始播放直播数据
@@ -206,11 +233,13 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     /**
      * 播放直播资源 zhangshuo 2015年2月4日 下午2:47:20
      */
+    private String url;
     private void playLiveSource() {
         ArrayList<String> streams = (ArrayList) mPlayData.getLiveStreams();
         if (null != streams && streams.size() > 0) {
             String liveOrgUrl = streams.get(mLivePosition);
             String result = getLiveUrl(liveOrgUrl);
+            url = result;
             LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!当前播放的直播地址!!!!!!!" + result);
             setVideoPath(result);
         } else {
@@ -250,7 +279,7 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
      * 获取直播的播放地址
      *
      * @param orgLiveUrl
-     * @return zhangshuo 2015年2月3日 下午3:46:21
+     * @return
      */
     private String getLiveUrl(String orgLiveUrl) {
         LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!!!!!!!before addPlatCode orgLiveUrl is " + orgLiveUrl);
@@ -260,14 +289,6 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
             return cdeHelper.getPlayUrl(mLiveLinkshellUrl);
         }
         return orgLiveUrl;
-    }
-
-    private boolean isLetvStream(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return false;
-        }
-        return url.contains("letv.com") || url.contains("letv.con")
-                || url.contains("video123456.com");
     }
 
     private boolean prepareLivePlayer() {
@@ -287,7 +308,7 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     }
 
     /**
-     * 设置播放器的相关监听事件 zhangshuo 2015年2月3日 下午3:44:40
+     * 设置播放器的相关监听事件
      */
     private void setPlayerListener() {
         mPlayContorl.setOnPreparedListener(this);
@@ -314,9 +335,9 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
                 + mActivityLive.isFromBackground);
         LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!mIsReceiveError is " + mIsReceiveError);
         // 只有之前缓冲
-        if (null != mActivityLive && !mIsReceiveError
-                && (mActivityLive.isFromBackground) && NetWorkUtils.isNetAvailable()) {
-            continePlayLvie();
+        if (null != mActivityLive
+                && mActivityLive.isFromBackground) {
+            normalPlay();
         }
     }
 
@@ -328,7 +349,7 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         }
     }
 
-    public void continePlayLvie() {
+    public void continePlayLive() {
         if (null == mPlayContorl) {
             prepareLivePlayer();
         }
@@ -510,11 +531,12 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     public boolean onError(MediaPlayer mp, int what, int extra) {
         LogUtil.e(Utils.LIVE_TAG, "##############onError called#######################");
         LogUtil.e(Utils.LIVE_TAG, "!!!!!!mp!!!!" + mp + "!!!!!!what!!!!!" + what + "!!!!!extra!!!!!!" + extra);
-        if (NetWorkUtils.isNetAvailable()) {
-            // 收到错误后立即切换下一条Url，如果所有的播放地址均已尝试过了则弹出错误提示框从头开始
-            handleLiveError();
-        } else
+        // 收到错误后立即切换下一条Url，如果所有的播放地址均已尝试过了则弹出错误提示框从头开始
+        handleLiveError();
+        if (!NetWorkUtils.isNetAvailable()) {
             LogUtil.e(Utils.LIVE_TAG, "#############onError net is unavailable##############");
+            setPlayLoadingVisibile(false);
+        }
         return false;
     }
 
@@ -529,7 +551,7 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
                 if (!isStreamListEnd(streams)) {
                     ++mLivePosition;
                     LogUtil.e(Utils.LIVE_TAG, "!!!!onError!!!mLivePosition!!!" + mLivePosition);
-                    continePlayLvie();
+                    continePlayLive();
                 } else {
                     LogUtil.e(Utils.LIVE_TAG, "!!!!onError!!!mLivePosition out of index!!!");
                     setPlayLoadingVisibile(false);
@@ -550,10 +572,27 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        ac = "init";
+        begin_time = System.currentTimeMillis();
+        ut = System.currentTimeMillis() - begin_time;
+        play_type = 1;
+        timing = 0;
+        LogUtil.e("wulianshu","ac = init");
+        UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), timing + "", "-", "-", mActivityLive.getPeid(), pageid);
+        ut = 0;
         mIsprepared = true;
         setPlayLoadingVisibile(false);
         sendHideControMsg();
         startPlayer();
+
+
+            ac = "play";
+            play_type = 1;
+            timing = 0;
+            //Object object,String ac,String ut,String retry,String play_type,String code_rate,String ref,String timing,String vlen
+
+            LogUtil.e("wulianshu", "ac = play");
+            UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "",  code_rate, mActivityLive.getRef(), timing + "",  "-","-",mActivityLive.getPeid(),pageid);
     }
 
     public void startPlayer() {
@@ -605,20 +644,22 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         switch (v.getId()) {
             // 用户点击了出错重试按钮
             case R.id.controller_load_timeout_refresh:
+                retry++;
                 // 首先重置当前的播放位置
                 mLivePosition = 0;
                 // 然后选取当前位置的播放地址开始播放
-                continePlayLvie();
+                continePlayLive();
                 break;
             case R.id.controller_net_error_play:
-                // 移动网络 是否继续播放
+                // 移动网络 点击播放
                 if (mPlayData == null) {
                     ToastUtil.showShortToast(mActivityLive, mActivityLive.getResources().getString(R.string.play_no_data));
                     return;
                 }
-                hideNetErrView();
-                // 然后选取当前位置的播放地址开始播放
-                continePlayLvie();
+                // 可能存在弱网情况，需要先显示loading
+                setPlayLoadingVisibile(true);
+                retryCount = 0;
+                userClickPlay();
                 break;
             case R.id.controller_net_error_setting:
                 Intent intent = new Intent(Settings.ACTION_SETTINGS);
@@ -640,26 +681,102 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         }
     }
 
+    /**
+     * 加载ui
+     *
+     * @param flag
+     */
     private void setPlayLoadingVisibile(boolean flag) {
         if (null != mLoadingLayout) {
             if (flag) {
                 if (!mLoadingLayout.isShown()) {
                     // 显示
                     mLoadingLayout.setVisibility(View.VISIBLE);
+                    mLoading_tip_text.setVisibility(View.VISIBLE);
+                    mLoading_tip_text.setText(mActivityLive.getResources().getString(R.string.player_loading_tip));
                     LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!block!!!!!!!!!!!!!!");
+
+                    ac = "block";
+                    ut = 0;
+                    play_type = 1;
+                    UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(),  "-", "-", "-", mActivityLive.getPeid(),pageid);
+                    startTime=System.currentTimeMillis();
+                    isblocked = true;
                 }
             } else {
                 if (mLoadingLayout.isShown()) {
-                    // 不显示
-                    mLoadingLayout.setVisibility(View.GONE);
-                    LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!eblock!!!!!!!!!!!!!!");
+                    mLoading_tip_text.setVisibility(View.GONE);
+                    if(isblocked) {
+                        ac = "eblock";
+                        ut = 0;
+                        play_type = 1;
+                        ut = System.currentTimeMillis() - startTime;
+                        UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), timing + "", "-", "-", mActivityLive.getPeid(), pageid);
+                        LogUtil.e("xll", "handle msg eblock report ok ");
+                        // 不显示
+                        mLoadingLayout.setVisibility(View.GONE);
+                        LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!eblock!!!!!!!!!!!!!!");
+                        isblocked = false;
+                    }
                 }
             }
         }
     }
 
     /**
-     * 显示当前网速 zhangshuo 2014年8月19日 下午2:12:27
+     * 地址全部无效，加载超时
+     *
+     * @param flag
+     */
+    public void setPlayErrorLayoutVisibile(boolean flag) {
+        if (null != mPlayErrorLayout) {
+            if (flag) {
+                mPlayErrorLayout.setVisibility(View.VISIBLE);
+            } else {
+                mPlayErrorLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * 无网络或移动网络相关ui显示与否
+     *
+     * @param flag
+     */
+    public void setPlayNetLayoutVisibile(boolean flag) {
+        if (null != mNetLayout) {
+            if (flag) {
+                mNetLayout.setVisibility(View.VISIBLE);
+            } else {
+                mNetLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * 显示移动网络界面ui
+     */
+    public void showGSMNetView() {
+        setPlayNetLayoutVisibile(true);
+        controller_net_error.setText(mActivityLive.getResources().getString(R.string.RPG_net_tip));
+        controller_net_error_play.setVisibility(View.VISIBLE);
+        controller_net_error_setting.setVisibility(View.GONE);
+        setPlayLoadingVisibile(false);
+    }
+
+    /**
+     * 无网络，设置网络ui
+     */
+    public void showNoNetView() {
+        setPlayNetLayoutVisibile(true);
+        controller_net_error.setText(mActivityLive.getResources().getString(R.string.nonet_tip));
+        controller_net_error_setting.setVisibility(View.VISIBLE);
+        controller_net_error_play.setVisibility(View.GONE);
+        setPlayLoadingVisibile(false);
+    }
+
+    /**
+     * 显示当前网速
      */
     private void showNetRate() {
         // 如果当前API level > 2.2则显示当前网速
@@ -705,58 +822,9 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         return mActivityLive;
     }
 
-    public void setPlayErrorLayoutVisibile(boolean flag) {
-        if (null != mPlayErrorLayout) {
-            if (flag) {
-                mPlayErrorLayout.setVisibility(View.VISIBLE);
-            } else {
-                mPlayErrorLayout.setVisibility(View.GONE);
-            }
-        }
-    }
-
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
         // TODO Auto-generated method stub
-    }
-
-    /**
-     *
-     */
-    public void showGSMNetView() {
-        mNetLayout.setVisibility(View.VISIBLE);
-        controller_net_error.setText(mActivityLive.getResources().getString(R.string.RPG_net_tip));
-        controller_net_error_play.setVisibility(View.VISIBLE);
-        controller_net_error_setting.setVisibility(View.GONE);
-        mLoadingLayout.setVisibility(View.GONE);
-    }
-
-    /**
-     * 没什么卵用
-     */
-    public void showWIFINetView() {
-        mLoadingLayout.setVisibility(View.VISIBLE);
-        mNetLayout.setVisibility(View.GONE);
-        controller_net_error_play.setVisibility(View.GONE);
-        controller_net_error_setting.setVisibility(View.GONE);
-    }
-
-    /**
-     * 无网络，设置网络
-     */
-    public void showNoNetView() {
-        mNetLayout.setVisibility(View.VISIBLE);
-        controller_net_error.setText(mActivityLive.getResources().getString(R.string.nonet_tip));
-        controller_net_error_setting.setVisibility(View.VISIBLE);
-        controller_net_error_play.setVisibility(View.GONE);
-    }
-
-    /**
-     * 有网络（隐藏网络设置相关view）
-     */
-    public void hideNetErrView() {
-        mNetLayout.setVisibility(View.GONE);
-        mLoadingLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -765,15 +833,16 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
      * @param netType 网络状态 -1 无网络  1 wifi 0 3G
      */
     public void setPlayerControllerBarState(int netType) {
-        if (this == null) {
-            return;
-        }
         LogUtil.e(Utils.LIVE_TAG, "##############setPlayerControllerBarState called##############");
-        //WIFI
         if (netType == NetWorkUtils.NETTYPE_WIFI) {
             LogUtil.e(Utils.LIVE_TAG, "##################cur netType is wifi##################");
-            hideNetErrView();
-            showWIFINetView();
+            setPlayNetLayoutVisibile(false);
+            // 无网络切换到有网络调用
+            if (isNoNet && !isVideoPlaying()) {
+                isNoNet = false;
+                normalPlay();
+            } else
+                LogUtil.e(Utils.LIVE_TAG, "############is playing#############");
         } else if (netType == NetWorkUtils.NETTYPE_GSM) {
             LogUtil.e(Utils.LIVE_TAG, "##################cur netType is gsm##################");
             onPause();
@@ -781,10 +850,68 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
             Toast.makeText(mActivityLive, mActivityLive.getResources().getString(R.string.RPG_net_tip), Toast.LENGTH_SHORT).show();
         } else if (netType == NetWorkUtils.NETTYPE_NO) {
             LogUtil.e(Utils.LIVE_TAG, "##################cur netType is no##################");
+            isNoNet = true;
             onPause();
             showNoNetView();
             //把小波波加载的精疲力尽去掉
             mPlayErrorLayout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 正常播放
+     */
+    private void normalPlay() {
+        LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!normalPlay called!!!!!!!!!!");
+        LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!mIsReceiveError is " + mIsReceiveError);
+
+        // 只有之前缓冲
+        if (NetWorkUtils.isNetAvailable()) {
+            if (!mIsReceiveError) {
+                continePlayLive();
+            } else {
+                setPlayLoadingVisibile(false);
+                // 已经尝试过所有的播放地址了，弹出错误提示框提示用用户重试
+                setPlayErrorLayoutVisibile(true);
+            }
+        } else {
+            LogUtil.e(Utils.LIVE_TAG, "##########normalPlay############# but net is unavailable");
+            setPlayLoadingVisibile(false);
+        }
+    }
+
+    /**
+     * 移动网络下点击播放 (弱网情况下1s后重试，且只重试一次)
+     */
+    private void userClickPlay() {
+        if (NetWorkUtils.isNetAvailable()) {
+            LogUtil.e(Utils.LIVE_TAG, "%%%%%%%%%%%%%%%user click play%%%%%%%%%%%%%%%");
+            normalPlay();
+        } else {
+            if (retryCount < 1) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        LogUtil.e(Utils.LIVE_TAG, "%%%%%%%%%%%%%%%net is weak and retry one time%%%%%%%%%%%%%%%");
+                        retryCount++;
+                        userClickPlay();
+                    }
+                }, 1000);
+            } else {
+                LogUtil.e(Utils.LIVE_TAG, "%%%%%%%%%%%%%%%%%net is weak but retryTime out%%%%%%%%%%%%%%%%%");
+                setPlayLoadingVisibile(false);
+            }
+        }
+    }
+  /**
+     * 大数据上报
+     */
+    public void uploadstat(long timing){
+        if( mPlayContorl !=null) {
+            ac = "finish";
+            ut = 0;
+            play_type = 1;
+            UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), timing+"",  "-","-",mActivityLive.getPeid(),pageid);
         }
     }
 }

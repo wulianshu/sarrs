@@ -665,7 +665,13 @@ public class DownloadJob implements Comparable<DownloadJob>{
         // 发送消息调用JS代码
         //mHandler.sendEmptyMessage(Utils.GET_JS_RESULT);
 //        mWebView.clearCache(true);
-        mWebView.loadUrl("javascript:MyJavaScriptInterface.startFunction(dealWithRequest('" + mSnifferParamter + "'));");
+        final String snifferparam = mSnifferParamter;
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl("javascript:MyJavaScriptInterface.startFunction(dealWithRequest('" + snifferparam + "'));");
+            }
+        });
         LogUtil.e("wulianshu", "LoadUrl 之后@@@@@@@@@");
     }
 

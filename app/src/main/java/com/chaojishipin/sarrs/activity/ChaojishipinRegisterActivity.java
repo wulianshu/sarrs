@@ -33,6 +33,7 @@ import com.chaojishipin.sarrs.thirdparty.QQLoginHelper;
 import com.chaojishipin.sarrs.thirdparty.UIs;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
 import com.chaojishipin.sarrs.thirdparty.WeiboLoginHelper;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.MD5Utils;
@@ -145,7 +146,14 @@ public class ChaojishipinRegisterActivity extends ChaoJiShiPinBaseActivity imple
 
     @Override
     protected void onResume() {
+        UmengPagePath.beginpage(ConstantUtils.AND_REGISTER,this);
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_REGISTER,this);
+        super.onPause();
     }
 
     @Override
@@ -252,15 +260,18 @@ public class ChaojishipinRegisterActivity extends ChaoJiShiPinBaseActivity imple
                 return;
             }
             if (charSequence.length() > 13) {
-                mNext.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+//                mNext.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+                mNext.setBackgroundResource(R.drawable.next_step);
                 return;
             }
             if (charSequence.length() == 13) {
                 mNext.setEnabled(true);
-                mNext.setBackgroundColor(getResources().getColor(R.color.color_c5242b));
+                mNext.setBackgroundResource(R.drawable.next_step_red);
+//                mNext.setBackgroundColor(getResources().getColor(R.color.color_c5242b));
             }
             if (charSequence.length() < 13) {
-                mNext.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+                mNext.setBackgroundResource(R.drawable.next_step);
+//                mNext.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
             }
             mClear.setVisibility(View.VISIBLE);
             StringBuilder stringBuilder = new StringBuilder();

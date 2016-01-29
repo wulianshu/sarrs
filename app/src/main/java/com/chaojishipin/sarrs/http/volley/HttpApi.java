@@ -20,6 +20,7 @@ import com.chaojishipin.sarrs.bean.HistoryRecord;
 import com.chaojishipin.sarrs.bean.HistoryRecordResponseData;
 import com.chaojishipin.sarrs.bean.HtmlDataBean;
 import com.chaojishipin.sarrs.bean.InterestRecommend;
+import com.chaojishipin.sarrs.bean.LiveDataEntity;
 import com.chaojishipin.sarrs.bean.LiveDataInfo;
 import com.chaojishipin.sarrs.bean.LiveStreamInfo;
 import com.chaojishipin.sarrs.bean.LogOutInfo;
@@ -146,7 +147,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("area", area);
         // 设备ID
         params.put("lc", Utils.getDeviceId(context));
-        params.put("imei",Utils.getPhoneImei());
+        params.put("imei", Utils.getPhoneImei());
         // 业务线
         params.put("p", "0");
         //一级平台编号
@@ -180,10 +181,11 @@ public class HttpApi extends SarrsBaseHttpApi {
         String url = sb.toString();
         return createRequest(SarrsRequest.Method.GET, url, new VideoDetailIndexParser(), params, null);
     }
-  /**
-   *   公共参数
-   *   屏幕分辨率在ChaojishipinSplashActivity写文件
-   * */
+
+    /**
+     * 公共参数
+     * 屏幕分辨率在ChaojishipinSplashActivity写文件
+     */
     static void addVer(Map<String, String> params) {
         params.put("pl", "1000011");
         params.put("appv", Utils.getClientVersionName());
@@ -378,14 +380,11 @@ public class HttpApi extends SarrsBaseHttpApi {
         sb.append("/sarrs/modifyuser");
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("token", token);
-        if (nickName != null && nickName.length() > 0)
-        {
+        if (nickName != null && nickName.length() > 0) {
             params.put("nick_name", nickName);
-        }else if (gender != -1)
-        {
+        } else if (gender != -1) {
             params.put("gender", String.valueOf(gender));
-        }else if (img != null && img.length() > 0)
-        {
+        } else if (img != null && img.length() > 0) {
             params.put("img", img);
         }
         addVer(params);
@@ -468,10 +467,11 @@ public class HttpApi extends SarrsBaseHttpApi {
 
     /**
      * 播放器，防盗链接口（letv源资源使用）
-     *  @param format 新版留地址必须加清晰度，0-normal，1-high，2-super，3-super2，4-real，取多个清晰度用英文格式逗号分隔，如0,1,2
+     *
+     * @param format 新版留地址必须加清晰度，0-normal，1-high，2-super，3-super2，4-real，取多个清晰度用英文格式逗号分隔，如0,1,2
      * @return
      */
-    public static SarrsRequest<VStreamInfoList> getPlayUrlRequest(String gvid, String vType, String playid,String format) {
+    public static SarrsRequest<VStreamInfoList> getPlayUrlRequest(String gvid, String vType, String playid, String format) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_6);
         sb.append("/sarrs/geturl");
@@ -512,7 +512,7 @@ public class HttpApi extends SarrsBaseHttpApi {
      *
      * @return
      */
-    public static SarrsRequest<CloudDiskBean> getPlayUrlCloudRequest(String gvid, String vType, String playid, String type, String uniqueId,String format) {
+    public static SarrsRequest<CloudDiskBean> getPlayUrlCloudRequest(String gvid, String vType, String playid, String type, String uniqueId, String format) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_6);
         sb.append("/sarrs/geturl");
@@ -523,7 +523,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("splatid", "1701");
         params.put("vtype", vType);
         params.put("type", type);
-        params.put("format",format);
+        params.put("format", format);
         params.put("unique_id", uniqueId);
         addVer(params);
         // 执行AES256加密取得lssv字段的加密值
@@ -573,13 +573,12 @@ public class HttpApi extends SarrsBaseHttpApi {
 
     /**
      * 播放器，防盗链接口（除云盘外其他外网资源资源使用）---新版本
-     * @param vType   //码流类型，支持同时返回多个码流信息，用英文逗号分隔，SARRS传252022,252021,252009
-     * @param playId   //播放类型：0:点播 1:直播 2:下载
      *
-     *
+     * @param vType  //码流类型，支持同时返回多个码流信息，用英文逗号分隔，SARRS传252022,252021,252009
+     * @param playId //播放类型：0:点播 1:直播 2:下载
      * @return
      */
-    public static SarrsRequest<OutSiteDataInfo> requestOutSiteData(String gvid, String vType, String playId,String format) {
+    public static SarrsRequest<OutSiteDataInfo> requestOutSiteData(String gvid, String vType, String playId, String format) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_6);
         sb.append("/sarrs/geturl");
@@ -604,14 +603,16 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put(ConstantUtils.LeTvBitStreamParam.KEY_KEY, key);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new OutSiteDataParser(), params, null);
     }
-     /**
-      *    流地址播放失败后 更新流地址接口
-      *   @param playUrl  流地址
-      *   @param format  清晰度，0-normal，1-high，2-super，3-super2，4-real
-      *   @param eid 新版外网流地址接口会返回该字段，上报时回传，用于统计播放失败率
-                    （iOS和Android流地址的两个eid中选择一个上报即可）
-      * */
-    public static SarrsRequest<UpdateUrlInfo> updateUrl(String playUrl,String format,String eid) {
+
+    /**
+     * 流地址播放失败后 更新流地址接口
+     *
+     * @param playUrl 流地址
+     * @param format  清晰度，0-normal，1-high，2-super，3-super2，4-real
+     * @param eid     新版外网流地址接口会返回该字段，上报时回传，用于统计播放失败率
+     *                （iOS和Android流地址的两个eid中选择一个上报即可）
+     */
+    public static SarrsRequest<UpdateUrlInfo> updateUrl(String playUrl, String format, String eid) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_6);
         sb.append("/sarrs/streamupdate");
@@ -622,9 +623,6 @@ public class HttpApi extends SarrsBaseHttpApi {
         addVer(params);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new UpdateUrlParser(), params, null);
     }
-
-
-
 
 
     /**
@@ -842,7 +840,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         sb.append(ConstantUtils.HOST.DOMON_5);
         sb.append("/sarrs/batchcollection?token=" + token + "&appv=" + Utils.getClientVersionName() + "&pl=1000011&appfrom=0&pl1=0&pl2=00&appid=0&auid=" + Utils.getDeviceId(ChaoJiShiPinApplication.getInstatnce()));
         LogUtil.e("wulianshu", "收藏批量上传 json： " + json);
-        MyJsonRequest jsonRequest = new MyJsonRequest(Request.Method.POST, sb.toString(), json, lis,lis);
+        MyJsonRequest jsonRequest = new MyJsonRequest(Request.Method.POST, sb.toString(), json, lis, lis);
         HttpManager.getInstance().mQueue.add(jsonRequest);
         // addVer(params);  http://user.chaojishipin.com/sarrs/batchcollection?token=2J3g14y-Roc6e9TKomGQgu0
        /* HashMap<String, String> headers = new HashMap<>();
@@ -888,6 +886,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         sb.append(ConstantUtils.HOST.DOMON_5);
         sb.append("/sarrs/syncplayrecord");
         HashMap<String, String> params = getBaseParams();
+
         params.put("source", historyRecord.getSource());
         params.put("id", historyRecord.getVid());
         params.put("token", token);
@@ -895,6 +894,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("aid", historyRecord.getPid());
         params.put("cid", historyRecord.getCid() + "");
         params.put("duration", historyRecord.getDurationTime() + "");
+
         addVer(params);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new HistoryRecordReponseDataParser(), params, null);
     }
@@ -916,8 +916,7 @@ public class HttpApi extends SarrsBaseHttpApi {
     /**
      * 上传头像
      */
-    public static SarrsRequest<UploadFile> uploadFile(String filePath)
-    {
+    public static SarrsRequest<UploadFile> uploadFile(String filePath) {
         Uri uri = Uri.parse(filePath);
         String name = uri.getLastPathSegment();
         StringBuilder sb = new StringBuilder();
@@ -940,14 +939,14 @@ public class HttpApi extends SarrsBaseHttpApi {
         }, new UploadFileParser());
     }
 
-    public static SarrsRequest<SarrsArrayList> getUpgradinfo(String appfrom){
+    public static SarrsRequest<SarrsArrayList> getUpgradinfo(String appfrom) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_2);
         sb.append("/sarrs/upgrade");
         HashMap<String, String> params = getBaseParams();
         addVer(params);
-        params.put("appfrom",appfrom);
-        return createRequest(SarrsRequest.Method.GET, sb.toString(),new UpgradinfoParser(), params, null);
+        params.put("appfrom", appfrom);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(), new UpgradinfoParser(), params, null);
     }
 
     /**
@@ -970,7 +969,6 @@ public class HttpApi extends SarrsBaseHttpApi {
     }
 
     /**
-     *
      * @return
      */
     public static SarrsRequest<SarrsArrayList> playfeedBack(String playurl,int state,int type,String source,String aid,int waiting){
@@ -1006,21 +1004,21 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("ver", "1.0");
         //不同上报需要改
         params.put("p", "0");
-        params.put("uid",token);
-        params.put("acode",acode);//点击
-        params.put("extend","-");
-        params.put("pageid",pageid);
-        params.put("ref",ref);
+        params.put("uid", token);
+        params.put("acode", acode);//点击
+        params.put("extend", "-");
+        params.put("pageid", pageid);
+        params.put("ref", ref);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         String act_time = simpleDateFormat.format(new Date());
         LogUtil.e("wulianshu", act_time);
         params.put("act_time", act_time);
         params.put("aeid", Utils.getDeviceId(ChaoJiShiPinApplication.getInstatnce()) + System.currentTimeMillis());
         params.put("r", System.currentTimeMillis() + "");
-        if(object instanceof  MainActivityAlbum){
+        if (object instanceof MainActivityAlbum) {
             params.put("type", "action");
-            MainActivityAlbum  mainActivityAlbum = (MainActivityAlbum) object;
-            params.put("cid",mainActivityAlbum.getCategory_id());
+            MainActivityAlbum mainActivityAlbum = (MainActivityAlbum) object;
+            params.put("cid", mainActivityAlbum.getCategory_id());
             params.put("aid", mainActivityAlbum.getId());
             params.put("vid",gvid);
             params.put("seid",mainActivityAlbum.getReId());
@@ -1031,84 +1029,85 @@ public class HttpApi extends SarrsBaseHttpApi {
             }
 
             params.put("bucket", mainActivityAlbum.getBucket());
-            params.put("rank",rank);
-            params.put("topic_id","-");
-            params.put("ranklist_id","-");
-            params.put("live_id","-");
-        }else if(object instanceof RankListDetail){
+            params.put("rank", rank);
+            params.put("topic_id", "-");
+            params.put("ranklist_id", "-");
+            params.put("live_id", "-");
+        } else if (object instanceof RankListDetail) {
             params.put("type", "action");
-            RankListDetail  rankListDetail = (RankListDetail) object;
-            params.put("cid",rankListDetail.getCategory_id());
+            RankListDetail rankListDetail = (RankListDetail) object;
+            params.put("cid", rankListDetail.getCategory_id());
             params.put("aid", rankListDetail.getGaid());
-            params.put("vid",rankListDetail.getVideos().get(0).getGvid());
-            params.put("seid","-");
-            params.put("area","-");
-            params.put("bucket","-");
-            params.put("rank",rank);
-            params.put("topic_id","-");
-            params.put("ranklist_id",rid_topcid);
-            params.put("live_id","-");
-        }else if(object instanceof TopicDetail){
+            params.put("vid", rankListDetail.getVideos().get(0).getGvid());
+            params.put("seid", "-");
+            params.put("area", "-");
+            params.put("bucket", "-");
+            params.put("rank", rank);
+            params.put("topic_id", "-");
+            params.put("ranklist_id", rid_topcid);
+            params.put("live_id", "-");
+        } else if (object instanceof TopicDetail) {
             params.put("type", "action");
-            TopicDetail  topicDetail = (TopicDetail) object;
-            params.put("cid",topicDetail.getCategory_id()+"");
+            TopicDetail topicDetail = (TopicDetail) object;
+            params.put("cid", topicDetail.getCategory_id() + "");
             params.put("aid", topicDetail.getGaid());
-            params.put("vid",topicDetail.getVideos().get(0).getGvid());
-            params.put("seid","-");
-            params.put("area","-");
-            params.put("bucket","-");
-            params.put("rank",rank);
-            params.put("topic_id",rid_topcid);
-            params.put("ranklist_id","-");
-            params.put("live_id","-");
-        }else if(object instanceof HistoryRecord){
+            params.put("vid", topicDetail.getVideos().get(0).getGvid());
+            params.put("seid", "-");
+            params.put("area", "-");
+            params.put("bucket", "-");
+            params.put("rank", rank);
+            params.put("topic_id", rid_topcid);
+            params.put("ranklist_id", "-");
+            params.put("live_id", "-");
+        } else if (object instanceof HistoryRecord) {
             params.put("type", "action");
-            HistoryRecord  historyRecord = (HistoryRecord) object;
-            params.put("cid",historyRecord.getCategory_id());
+            HistoryRecord historyRecord = (HistoryRecord) object;
+            params.put("cid", historyRecord.getCategory_id());
             params.put("aid", historyRecord.getId());
-            params.put("vid",historyRecord.getGvid());
-            params.put("seid","-");
-            params.put("area","-");
-            params.put("bucket","-");
-            params.put("rank",rank);
-            params.put("topic_id","-");
-            params.put("ranklist_id","-");
-            params.put("live_id","-");
-        }else if(object instanceof Favorite){
+            params.put("vid", historyRecord.getGvid());
+            params.put("seid", "-");
+            params.put("area", "-");
+            params.put("bucket", "-");
+            params.put("rank", rank);
+            params.put("topic_id", "-");
+            params.put("ranklist_id", "-");
+            params.put("live_id", "-");
+        } else if (object instanceof Favorite) {
             params.put("type", "action");
-            Favorite  favorite = (Favorite) object;
-            params.put("cid",favorite.getCid());
+            Favorite favorite = (Favorite) object;
+            params.put("cid", favorite.getCid());
             params.put("aid", favorite.getAid());
-            params.put("vid",favorite.getGvid());
-            params.put("seid","-");
-            params.put("area","-");
-            params.put("bucket","-");
-            params.put("rank",rank);
-            params.put("topic_id","-");
-            params.put("ranklist_id","-");
-            params.put("live_id","-");
-        }else if(object instanceof  VideoDetailItem){
+            params.put("vid", favorite.getGvid());
+            params.put("seid", "-");
+            params.put("area", "-");
+            params.put("bucket", "-");
+            params.put("rank", rank);
+            params.put("topic_id", "-");
+            params.put("ranklist_id", "-");
+            params.put("live_id", "-");
+        } else if (object instanceof VideoDetailItem) {
             params.put("type", "action");
-            VideoDetailItem  videoDetailItem = (VideoDetailItem) object;
-            params.put("cid",videoDetailItem.getCategory_id());
+            VideoDetailItem videoDetailItem = (VideoDetailItem) object;
+            params.put("cid", videoDetailItem.getCategory_id());
 
-            if(!TextUtils.isEmpty(videoDetailItem.getId())) {
+            if (!TextUtils.isEmpty(videoDetailItem.getId())) {
                 params.put("aid", videoDetailItem.getId());
             }
             params.put("vid", videoDetailItem.getVideoItems().get(0).getGvid());
-            if(!TextUtils.isEmpty(videoDetailItem.getReid())){
-                params.put("seid",videoDetailItem.getReid());
+            if (!TextUtils.isEmpty(videoDetailItem.getReid())) {
+                params.put("seid", videoDetailItem.getReid());
             }
-            if(!TextUtils.isEmpty(videoDetailItem.getArea_name()));{
-                params.put("area",videoDetailItem.getArea_name());
+            if (!TextUtils.isEmpty(videoDetailItem.getArea_name())) ;
+            {
+                params.put("area", videoDetailItem.getArea_name());
             }
-            params.put("bucket",videoDetailItem.getBucket());
-            params.put("rank",rank);
-            params.put("topic_id","-");
-            params.put("ranklist_id","-");
-            params.put("live_id","-");
-        }else if(object instanceof  SearchResultInfos){
-            SearchResultInfos  searchResultInfos = (SearchResultInfos) object;
+            params.put("bucket", videoDetailItem.getBucket());
+            params.put("rank", rank);
+            params.put("topic_id", "-");
+            params.put("ranklist_id", "-");
+            params.put("live_id", "-");
+        } else if (object instanceof SearchResultInfos) {
+            SearchResultInfos searchResultInfos = (SearchResultInfos) object;
 //            params.put("cid",mainActivityAlbum.getCategory_id());
 //            params.put("aid", mainActivityAlbum.getId());
 //            params.put("vid",mainActivityAlbum.getVideos().get(0).getGvid());
@@ -1117,51 +1116,52 @@ public class HttpApi extends SarrsBaseHttpApi {
 
             try {
                 String kw = URLEncoder.encode(searchResultInfos.getSearch_word(), "UTF-8");
-                params.put("kw",kw);
+                params.put("kw", kw);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("pn",pn);
-            params.put("sa",sa);
-            params.put("input",input);
-            params.put("type","search");
+            params.put("pn", pn);
+            params.put("sa", sa);
+            params.put("input", input);
+            params.put("type", "search");
             String aid = "-";
             String vid = "-";
             String cid = "-";
             String sid = "-";
             String lid = "-";
             String gid = "-";
-            if("1".equalsIgnoreCase(sa)){
+            if ("1".equalsIgnoreCase(sa)) {
                 int irank = Integer.parseInt(rank);
-                params.put("pos",rank);
+                params.put("pos", rank);
                 SearchResultDataList searchResultDataList = (SearchResultDataList) searchResultInfos.getItems().get(irank);
 
-                if(searchResultDataList != null) {
-                    if(!TextUtils.isEmpty(searchResultDataList.getId())){
+                if (searchResultDataList != null) {
+                    if (!TextUtils.isEmpty(searchResultDataList.getId())) {
                         aid = searchResultDataList.getId();
                     }
 
-                    if (searchResultDataList.getVideos() !=null && searchResultDataList.getVideos().size()>0 && !TextUtils.isEmpty(searchResultDataList.getVideos().get(0).getGvid())) {
+                    if (searchResultDataList.getVideos() != null && searchResultDataList.getVideos().size() > 0 && !TextUtils.isEmpty(searchResultDataList.getVideos().get(0).getGvid())) {
                         vid = searchResultDataList.getVideos().get(0).getGvid();
                     }
-                    if(!TextUtils.isEmpty(searchResultDataList.getCategory_id())) {
+                    if (!TextUtils.isEmpty(searchResultDataList.getCategory_id())) {
                         cid = searchResultDataList.getCategory_id();
                     }
 
                 }
 
-            }else{
-                params.put("pos",rank);
+            } else {
+                params.put("pos", rank);
             }
 
-            String extend = aid+"_"+vid+"_"+cid+"_"+sid+"_"+lid + "_" + gid;
+            String extend = aid + "_" + vid + "_" + cid + "_" + sid + "_" + lid + "_" + gid;
 
 
             params.put("extend", extend);
         }
-        createRequest(SarrsRequest.Method.GET, sb.toString(),null, params, null).start(null,ConstantUtils.REQUEST_UPLOAD_STAT);
+        createRequest(SarrsRequest.Method.GET, sb.toString(), null, params, null).start(null, ConstantUtils.REQUEST_UPLOAD_STAT);
     }
-    public static void play_stat(Object object,String token,String ac,String ut,String retry,String play_type,String code_rate,String ref,String timing,String vlen,String seid,String peid){
+
+    public static void play_stat(Object object, String token, String ac, String ut, String retry, String play_type, String code_rate, String ref, String timing, String vlen, String seid, String peid,String pageid) {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_9);
         HashMap<String, String> params = getBaseParams();
@@ -1169,47 +1169,59 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("ver", "1.0");
         //不同上报需要改
         params.put("p", "0");
-        params.put("uid",token);
-        params.put("ac",ac);//点击
-        params.put("extend","-");
-        params.put("ref",ref);
-        params.put("type","play");
-        if("0".equalsIgnoreCase(timing)){
-            params.put("timing","-");
-        }else{
-            params.put("timing",timing);
+        params.put("uid", token);
+        params.put("ac", ac);//点击
+        params.put("extend", "-");
+        params.put("ref", ref);
+        params.put("type", "play");
+        if ("0".equalsIgnoreCase(timing)) {
+            params.put("timing", "-");
+        } else {
+            params.put("timing", timing);
         }
-        params.put("vlen",vlen);
-        params.put("retry",retry);
-        params.put("play_type",play_type);
-        if("0".equalsIgnoreCase(ut)){
-            params.put("ut","-");
-        }else{
-            params.put("ut",ut);
+        params.put("vlen", vlen);
+        params.put("retry", retry);
+        params.put("play_type", play_type);
+        if ("0".equalsIgnoreCase(ut)) {
+            params.put("ut", "-");
+        } else {
+            params.put("ut", ut);
         }
 
-        params.put("code_rate",code_rate);
+        params.put("code_rate", code_rate);
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-        String act_time = System.currentTimeMillis()+"";
+        String act_time = System.currentTimeMillis() + "";
         LogUtil.e("wulianshu", act_time);
         params.put("ctime", act_time);
         params.put("peid", peid);
         params.put("r", System.currentTimeMillis() + "");
-        params.put("live_id","-");
-        params.put("topic_id","-");
-        params.put("ranklist_id","-");
-        params.put("extend","-");
-        params.put("player_version","1.0.1");
-        params.put("ref",ref);
-        params.put("pageid", "00S002008");
+        params.put("live_id", "-");
+        params.put("topic_id", "-");
+        params.put("ranklist_id", "-");
+        params.put("extend", "-");
+        params.put("player_version", "1.0.1");
+        params.put("ref", ref);
         params.put("seid", seid);
-        if(object instanceof VideoItem){
+        params.put("pageid", pageid);
+        if (object instanceof VideoItem) {
             VideoItem videoItem = (VideoItem) object;
-            params.put("aid",videoItem.getId());
-            params.put("cid",videoItem.getCategory_id());
+            params.put("aid", videoItem.getId());
+            params.put("cid", videoItem.getCategory_id());
             params.put("vid", videoItem.getGvid());
+        }else if(object instanceof LiveDataEntity){
+            LiveDataEntity liveDataEntity = (LiveDataEntity) object;
+            params.put("aid", "-");
+            params.put("cid", liveDataEntity.getCid());
+            params.put("vid", "-");
+            //cid 是4  cid_channalid  其他  cid_id
+            if("4".equals(liveDataEntity.getCid())){
+                params.put("live_id", liveDataEntity.getCid()+"_"+liveDataEntity.getChannelId());
+            }
+//            else{
+//                params.put("live_id", liveDataEntity.getCid()+"_"+liveDataEntity.getId());
+//            }
         }
-        createRequest(SarrsRequest.Method.GET, sb.toString(),null, params, null).start(null,ConstantUtils.REQUEST_UPLOAD_STAT);
+        createRequest(SarrsRequest.Method.GET, sb.toString(), null, params, null).start(null, ConstantUtils.REQUEST_UPLOAD_STAT);
     }
 
     /**

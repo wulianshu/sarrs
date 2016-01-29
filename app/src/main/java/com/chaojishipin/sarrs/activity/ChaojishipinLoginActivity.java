@@ -46,6 +46,7 @@ import com.chaojishipin.sarrs.thirdparty.LoginListener;
 import com.chaojishipin.sarrs.thirdparty.LoginManager;
 import com.chaojishipin.sarrs.thirdparty.LoginUtils;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.GetSmsContent;
 import com.chaojishipin.sarrs.utils.JsonUtil;
@@ -282,17 +283,19 @@ public class ChaojishipinLoginActivity extends ChaoJiShiPinBaseActivity implemen
                 mError.setVisibility(View.VISIBLE);
                 mError.setText(getResources().getString(R.string.login_verifycode_error_max));
                 mLogin.setEnabled(false);
-                mLogin.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+//                mLogin.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+                mLogin.setBackgroundResource(R.drawable.next_step);
                 return;
             }
             if (charSequence.length() < 4) {
                 mLogin.setEnabled(false);
-                mLogin.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+//                mLogin.setBackgroundColor(getResources().getColor(R.color.color_D5D5D5));
+                mLogin.setBackgroundResource(R.drawable.next_step);
             }
 
             if (charSequence.length() == 4) {
-
-                mLogin.setBackgroundColor(getResources().getColor(R.color.color_c5242b));
+                mLogin.setBackgroundResource(R.drawable.next_step_red);
+//                mLogin.setBackgroundColor(getResources().getColor(R.color.color_c5242b));
                 mLogin.setEnabled(true);
                 return;
             }
@@ -506,5 +509,17 @@ public class ChaojishipinLoginActivity extends ChaoJiShiPinBaseActivity implemen
         HttpManager.getInstance().cancelByTag(ConstantUtils.UPLOAD_HISTORY_RECORD);
         HttpApi.
                 uploadHistoryRecord(token, json, new UpoloadHistoryRecordListener());
+    }
+
+    @Override
+    protected void onResume() {
+        UmengPagePath.beginpage(ConstantUtils.AND_REGISTER,this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        UmengPagePath.endpage(ConstantUtils.AND_REGISTER,this);
+        super.onPause();
     }
 }

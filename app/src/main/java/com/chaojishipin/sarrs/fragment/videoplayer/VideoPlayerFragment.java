@@ -50,9 +50,10 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     private final String TAG = this.getClass().getSimpleName();
     private VideoPlayerController mVideoPlayerController;
     private int mSysAPILevel = 0;
-    private long begintime=0l;
-    public String getPeid(){
-     return Utils.getDeviceId(ChaoJiShiPinApplication.getInstatnce())+begintime;
+    private long begintime = 0l;
+
+    public String getPeid() {
+        return Utils.getDeviceId(ChaoJiShiPinApplication.getInstatnce()) + begintime;
     }
     //数据上报要用
     private String ref;
@@ -61,7 +62,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
         return seid;
     }
 
-    private String seid="-";
+    private String seid = "-";
 
     public String getRef() {
         return ref;
@@ -126,7 +127,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
         historyRecordDao = new HistoryRecordDao(mContext);
         ref = getActivity().getIntent().getStringExtra("ref");
         seid = getActivity().getIntent().getStringExtra("seid");
-        if(TextUtils.isEmpty(seid)){
+        if (TextUtils.isEmpty(seid)) {
             seid = "-";
         }
         if (container == null) {
@@ -147,31 +148,31 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     }
 
     /**
-     *   全屏展示剧集 按钮
-     * */
+     * 全屏展示剧集 按钮
+     */
 
-    public void showEpisode(){
-        if(mVideoPlayerController!=null){
+    public void showEpisode() {
+        if (mVideoPlayerController != null) {
             mVideoPlayerController.setSelectVisibile(true);
         }
     }
-    /**
-     *   全屏展示剧集 按钮
-     * */
 
-    public void hideEpisode(){
-        if(mVideoPlayerController!=null){
+    /**
+     * 全屏展示剧集 按钮
+     */
+
+    public void hideEpisode() {
+        if (mVideoPlayerController != null) {
             mVideoPlayerController.setSelectVisibile(false);
         }
     }
 
 
-
     /**
-     *   全屏展示下一集按钮
-     * */
-    public void showPlayNext(){
-        if(mVideoPlayerController!=null){
+     * 全屏展示下一集按钮
+     */
+    public void showPlayNext() {
+        if (mVideoPlayerController != null) {
             mVideoPlayerController.setPlayNextVisible(true);
         }
     }
@@ -189,7 +190,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     }
 
     private void initData() {
-       // mVideoDetailItem=(VideoDetailItem)getActivity().getIntent().getSerializableExtra("videoDetailItem");
+        // mVideoDetailItem=(VideoDetailItem)getActivity().getIntent().getSerializableExtra("videoDetailItem");
         mSysAPILevel = Utils.getAPILevel();
         initTrafficStats(mSysAPILevel);
     }
@@ -241,11 +242,11 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     }
 
     /**
-     *   播放记录（添加本地、在线）
-     * */
+     * 播放记录（添加本地、在线）
+     */
     public void saveRecord() {
         if (mVideoPlayerController.getmPlayContorl() == null || mVideoPlayerController.getmPlayContorl().getDuration() == -1) {
-          return;
+            return;
         }
         videoItem = mVideoPlayerController.getCurrentVideoItem();
         if (videoItem != null) {
@@ -290,9 +291,6 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                             } else if (videoItem.getName().contains(":") && ((ChaoJiShiPinVideoDetailActivity) this.getActivity()).getCurrentplayVideoDetailItem() != null) {
                                 stitle = ((ChaoJiShiPinVideoDetailActivity) this.getActivity()).getCurrentplayVideoDetailItem().getFtitle() + "  第" + videoItem.getPorder() + "期  " + videoItem.getName().split(":")[1];
                             }
-
-
-
                         } else {
                             if (((ChaoJiShiPinVideoDetailActivity) this.getActivity()).getCurrentplayVideoDetailItem() != null && !TextUtils.isEmpty(((ChaoJiShiPinVideoDetailActivity) this.getActivity()).getCurrentplayVideoDetailItem().getFtitle())) {
                                 title = ((ChaoJiShiPinVideoDetailActivity) this.getActivity()).getCurrentplayVideoDetailItem().getFtitle();
@@ -311,8 +309,8 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                         stitle = videoItem.getTitle();
                     }
                 }
-                if(TextUtils.isEmpty(stitle)){
-                    stitle=videoItem.getTitle();
+                if (TextUtils.isEmpty(stitle)) {
+                    stitle = videoItem.getTitle();
                 }
                 historyRecord.setTitle(stitle);
                 historyRecord.setContent_type(videoItem.getContent_type());
@@ -322,16 +320,16 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
             }
 
             //上传服务端
-            if (UserLoginState.getInstance().isLogin()&&NetWorkUtils.isNetAvailable()) {
+            if (UserLoginState.getInstance().isLogin() && NetWorkUtils.isNetAvailable()) {
                 String token = UserLoginState.getInstance().getUserInfo().getToken();
-                if (videoItem != null &&  videoItem.getGvid()!=null ) {
+                if (videoItem != null && videoItem.getGvid() != null) {
 //                if (videoItem.getId() == null || "".equals(videoItem.getId())) {
 //                    Log.e("VideoPlayerFragment", "videoItem id is null");
 //                    return;
 //                }
                     UploadRecord uploadRecord = new UploadRecord();
                     //TODO  吴联暑检查下 有没有类似问题 ?
-                    if(!TextUtils.isEmpty(videoItem.getCategory_id())){
+                    if (!TextUtils.isEmpty(videoItem.getCategory_id())) {
                         uploadRecord.setCid(Integer.parseInt(videoItem.getCategory_id()));
                     }
                     uploadRecord.setAction(0);
@@ -341,7 +339,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                     uploadRecord.setUpdateTime(System.currentTimeMillis());
                     uploadRecord.setSource(videoItem.getSource());
                     uploadRecord.setVid(videoItem.getGvid());
-                    if(!TextUtils.isEmpty(videoItem.getId())){
+                    if (!TextUtils.isEmpty(videoItem.getId())) {
                         uploadHistoryRecordOneRecord(token, uploadRecord);
                     }
 
@@ -362,24 +360,24 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
      */
 
 
-    private void myOnresume(){
+    private void myOnresume() {
         LogUtil.e("Media Player", "OnResume()");
 
         mNetType = NetWorkUtils.getNetType();
         if (mVideoPlayerController != null && mVideoPlayerController.getmPlayContorl() != null) {
-            if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
-                LogUtil.e("wulianshu","setPlayLoadingVisibile 5");
-                mVideoPlayerController.setPlayLoadingVisibile(false,null);
+            if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
+                LogUtil.e("wulianshu", "setPlayLoadingVisibile 5");
+                mVideoPlayerController.setPlayLoadingVisibile(false, null);
             }
-            if(videoItem !=null) {
+            if (videoItem != null) {
                 mVideoPlayerController.setVideoName(videoItem);
             }
             if (mNetType != -1 || mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
                 // 锁屏或从后台再次进入时设置播放器控制状态栏的显示
-                if (mVideoPlayerController.getmLockScreenBtn().isSelected()){
-                    Message msg=new Message();
-                    msg.what=ConstantUtils.DISSMISS_MEDIACONTROLLER;
-                    if(mHandler.hasMessages(ConstantUtils.DISSMISS_MEDIACONTROLLER)){
+                if (mVideoPlayerController.getmLockScreenBtn().isSelected()) {
+                    Message msg = new Message();
+                    msg.what = ConstantUtils.DISSMISS_MEDIACONTROLLER;
+                    if (mHandler.hasMessages(ConstantUtils.DISSMISS_MEDIACONTROLLER)) {
                         mHandler.removeMessages(ConstantUtils.DISSMISS_MEDIACONTROLLER);
                     }
                     mHandler.sendMessage(msg);
@@ -399,17 +397,17 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                     LogUtil.e("xll", " onResume 暂停退出 isPause " + mVideoPlayerController.ismIsPause());
                     mVideoPlayerController.getmPlayContorl().seekTo(recoderposition);
                     mVideoPlayerController.playerPause();
-                    if(mVideoPlayerController.ismIsPause()){
+                    if (mVideoPlayerController.ismIsPause()) {
                         mVideoPlayerController.updatePlayBtnBg(true);
-                    }else{
+                    } else {
                         mVideoPlayerController.updatePlayBtnBg(false);
                     }
 
                 } else if (pausetype == -1 && mNetType == NetWorkUtils.NETTYPE_WIFI) {
-                    LogUtil.e("xll"," onResume 其他退出");
+                    LogUtil.e("xll", " onResume 其他退出");
                     mVideoPlayerController.play();
                     mVideoPlayerController.updatePlayBtnBg(false);
-                } else if(pausetype == 1 && mActivity.getMediaType() ==  ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+                } else if (pausetype == 1 && mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
                     mVideoPlayerController.getmPlayContorl().seekTo(recoderposition);
                     mVideoPlayerController.play();
                     LogUtil.e("xll", "Letv ");
@@ -434,11 +432,12 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
         }
     }
-   /**
-    *  播放上报
-    *  目前支持在线播放到最后一集返回详情页上报，本地播放以及推到后台不上报
-    *  */
-    void report(){
+
+    /**
+     * 播放上报
+     * 目前支持在线播放到最后一集返回详情页上报，本地播放以及推到后台不上报
+     */
+    void report() {
         if (mPlayData != null) {
                 String bucket="";
                 String reid="";
@@ -447,24 +446,24 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                 reid = mActivity.getData().getReid();
 
             }
-                VideoItem videoItem = mVideoPlayerController.getCurrentVideoItem();
-                int playTime = 0;
-                if (mVideoPlayerController.getmPlayContorl() != null) {
-                    playTime = mVideoPlayerController.getmPlayContorl().getCurrentPosition() / 1000;
-                }
-                    if (videoItem != null) {
-                    DataReporter.reportPlayRecord(videoItem.getGvid(),
-                            videoItem.getId(),
-                            videoItem.getSource(),
-                            videoItem.getCategory_id(),
-                            playTime,
-                            UserLoginState.getInstance().getUserInfo().getToken(),
-                            NetWorkUtils.getNetInfo(),
-                            bucket,
-                            reid);
+            VideoItem videoItem = mVideoPlayerController.getCurrentVideoItem();
+            int playTime = 0;
+            if (mVideoPlayerController.getmPlayContorl() != null) {
+                playTime = mVideoPlayerController.getmPlayContorl().getCurrentPosition() / 1000;
+            }
+            if (videoItem != null) {
+                DataReporter.reportPlayRecord(videoItem.getGvid(),
+                        videoItem.getId(),
+                        videoItem.getSource(),
+                        videoItem.getCategory_id(),
+                        playTime,
+                        UserLoginState.getInstance().getUserInfo().getToken(),
+                        NetWorkUtils.getNetInfo(),
+                        bucket,
+                        reid);
 
-                    LogUtil.e("xll ", "report online: aid : " + videoItem.getId() + " gvid :" + videoItem.getGvid() + " source :" + videoItem.getSource()+" cid :"+videoItem.getCategory_id()+" bucket: "+bucket+" seid : "+reid);
-                }
+                LogUtil.e("xll ", "report online: aid : " + videoItem.getId() + " gvid :" + videoItem.getGvid() + " source :" + videoItem.getSource() + " cid :" + videoItem.getCategory_id() + " bucket: " + bucket + " seid : " + reid);
+            }
         }
     }
 
@@ -474,28 +473,27 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
         switch (v.getId()) {
             case R.id.mediacontroller_top_back:
                 //本地播放 半屏返回键退出
-                if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL)
-                {
+                if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
                     mActivity.finish();
                     return;
-                }else{
+                } else {
                     if (ChaoJiShiPinVideoDetailActivity.isFullScreen) {
-                        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                             mActivity.setSmallScreen();
                             mActivity.setSCREEN(ChaoJiShiPinVideoDetailActivity.SCREEN.HALF);
                             mActivity.statusBarShow(true);
                             // 下拉菜单隐藏在半屏
-                            if(mVideoPlayerController!=null){
+                            if (mVideoPlayerController != null) {
                                 mVideoPlayerController.hideAnimSelect(10);
                                 mVideoPlayerController.setSlideTriggerVisible(false);
                             }
-                        }else{
+                        } else {
                             mActivity.setSCREEN(ChaoJiShiPinVideoDetailActivity.SCREEN.HALF);
                             mActivity.setSmallScreen();
                             mActivity.statusBarShow(true);
                             // 下拉菜单隐藏在半屏
-                            if(mVideoPlayerController!=null){
+                            if (mVideoPlayerController != null) {
                                 mVideoPlayerController.hideAnimSelect(10);
                                 mVideoPlayerController.setSlideTriggerVisible(false);
                             }
@@ -526,12 +524,13 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                 }else{
                     // 竖屏-半屏
                     if (ChaoJiShiPinVideoDetailActivity.isFullScreen) {
-                        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                             mActivity.setSmallScreen();
                             mActivity.setSCREEN(ChaoJiShiPinVideoDetailActivity.SCREEN.HALF);
                             mActivity.statusBarShow(true);
-                        }else{
+                        } else {
+
                             mActivity.setSmallScreen();
                             mActivity.setSCREEN(ChaoJiShiPinVideoDetailActivity.SCREEN.HALF);
                             mActivity.statusBarShow(true);
@@ -548,17 +547,17 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                     } else {
                         // 切换成横屏-全屏
                         mActivity.statusBarShow(false);
-                        if (mVideoPlayerController!= null) {
+                        if (mVideoPlayerController != null) {
                             mVideoPlayerController.resetEpisoBtnColor(mPlayData);
-                                // 在线播放单视频//或者单个视频专辑 ，隐藏剧集按钮
-                                if(mPlayData!=null&&mPlayData.getmEpisodes()!=null
-                                        &&mPlayData.getmEpisodes().indexOfKey(mPlayData.getKey())>=0
-                                        &&mPlayData.getmEpisodes().get(mPlayData.getKey())!=null
-                                        &&mPlayData.getmEpisodes().get(mPlayData.getKey()).size()<=1
-                                  ){
-                                        LogUtil.e("v1.1.2"," episo only one epsoviwe gone");
-                                        mVideoPlayerController.setSelectVisibile(false);
-                                }
+                            // 在线播放单视频//或者单个视频专辑 ，隐藏剧集按钮
+                            if (mPlayData != null && mPlayData.getmEpisodes() != null
+                                    && mPlayData.getmEpisodes().indexOfKey(mPlayData.getKey()) >= 0
+                                    && mPlayData.getmEpisodes().get(mPlayData.getKey()) != null
+                                    && mPlayData.getmEpisodes().get(mPlayData.getKey()).size() <= 1
+                                    ) {
+                                LogUtil.e("v1.1.2", " episo only one epsoviwe gone");
+                                mVideoPlayerController.setSelectVisibile(false);
+                            }
                             mVideoPlayerController.updateSaveStatus();
                         }
                         mActivity.setFullScreen();
@@ -604,27 +603,27 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 //        mVideoDetailItem =  ;
         if (null != playData) {
             //LogUtil.e("xll","receive pageNum "+playData.getmPageNum());
-            LogUtil.e("xll", "receive data (k,p) "+playData.getKey()+""+playData.getIndex());
+            LogUtil.e("xll", "receive data (k,p) " + playData.getKey() + "" + playData.getIndex());
             LogUtil.e("xll", "receive  " + playData.getIndex());
             String from = playData.getFrom();
-            if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+            if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
 
-                if(playData.getmLocalDataLists()!=null&&playData.getmLocalDataLists().size()>0){
-                    Cid=playData.getmLocalDataLists().get(0).getCid();
-                }else {
-                    if(playData.getmEpisodes()!=null&&playData.getmEpisodes().size()>0){
-                        Cid=playData.getmEpisodes().get(playData.getKey()).get(0).getCategory_id();
+                if (playData.getmLocalDataLists() != null && playData.getmLocalDataLists().size() > 0) {
+                    Cid = playData.getmLocalDataLists().get(0).getCid();
+                } else {
+                    if (playData.getmEpisodes() != null && playData.getmEpisodes().size() > 0) {
+                        Cid = playData.getmEpisodes().get(playData.getKey()).get(0).getCategory_id();
                     }
 
                 }
 
-            }else{
-                if(playData.getmEpisodes()!=null&&playData.getmEpisodes().size()>0){
-                    Cid=playData.getmEpisodes().get(playData.getKey()).get(0).getCategory_id();
+            } else {
+                if (playData.getmEpisodes() != null && playData.getmEpisodes().size() > 0) {
+                    Cid = playData.getmEpisodes().get(playData.getKey()).get(0).getCategory_id();
                 }
 
             }
-            if(Cid!=null){
+            if (Cid != null) {
                 mPlayData.setCid(Cid);
             }
             LogUtil.d("dyf", "来源：" + from);
@@ -640,7 +639,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
             } else if (ConstantUtils.PLAYER_FROM_DETAIL_ITEM.equals(from)) {
                 LogUtil.d("dyf", "setmPlayData" + mPlayData);
                 //将播放数据提供给播放控制台使用
-                if(mVideoPlayerController !=null) {
+                if (mVideoPlayerController != null) {
                     //mVideoPlayerController.stop();
                     mVideoPlayerController.clickPauseOrPlay();
                 }
@@ -653,11 +652,9 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                 // 设置全屏展开状态
                 mVideoPlayerController.resetFullScreenEpiso(mPlayData);
                 LogUtil.e("update FullScreen Episo Data", " OK");
-            }else if (ConstantUtils.PLAYER_FROM_BOTTOM_EPISO_TAG_CLICK.equals(from)) {
+            } else if (ConstantUtils.PLAYER_FROM_BOTTOM_EPISO_TAG_CLICK.equals(from)) {
                 LogUtil.e("update FullScreen Episo Data", " OK");
-            }
-
-            else if (ConstantUtils.PLAYER_FROM_SPECAIL.equals(from)) {
+            } else if (ConstantUtils.PLAYER_FROM_SPECAIL.equals(from)) {
                 //更新播放器数据
                 mVideoPlayerController.updatePlayData(mPlayData);
             } else if (ConstantUtils.PLAYER_FROM_SEARCH.equals(from)) {
@@ -673,7 +670,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
             } else if (ConstantUtils.PLAYER_FROM_RANKLIST.equals(from)) {
                 //更新播放器数据
                 mVideoPlayerController.updatePlayData(mPlayData);
-            }else{
+            } else {
                 // 下载。。。。等播放本地使用
                 mVideoPlayerController.setmPlayData(mPlayData);
 
@@ -686,12 +683,11 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     }
 
     public void onEventMainThread(String data) {
-        if (data.equals(mActivity.SHARE_CANCEL))
-        {
+        if (data.equals(mActivity.SHARE_CANCEL)) {
             reloadData();
-        }else if(mActivity.PLAY_DATA_ERR.equals(data)){
+        } else if (mActivity.PLAY_DATA_ERR.equals(data)) {
             mVideoPlayerController.showTimeOutLayout();
-            ToastUtil.showShortToast(mActivity,mActivity.getResources().getString(R.string.video_cannot_play));
+            ToastUtil.showShortToast(mActivity, mActivity.getResources().getString(R.string.video_cannot_play));
         }
     }
 
@@ -715,7 +711,8 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
     /**
      * 大小屏幕切换控制UI变化
-     *    wifi/2G/3G/4G 1 2 3 4
+     * wifi/2G/3G/4G 1 2 3 4
+     *
      * @param isFullScreen
      */
     public void setmVideoPlayerControllerUIByScreen(boolean isFullScreen) {
@@ -726,7 +723,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
             mVideoPlayerController.getmSlideBtn().setVisibility(View.VISIBLE);
             mVideoPlayerController.getmPlayNextBtn().setVisibility(View.VISIBLE);
             mVideoPlayerController.getmLockScreenBtn().setVisibility(View.VISIBLE);
-            mChangeFullScreen.setBackgroundResource(R.drawable.sarrs_pic_small_screen);
+            mChangeFullScreen.setImageResource(R.drawable.sarrs_pic_small_screen);
         } else {
             if (mNetType == -1) {
                 mVideoPlayerController.getmVideoPlayerNetErrorIcon().setVisibility(View.GONE);
@@ -735,17 +732,14 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
             mVideoPlayerController.hideSlideMenu();
             mVideoPlayerController.hideAnimSelect(10);
             mVideoPlayerController.getmPlayNextBtn().setVisibility(View.GONE);
-            LogUtil.e("v1.1.2","next btn gone fullscreen is false");
+            LogUtil.e("v1.1.2", "next btn gone fullscreen is false");
             mVideoPlayerController.getmLockScreenBtn().setVisibility(View.GONE);
-            mChangeFullScreen.setBackgroundResource(R.drawable.sarrs_pic_full_screen);
+            mChangeFullScreen.setImageResource(R.drawable.sarrs_pic_full_screen);
         }
         mVideoPlayerController.setSelectVisibile(isFullScreen);
         mVideoPlayerController.setMediaControllerTopVisibile(true);
 
     }
-
-
-
 
 
     /**
@@ -757,7 +751,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
         if (mVideoPlayerController == null) {
             return;
         }
-         reloadData();
+        reloadData();
         //WIFI
         if (netType == NetWorkUtils.NETTYPE_WIFI) {
             mVideoPlayerController.hideNetView();
@@ -766,13 +760,13 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
         } else if (netType == NetWorkUtils.NETTYPE_GSM) {
 
-            if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+            if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
 
-                LogUtil.e("xll","播放本地断开网络！");
-            }else{
-                if(mActivity.getEpisodeType()== ChaoJiShiPinVideoDetailActivity.EpisodeType.EPISO_LOCAL){
-                    LogUtil.e("v1.1.2"," local episode not show netview");
-                }else{
+                LogUtil.e("xll", "播放本地断开网络！");
+            } else {
+                if (mActivity.getEpisodeType() == ChaoJiShiPinVideoDetailActivity.EpisodeType.EPISO_LOCAL) {
+                    LogUtil.e("v1.1.2", " local episode not show netview");
+                } else {
                     mVideoPlayerController.playerPause();
                     mVideoPlayerController.resetPlaystate(true);
                     mVideoPlayerController.showGSMNetView();
@@ -780,12 +774,10 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
                 }
 
             }
-
-
         }
         // no net
         else if (netType == NetWorkUtils.NETTYPE_NO) {
-            if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+            if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
 
                LogUtil.e("xll","播放本地断开网络！");
             }else{
@@ -856,25 +848,25 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     }
 
 
-
-
     @Override
     public void onStop() {
-        VideoPlayerFragment.isactivityonresume=false;
+        VideoPlayerFragment.isactivityonresume = false;
         super.onStop();
     }
 
     @Override
     public void onDetach() {
-        VideoPlayerFragment.isactivityonresume=false;
+        VideoPlayerFragment.isactivityonresume = false;
         super.onDetach();
     }
-    public void reloadData(){
-        if(isactivityonresume) {
+
+    public void reloadData() {
+        if (isactivityonresume) {
             myOnresume();
         }
     }
-    public boolean isLockScreen(){
+
+    public boolean isLockScreen() {
         return mVideoPlayerController.isLockScreen();
     }
 }

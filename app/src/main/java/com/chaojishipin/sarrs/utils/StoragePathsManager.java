@@ -1,12 +1,6 @@
 package com.chaojishipin.sarrs.utils;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,107 +13,51 @@ import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.os.storage.StorageManager;
-import android.support.v4.util.LongSparseArray;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
-import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
-
-/**
- * @description Get the internal or external storage path.
- * 				This class used three ways to obtain the storage path.
- * 				reflect:
- * 						major method is getVolumePaths and getVolumeState. this two method is hidden for programmer, so we must to use this way.
- * 						if either getVolumePaths or getVolumeState can not be found (e.g. in some sdk version), then use next way.
- * 				command:
- * 						By filter the output of command "mount",  may be we can get the storage path that we want. if didn't, then use next way.
- * 				Api:
- * 						As is known to all, we use getExternalStorageDirectory method.
- */
-
-//case
-
-
-
-/*
--------------------------------device1--------------------
-        01-08 16:43:40.236 30932-30932/com.chaojishipin.sarrs E/xll_storage: init
-        01-08 16:43:40.243 30932-30932/com.chaojishipin.sarrs E/xll_storage: /storage/emulated/0
-        01-08 16:43:40.243 30932-30932/com.chaojishipin.sarrs E/xll_storage: /storage/sdcard1
-///shell///
-        01-08 16:43:40.292 30932-30932/com.chaojishipin.sarrs E/xll_storage: abtain by command:
-        /mnt/media_rw/sdcard1
-        01-08 16:43:40.292 30932-30932/com.chaojishipin.sarrs E/xll_storage: abtain by Environment:
-        /mnt/media_rw/sdcard1
-
-        -------------------------------device2--------------------
-        01-08 16:51:28.606 26380-26380/com.chaojishipin.sarrs E/xll_storage: init
-        01-08 16:51:28.615 26380-26380/com.chaojishipin.sarrs E/xll_storage: /storage/emulated/0
-
-        abtain by Environment: /storage/emulated/0
-
-
-        -------------------------------device3--------------------
-        01-08 16:53:30.628 8717-8717/com.chaojishipin.sarrs E/xll_storage: init
-        01-08 16:53:30.633 8717-8717/com.chaojishipin.sarrs E/xll_storage: /storage/emulated/0
-        01-08 16:53:30.633 8717-8717/com.chaojishipin.sarrs E/xll_storage: /storage/usbotg
-
-        abtain by Environment: /storage/emulated/0
-*/
-
-
+import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.bean.StorageBean;
 
 
 public class StoragePathsManager {
     private static final String LOG_TAG = "xll_storage";
 
-    private boolean isHM = false;
-    private final String DIR = "chaojishipin/movies";
-    private final String NEW_DIR = "Android/data/com.chaojishipin.sarrs/files";
-
+    private Context mContext;
+    // 优先级情况下获取最终卡path
     private String finalExterpath="";
-    static StoragePathsManager instanse;
-    private Context context;
+    // 内置卡path
+    private String internalSDpath="";
+    // 外置卡path
+    private String outSDpath="";
 
-    private StoragePathsManager(){
-        init();
+    private static StoragePathsManager instanse;
+
+    private StoragePathsManager(Context context){
+        mContext=context.getApplicationContext();
     }
 
-    public static synchronized final StoragePathsManager getInstanse()
+    public static synchronized StoragePathsManager getInstanse(Context context)
     {
         if(instanse==null){
-            instanse=new StoragePathsManager();
+            instanse=new StoragePathsManager(context);
         }
         return instanse;
     }
 
-    void deleteV_1_1_0Moviepath(){
+    private void deleteV_1_1_0Moviepath(){
         // 覆盖安装需要删除之前文件夹里视频
         String beforePath="/mnt/sdcard/Android/data/com.chaojishipin.sarrs/files/movies";
         File beforeFile=new File(beforePath);
         LogUtil.e(LOG_TAG,"before path "+beforePath);
         if(beforeFile.exists()){
-//            File[] beforemovies=  beforeFile.listFiles();
-//            for(File beforeChild:beforemovies){
-//
-//                boolean candele= beforeChild.delete();
-//
-//                LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete process");
-//                if(candele){
-//                    LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete ok");
-//                }else{
-//                    LogUtil.e(LOG_TAG,"v1.0.1 path exsits delete error");
-//                }
-//
-//
-//            }
            recursionDeleteFile(beforeFile);
-
 
         }else{
             LogUtil.e(LOG_TAG,"before path not exsits  ");
@@ -128,21 +66,22 @@ public class StoragePathsManager {
 
     private void deleV1_0_1Moviepath(){
         // 覆盖安装需要删除之前文件夹里视频
-        String beforePath=Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + DIR;
+        String beforePath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/chaojishipin";
         File beforeFile=new File(beforePath);
         LogUtil.e(LOG_TAG, "before path " + beforePath);
         if(beforeFile.exists()){
               recursionDeleteFile(beforeFile);
         }else{
-            LogUtil.e(LOG_TAG, "before path not exsits  ");
+            LogUtil.e(LOG_TAG,"before path not exsits  ");
         }
     }
+
     public void recursionDeleteFile(File file){
         if(file.isFile()){
             file.delete();
             return;
         }
-		if(file.isDirectory()){
+        if(file.isDirectory()){
             File[] childFile = file.listFiles();
             if(childFile == null || childFile.length == 0){
                 file.delete();
@@ -155,36 +94,11 @@ public class StoragePathsManager {
         }
     }
 
-    public void init(){
-        String s1 = Build.MANUFACTURER;
-        String s2 = Build.MODEL;
-        if(TextUtils.isEmpty(s1) || TextUtils.isEmpty(s2))
-            ;
-//        else if("xiaomi".equalsIgnoreCase(s1) && s2.toLowerCase().contains("hm note")){
-            isHM = true;
-            reset();
- //       }
-
-        getExternalSDpath();
-    }
-
-	public void deleteallDownloadPath(){
-        getExternalSDpath();
+    public void deleteallDownloadPath(){
+        getStoragePaths();
         deleV1_0_1Moviepath();
         deleteV_1_1_0Moviepath();
         deleV1_1_1moviepath();
-    }
-	
-    public String getExternalSDpath(){
-        if(!TextUtils.isEmpty(finalExterpath) && useful(finalExterpath, true) > 0){
-            if(isHM)
-                return finalExterpath + "/" + NEW_DIR;
-            return finalExterpath + "/" + DIR;
-        }
-        if(isHM){
-            return getExternalPath();
-        }else
-            return getSDpath();
     }
 
     /**
@@ -193,231 +107,241 @@ public class StoragePathsManager {
      *  获取sdcard （多个外置以及包含内置sdcard情况下取sdcard路径）
      *
      * */
-    private String getSDpath(){
-        LogUtil.e(LOG_TAG, "init");
-        List<String>pathList=new ArrayList<>();
-        if(!SPUtil.getInstance().getBoolean("init",false)){
-            deleV1_0_1Moviepath();
-            deleteV_1_1_0Moviepath();
-        }
-        File parentFile =new File("/storage/");
-        File [] childfiles=parentFile.listFiles();
+    private String folderName="/chaojishipin/movies";
 
-        for(File child:childfiles){
-            File subChild=new File(child.getAbsolutePath()+"/"+"tempchaojishipin");
-            if(subChild.exists()){
-                subChild.delete();
+    public List<StorageBean> getStoragePaths(){
+        List<StorageBean> mList=new ArrayList<>();
+
+        LogUtil.e("v1.2.0","build sdk "+Build.VERSION.SDK_INT);
+        LogUtil.e("v1.2.0","level sdk "+Build.VERSION_CODES.KITKAT);
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
+            List<String> pathList=new ArrayList<>();
+            File[] fs = mContext.getExternalFilesDirs(folderName);
+            try{
+                 LogUtil.e("v1.2.0","new leve19 check sdcard num is "+fs.length);
+                  //打印出拔出sd卡后的可用目录
+
+                 for(File file:fs){
+                     if(file!=null){
+                         LogUtil.e("v1.2.0","new level19 ok "+file.getAbsolutePath()+" after delete null diretory  ");
+                         pathList.add(file.getAbsolutePath());
+                     }
+
+
+                 }
+                LogUtil.e("v1.2.0","new api leve19 after delte nousable directroy size is "+pathList.size());
+                if(pathList.size()>1){
+                    //LogUtil.e("v1.2.0"," size >1 new leve19  "+fs[0].getAbsolutePath());
+                    LogUtil.e("v1.2.0"," size >1 new leve19_sdk  "+Environment.getExternalStorageDirectory().getAbsolutePath()+folderName);
+
+                    finalExterpath= fs[1].getAbsolutePath();
+                    internalSDpath=Environment.getExternalStorageDirectory().getAbsolutePath()+folderName;
+                    outSDpath=fs[1].getAbsolutePath();
+                    StorageBean interl=new StorageBean();
+                    interl.setName(mContext.getString(R.string.setting_internal));
+                    interl.setType(1);
+                    interl.setIsClick(false);
+                    interl.setIsEnable(true);
+                    interl.setPath(internalSDpath);
+                    mList.add(interl);
+                    // 外置sd卡可用
+                    StorageBean outSD=new StorageBean();
+                    outSD.setName(mContext.getString(R.string.setting_sd_extend));
+                    outSD.setType(2);
+                    outSD.setIsClick(true);
+                    outSD.setIsEnable(true);
+                    outSD.setPath(outSDpath);
+                    mList.add(outSD);
+
+
+                }else if(pathList.size()==1){
+                   // LogUtil.e("v1.2.0","new leve19  "+fs[0].getAbsolutePath());
+                    LogUtil.e("v1.2.0","new leve19_sdk  "+Environment.getExternalStorageDirectory().getAbsolutePath()+folderName);
+
+                    finalExterpath= Environment.getExternalStorageDirectory().getAbsolutePath()+folderName;
+                    internalSDpath=Environment.getExternalStorageDirectory().getAbsolutePath()+folderName;
+                    StorageBean interl=new StorageBean();
+                    interl.setName(mContext.getString(R.string.setting_internal));
+                    interl.setType(1);
+                    interl.setIsClick(true);
+                    interl.setIsEnable(true);
+                    interl.setPath(internalSDpath);
+                    mList.add(interl);
+
+                    // 构造 假外置存储
+                    StorageBean outSD=new StorageBean();
+                    outSD.setName(mContext.getString(R.string.setting_sd_extend));
+                    outSD.setType(2);
+                    outSD.setIsClick(false);
+                    outSD.setIsEnable(false);
+                    outSD.setPath("");
+                    mList.add(outSD);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+                LogUtil.e("v1.2.0", "new api file error logic " + e.getMessage());
+
             }
-            // 权限筛选
-            boolean mkdirSuccess=subChild.mkdirs();
-            if(mkdirSuccess){
-                if(child.canWrite()&&child.canRead()){
-                    String path  =child.getAbsolutePath();
-                    if(path.toLowerCase().contains("sdcard")){
-                        pathList.add(path);
-                        LogUtil.e(LOG_TAG, "child path permission  ok " + child.getAbsolutePath());
+
+
+        }else{
+            LogUtil.e(LOG_TAG, "init");
+            List<String>pathList=new ArrayList<>();
+            if(!SPUtil.getInstance().getBoolean("init",false)){
+                deleV1_0_1Moviepath();
+                deleteV_1_1_0Moviepath();
+            }
+            // exec();
+            File parentFile =new File("/storage/");
+            File [] childfiles=parentFile.listFiles();
+
+            for(File child:childfiles){
+                File subChild=new File(child.getAbsolutePath()+"/"+"tempchaojishipin.temp");
+                if(subChild.exists()){
+                    subChild.delete();
+                }
+                try{
+
+
+
+                    boolean isCreate=   subChild.createNewFile();
+                    LogUtil.e("v1.2.0", "create file " + isCreate);
+                    if(isCreate){
+                        LogUtil.e("v1.2.0","create file "+subChild.getAbsolutePath());
                     }
 
+
+                    if(isCreate){
+                        if(child.canWrite()&&child.canRead()){
+                            String path  =child.getAbsolutePath();
+                            if(path.toLowerCase().contains("sdcard")){
+                                pathList.add(path);
+                                LogUtil.e(LOG_TAG, "child path permission  ok " + child.getAbsolutePath());
+                            }
+
+                        }else{
+                            LogUtil.e(LOG_TAG, "child path permission(R&W) not have " + child.getAbsolutePath());
+
+                        }
+                    }else{
+                        LogUtil.e(LOG_TAG, "child path permission(create) not have " + child.getAbsolutePath());
+                    }
+
+
+                }catch (Exception e){
+                    LogUtil.e(LOG_TAG, "child path permission(create exception) not have " + child.getAbsolutePath());
+                    LogUtil.e(LOG_TAG,e.getMessage());
+                    e.printStackTrace();
                 }
-            }else{
-                LogUtil.e(LOG_TAG, "child path permission not have " + child.getAbsolutePath());
+
+                // 权限筛选
+                // boolean mkdirSuccess=subChild.mkdirs();
+
+
+            }
+            // 含有字母、数字排序
+            Collections.sort(pathList);
+
+            //  中兴(有外置) /storage/sdcard1  /storage/sdcard0   三星(由外置) /storage/sdcard0  /storage/extSdCard    /lemax(都是内置)  /storage/sdcard0   /storage/sdcard1
+            if(pathList.size()>1) {
+                for (String str : pathList) {
+                    if (!str.toLowerCase().equalsIgnoreCase("/storage/sdcard0")) {
+                        finalExterpath = str+folderName;
+                        outSDpath=str+folderName;
+                        StorageBean outSD=new StorageBean();
+                        outSD.setName(mContext.getString(R.string.setting_sd_extend));
+                        outSD.setType(2);
+                        outSD.setIsClick(true);
+                        outSD.setIsEnable(true);
+                        outSD.setPath(outSDpath);
+                        mList.add(outSD);
+                    }else{
+                        internalSDpath=str+folderName;
+                        StorageBean intel=new StorageBean();
+                        intel.setName(mContext.getString(R.string.setting_internal));
+                        intel.setType(1);
+                        intel.setIsClick(false);
+                        intel.setIsEnable(true);
+                        intel.setPath(internalSDpath);
+                        mList.add(intel);
+                    }
+                    LogUtil.e(LOG_TAG, " sdcard path array>1 " + finalExterpath);
+                }
+            }
+            // 酷派 手机 返回 /storage/emulated/0   （内置）  /storage/sdcard1
+            if(pathList.size()==1){
+                finalExterpath= pathList.get(0)+folderName;
+                internalSDpath=pathList.get(0)+folderName;
+                StorageBean interl=new StorageBean();
+                interl.setName(mContext.getString(R.string.setting_internal));
+                interl.setType(1);
+                interl.setIsClick(true);
+                interl.setIsEnable(true);
+                interl.setPath(internalSDpath);
+                mList.add(interl);
+                // 构造 假外置存储
+                StorageBean outSD=new StorageBean();
+                outSD.setName(mContext.getString(R.string.setting_sd_extend));
+                outSD.setType(2);
+                outSD.setIsClick(false);
+                outSD.setIsEnable(false);
+                outSD.setPath("");
+                mList.add(outSD);
+
+                LogUtil.e(LOG_TAG," sdcard path array=1 "+finalExterpath);
             }
 
-        }
-        // 含有字母、数字排序
-        Collections.sort(pathList);
+            if(pathList.size()==0){
+                finalExterpath=Environment.getExternalStorageDirectory().getAbsolutePath()+folderName;
+                internalSDpath=Environment.getExternalStorageDirectory().getAbsolutePath()+folderName;
+                StorageBean intel=new StorageBean();
+                intel.setName(mContext.getString(R.string.setting_internal));
+                intel.setType(1);
+                intel.setIsClick(false);
+                intel.setIsEnable(true);
+                intel.setPath(internalSDpath);
+                mList.add(intel);
 
-        //  中兴(有外置) /storage/sdcard1  /storage/sdcard0   三星(由外置) /storage/sdcard0  /storage/extSdCard    /lemax(都是内置)  /storage/sdcard0   /storage/sdcard1
-        if(pathList.size()>1) {
-            for (String str : pathList) {
-                if (!str.toLowerCase().equalsIgnoreCase("/storage/sdcard0")) {
+                // 构造 假外置存储
+                StorageBean outSD=new StorageBean();
+                outSD.setName(mContext.getString(R.string.setting_sd_extend));
+                outSD.setType(2);
+                outSD.setIsClick(false);
+                outSD.setIsEnable(false);
+                outSD.setPath("");
+                mList.add(outSD);
 
-                    finalExterpath = str;
-                }
-
-                LogUtil.e(LOG_TAG, " sdcard path array>1 " + finalExterpath);
             }
-        }
-        // 酷派 手机 返回 /storage/emulated/0   （内置）  /storage/sdcard1
-        if(pathList.size()==1){
-            finalExterpath= pathList.get(0);
-            LogUtil.e(LOG_TAG," sdcard path array=1 "+finalExterpath);
-        }
 
-        if(pathList.size()==0){
-            finalExterpath=Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
 
+
+        }
         LogUtil.e(LOG_TAG," final path "+finalExterpath);
         LogUtil.e(LOG_TAG, "init ok");
         if(!TextUtils.isEmpty(finalExterpath)){
-            //外置sdcard路径覆盖安装删除之前数据
+            //初次安装外置sdcard路径删除之前数据
             if(!SPUtil.getInstance().getBoolean("init",false)){
                 deleV1_1_1moviepath();
             }
-            record();
+
+            SPUtil.getInstance().putString("sdcard",""+finalExterpath);
+            LogUtil.e(LOG_TAG, "sdcard path put ok : " + finalExterpath );
+            SPUtil.getInstance().putBoolean("init",true);
         }
-        return finalExterpath;
+
+        return mList;
     }
 
-    private void record(){
-        if(isHM)
-            SPUtil.getInstance().putString("sdcard",""+finalExterpath + "/" + NEW_DIR);
-        else
-            SPUtil.getInstance().putString("sdcard",""+finalExterpath + "/" + DIR);
-        SPUtil.getInstance().putBoolean("init",true);
-    }
-
-    private void reset(){
-        SPUtil.getInstance().putString("sdcard", "");
-        SPUtil.getInstance().putBoolean("init", false);
-    }
 
     private void deleV1_1_1moviepath(){
-        String expath=finalExterpath+"/" + DIR;
+        String expath=finalExterpath+"/chaojishipin/movies";
         File exFile=new File(expath);
         if(exFile.exists()){
             LogUtil.e(LOG_TAG,"ext path exsits  "+expath);
+              recursionDeleteFile(exFile);
         }else{
             LogUtil.e(LOG_TAG,"ext path not exsits ");
         }
-    }
-
-    private String getExternalPath(){
-        LongSparseArray<String> array = getExterPath();
-        if(array.size() == 0)
-            finalExterpath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        else {
-            finalExterpath = array.valueAt(array.size() - 1);
-            record();
-        }
-
-        return finalExterpath;
-    }
-
-    private LongSparseArray<String> getExterPath() {
-        LongSparseArray<String> path = new LongSparseArray<>();
-        try {
-            File f = Environment.getExternalStorageDirectory();
-            long space = useful(f.getAbsolutePath(), true);
-            if (space > 0)
-                path.put(space, f.getAbsolutePath());
-
-            Runtime runtime = Runtime.getRuntime();
-            Process proc = runtime.exec("mount");
-            InputStream is = proc.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            String line;
-            BufferedReader br = new BufferedReader(isr);
-            while ((line = br.readLine()) != null) {
-                if (line.contains("secure"))
-                    continue;
-                if (line.contains("asec"))
-                    continue;
-                if (line.contains("fat")) {
-                    String columns[] = line.split(" ");
-                    if (columns != null) {
-                        for (int j = 0; j < columns.length; j++) {
-                            long tmp = useful(columns[j], true);
-                            if (tmp > 0)
-                                path.put(tmp, columns[j]);
-                        }
-                    }
-                } else if (line.contains("fuse")) {
-                    String columns[] = line.split(" ");
-                    if (columns != null) {
-                        for (int j = 0; j < columns.length; j++) {
-                            long tmp = useful(columns[j], true);
-                            if (tmp > 0)
-                                path.put(tmp, columns[j]);
-                        }
-                    }
-                }
-            }
-
-            br.close();
-            isr.close();
-            is.close();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return path;
-    }
-
-    private File mkDirs(String path, boolean child){
-        try{
-            File f;
-            if(child){
-                if(isHM)
-                    f = new File(path, NEW_DIR);
-                else
-                    f = new File(path, DIR);
-            }else
-                f = new File(path);
-            if(f.exists())
-                return f;
-            if(f.mkdirs())
-                return f;
-
-            MediaFile tmp = new MediaFile(ChaoJiShiPinApplication.getInstatnce().getContentResolver(), f);
-            if(tmp.mkdir())
-                return tmp.getFile();
-
-        }catch(Throwable e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void test(String file, String conent) {
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(file, true)));
-            out.write(conent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private long useful(String path, boolean child) {
-        try {
-            if(TextUtils.isEmpty(path) || !path.startsWith("/"))
-                return -1;
-            File file = new File(path);
-            if (file.canWrite() && file.canRead()) {
-                try {
-                    file = mkDirs(path, child);
-                    if(file == null)
-                        file = new File(path, NEW_DIR);
-                    file = new File(file, System.currentTimeMillis() + "");
-                    test(file.getAbsolutePath(), "aaaaaaaa");
-                    FileOutputStream fout = new FileOutputStream(file);
-                    fout.write("a".getBytes());
-                    fout.close();
-                    file.delete();
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    return -1;
-                }
-                if (!child)
-                    return 1;
-                StatFs statFs = new StatFs(path);
-                long blockSize = statFs.getBlockSize();
-                long availableBlocks = statFs.getAvailableBlocks();
-                if (blockSize > 0 && availableBlocks > 0)
-                    return blockSize * availableBlocks;
-            }
-            return -1;
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 }

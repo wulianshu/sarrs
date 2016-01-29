@@ -29,10 +29,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="visible" />
+        android:visibility="gone" />
     <!-- 网络异常界面-->
     <include
-        android:id="@+id/videoplayer_error_layout"
+        android:id="@+id/videoplayer_net_error_layout"
         layout="@layout/videoplayerfragment_mideaplayer_mediacontroller_net"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
