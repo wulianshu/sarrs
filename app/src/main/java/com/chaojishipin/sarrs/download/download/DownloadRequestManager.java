@@ -26,11 +26,11 @@ import com.chaojishipin.sarrs.http.parser.SingleInfoParser;
 import com.chaojishipin.sarrs.utils.AllActivityManager;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.DataUtils;
+import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.StringUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.letv.http.LetvHttpConstant;
 import com.letv.http.impl.LetvHttpParameter;
-import com.sina.weibo.sdk.utils.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,8 +47,8 @@ import java.util.Map;
 
 
 public class DownloadRequestManager {
-	
-	private WebView mWebView;
+
+    private WebView mWebView;
 
     private TestJavaScriptInterface mTestInterface;
     private String mSnifferParamter = "";
@@ -61,25 +61,25 @@ public class DownloadRequestManager {
     private String mDefaultDefinition = "";
     private String downLoadUrl;
     private String downLoadType;
-	private final String type = "0"; //0:mp4, 1:m3u8
-    
-    
-    public DownloadRequestManager() {
-		super();
-	}
+    private final String type = "0"; //0:mp4, 1:m3u8
 
-	public DownloadRequestManager(Context context){
-		super();
-    	mTestInterface = new TestJavaScriptInterface();
-    	final Context cotexttemp = context;
-		AllActivityManager.getInstance().getCurrentActivity().runOnUiThread(new Runnable() // 工作线程刷新UI
-		{ //这部分代码将在UI线程执行，实际上是runOnUiThread post Runnable到UI线程执行了
-			@Override
-			public void run() {
-				initWebView(cotexttemp);
-			}
-		});
-    	num = 0;
+
+    public DownloadRequestManager() {
+        super();
+    }
+
+    public DownloadRequestManager(Context context) {
+        super();
+        mTestInterface = new TestJavaScriptInterface();
+        final Context cotexttemp = context;
+        AllActivityManager.getInstance().getCurrentActivity().runOnUiThread(new Runnable() // 工作线程刷新UI
+        { //这部分代码将在UI线程执行，实际上是runOnUiThread post Runnable到UI线程执行了
+            @Override
+            public void run() {
+                initWebView(cotexttemp);
+            }
+        });
+        num = 0;
     }
 
 	public VStreamInfoList getDownloadData(DownloadEntity downloadEntity) {
@@ -231,37 +231,36 @@ public class DownloadRequestManager {
 				AllActivityManager.getInstance().getCurrentActivity().runOnUiThread(new Runnable() // 工作线程刷新UI
                 { //这部分代码将在UI线程执行，实际上是runOnUiThread post Runnable到UI线程执行了  
                     @Override
-                    public void run()  
-                    {  
-                    	mHandler = new Handler();
-                    	mRunnable = new Runnable() {
-							@Override
-							public void run() {
-								if(num<20){
-									num++;
-									mWebView.clearCache(true);
-		    	                    mWebView.loadUrl("javascript:androidrequest()");
-		    	                    LogUtil.i("dyf", "执行handleMessage----"+num);
-		    	                    mHandler.postDelayed(mRunnable, 300);
-								}else{
-									mHandler.removeCallbacks(mRunnable);
-								}
-								
-							}
-						};
-                    	mHandler.postDelayed(mRunnable, 300);
-                    }  
-                }); 
-                while(num<loopMaxNum){
-                	try {
-                		LogUtil.i("dyf", "执行sleep----"+num);
-						Thread.sleep(100);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+                    public void run() {
+                        mHandler = new Handler();
+                        mRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (num < 20) {
+                                    num++;
+                                    mWebView.clearCache(true);
+                                    mWebView.loadUrl("javascript:androidrequest()");
+                                    LogUtil.i("dyf", "执行handleMessage----" + num);
+                                    mHandler.postDelayed(mRunnable, 300);
+                                } else {
+                                    mHandler.removeCallbacks(mRunnable);
+                                }
+
+                            }
+                        };
+                        mHandler.postDelayed(mRunnable, 300);
+                    }
+                });
+                while (num < loopMaxNum) {
+                    try {
+                        LogUtil.i("dyf", "执行sleep----" + num);
+                        Thread.sleep(100);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 mHandler.removeCallbacks(mRunnable);
-                LogUtil.i("dyf", "返回url---"+downLoadUrl);
+                LogUtil.i("dyf", "返回url---" + downLoadUrl);
                 return downLoadUrl;
             }
         } catch (Exception e) {
@@ -468,22 +467,22 @@ public class DownloadRequestManager {
      * 云盘请求下载url
      */
     public String getCloudDiskDownloadUrl(DownloadEntity downloadEntity) {
-    	Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
 //		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_CLOUD_CODE,downloadEntity.getCloudId());
-		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_TYPE, type);
+        bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_TYPE, type);
 //		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_SRC, "nets");
 //		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_CDETYPE, MoviesHttpApi.LeTvBitStreamParam.KEY_CDETYPE_AES);
 //		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_REQUESTTYPE, MoviesHttpApi.LeTvBitStreamParam.KEY_DOWNLOAD);
-		bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_VID, downloadEntity.getGlobaVid());
-		HashMap<String, String> map = new HashMap<>();
-		MoviesHttpApi.addVer(map);
-		Iterator iter = map.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			String key = (String)entry.getKey();
-			String val = (String)entry.getValue();
-			bundle.putString(key, val);
-		}
+        bundle.putString(MoviesHttpApi.LeTvBitStreamParam.KEY_VID, downloadEntity.getGlobaVid());
+        HashMap<String, String> map = new HashMap<>();
+        MoviesHttpApi.addVer(map);
+        Iterator iter = map.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String key = (String) entry.getKey();
+            String val = (String) entry.getValue();
+            bundle.putString(key, val);
+        }
 
 		LetvHttpParameter<?, ?> httpParameter = MoviesHttpApi.getLetvStreamParameter(new CloudDiskParser(),bundle);
 		String url = httpParameter.getBaseUrl() + httpParameter.encodeUrl();

@@ -1,27 +1,19 @@
 package com.mylib.download;
 
-import android.text.TextUtils;
-
 import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.http.api.MoviesHttpApi;
 import com.chaojishipin.sarrs.fragment.videoplayer.PlayerUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
-import com.chaojishipin.sarrs.utils.NetWorkUtils;
 import com.chaojishipin.sarrs.utils.StringUtil;
-
-import org.apache.http.conn.ConnectTimeoutException;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -48,9 +40,9 @@ public class CDNDownload implements IDown {
     private AtomicBoolean isPause = new AtomicBoolean(false); //stop task
     private AtomicBoolean downloadFinish = new AtomicBoolean(false);
     private AtomicBoolean isStarting = new AtomicBoolean(false);
-    protected MyDownloadTask mTask;
+    protected DownloadTask mTask;
 
-    public CDNDownload(IDownload request, DownloadQueue.DownloadCallback callback, DownloadJob job, MyDownloadTask task) {
+    public CDNDownload(IDownload request, DownloadQueue.DownloadCallback callback, DownloadJob job, DownloadTask task) {
         super();
         this.job = job;
         this.mProgress = request.getStartPosition();

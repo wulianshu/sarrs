@@ -1,14 +1,11 @@
 package com.mylib.download;
 
-import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.utils.LogUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,7 +21,7 @@ public class DownloadQueue{
 	private static DownloadQueue mQueue;
 	private DownloadManagerFactory.DownloadModule mModule;
 	private DownloadExecutor mExecutor;
-	private Hashtable<IDownload, MyDownloadTask> mRequestTaskMaps;
+	private Hashtable<IDownload, DownloadTask> mRequestTaskMaps;
 	private int mPoolSize = 1;
 	
 	@SuppressWarnings("unused")
@@ -43,7 +40,7 @@ public class DownloadQueue{
 	private void init() {
 		int corePoolSize = mPoolSize;
 		int maxPoolSize = mPoolSize;
-		mRequestTaskMaps = new Hashtable<IDownload, MyDownloadTask>();
+		mRequestTaskMaps = new Hashtable<IDownload, DownloadTask>();
 		mExecutor = new DownloadExecutor(mModule.getModule(), corePoolSize, maxPoolSize);
 		mExecutor.setRejectedExecutionHandler(new TaskCallerRunsPolicy());
 		mExecutor.setqCallback(new QueueCallback(){
@@ -64,14 +61,14 @@ public class DownloadQueue{
 		return queue;
 	}*/
 	
-	public MyDownloadTask getDownloadTask(IDownload request, DownloadCallback callback) {
-		MyDownloadTask task = new MyDownloadTask(request, callback);
+	public DownloadTask getDownloadTask(IDownload request, DownloadCallback callback) {
+		DownloadTask task = new DownloadTask(request, callback);
 		return task;
 	}
 	
 	public void startDownload(IDownload request, DownloadCallback callback){
 		
-		MyDownloadTask task = getDownloadTask(request, callback);
+		DownloadTask task = getDownloadTask(request, callback);
 		try {
 			mExecutor.execute(task);
 		} catch (Exception e) {
@@ -82,7 +79,7 @@ public class DownloadQueue{
 	
 	public boolean pauseDownload(IDownload request){
 		if(request != null){
-			MyDownloadTask task = mRequestTaskMaps.get(request);
+			DownloadTask task = mRequestTaskMaps.get(request);
 			mExecutor.pauseTask(task);
 			removeRequest(request);
 			if(task == null)
@@ -163,12 +160,12 @@ public class DownloadQueue{
 			printLog(" [afterExecute] [ActiveCount=" + getActiveCount() + " ,TaskCount=" + getTaskCount() + ", queueSize=" + getQueue().size() + " ]");
 			downloadingVector.remove(r);
 			if(qCallback != null){
-				MyDownloadTask task = (MyDownloadTask) r;
+				DownloadTask task = (DownloadTask) r;
 				qCallback.qCallback(task.getRequest());
 			}
 		}
 		
-		public void pauseTask(MyDownloadTask task){
+		public void pauseTask(DownloadTask task){
 			if(task != null){
 				BlockingQueue<Runnable> queues = getQueue();
 				if(queues.contains(task)){
@@ -190,7 +187,7 @@ public class DownloadQueue{
 				printLog("[clearAllTask  module="+ mModule +"]");
 				getQueue().clear();
 				for(Runnable r : downloadingVector){
-					MyDownloadTask task = (MyDownloadTask)r;
+					DownloadTask task = (DownloadTask)r;
 					list.add(task.getRequest().getUrl());
 					task.pauseTask();
 				}

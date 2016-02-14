@@ -6,7 +6,7 @@ import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.utils.DataUtils;
 import com.mylib.download.DownloadConstant.Status;
 
-public class ShelfDownload extends IDownload.GetDownload {
+public class VideoDownload extends IDownload.GetDownload {
 	
 	private long mTotalSize;
 	private long mProgress;
@@ -17,7 +17,7 @@ public class ShelfDownload extends IDownload.GetDownload {
 	private boolean mStatusChange = false;
 	private DownloadManagerFactory.DownloadModule mModule;
 	
-	public ShelfDownload(DownloadManagerFactory.DownloadModule module, DownloadJob job){
+	public VideoDownload(DownloadManagerFactory.DownloadModule module, DownloadJob job){
 		mModule = module;
 		this.setParams(job);
 	}

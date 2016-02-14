@@ -115,22 +115,23 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
     private TextView controller_net_error;
     private Button controller_net_error_setting;
 
-   private boolean isNoNet = false; //无网络标示
+    private boolean isNoNet = false; //无网络标示
     private int retryCount; // 弱网重试机制
-    private String ac="-";
-    private long timing=0; //毫秒  已经播放的视频长度
+    private String ac = "-";
+    private long timing = 0; //毫秒  已经播放的视频长度
     private long begin_time;
     private long end_time;
     private long ut;//动作耗时 毫秒
 //    private int vlen;//视频的总长 秒为单位
     private int retry;//重试次数
     private int play_type;//播放类型
-    private String code_rate="-";//码流对照表
+    private String code_rate = "-";//码流对照表
     private String ref = "-";
     private int repeatcount = 0;
     private String pageid = "00S002009_1";
     private long startTime = 0l;
     private boolean isblocked = false;
+
     public PlayLiveController(ChaojishipinLivePlayActivity mPlayLiveActivity) {
         mActivityLive = mPlayLiveActivity;
         mVideoViewBuilder = LetvVideoViewBuilder.getInstants();
@@ -283,9 +284,17 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
      */
     private String getLiveUrl(String orgLiveUrl) {
         LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!!!!!!!before addPlatCode orgLiveUrl is " + orgLiveUrl);
+        LogUtil.e("wym", "#####################origin liveUrl is " + orgLiveUrl);
         if (!TextUtils.isEmpty(orgLiveUrl)) {
+            String livePLayUrl = "";
+            if (orgLiveUrl.contains("splatid"))
+                livePLayUrl = orgLiveUrl.replace("splatid=1047", "splatid=1060201002");
+            else
+                livePLayUrl = orgLiveUrl + "&splatid=1060201002";
+            LogUtil.e(Utils.LIVE_TAG, "!!!!!!!!!!!!!!!!!!!!!after add splatid livePlayUrl is " + livePLayUrl);
+            LogUtil.e("wym", "!!!!!!!!!!!!!!!!!!!!!after add splatid livePlayUrl is " + livePLayUrl);
             CdeHelper cdeHelper = mCDEManager.getmCdeHelper();
-            mLiveLinkshellUrl = cdeHelper.getLinkshellUrl(orgLiveUrl);
+            mLiveLinkshellUrl = cdeHelper.getLinkshellUrl(livePLayUrl);
             return cdeHelper.getPlayUrl(mLiveLinkshellUrl);
         }
         return orgLiveUrl;
@@ -457,8 +466,8 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
      */
     private void showMediaControll(boolean isDelayDismiss) {
         if (null != mActivityLive) {
-            mActivityLive.statusBarShow(true);
-//            mActivityLive.statusBarShow(false);
+//            mActivityLive.statusBarShow(true);
+            mActivityLive.statusBarShow(false);
             if (mActivityLive.getmSysAPILevel() >= PlayerUtils.API_14) {
                 PlayerUtils.showVirtualKey(mWindow);
             }
@@ -586,13 +595,13 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         startPlayer();
 
 
-            ac = "play";
-            play_type = 1;
-            timing = 0;
-            //Object object,String ac,String ut,String retry,String play_type,String code_rate,String ref,String timing,String vlen
+        ac = "play";
+        play_type = 1;
+        timing = 0;
+        //Object object,String ac,String ut,String retry,String play_type,String code_rate,String ref,String timing,String vlen
 
-            LogUtil.e("wulianshu", "ac = play");
-            UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "",  code_rate, mActivityLive.getRef(), timing + "",  "-","-",mActivityLive.getPeid(),pageid);
+        LogUtil.e("wulianshu", "ac = play");
+        UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), timing + "", "-", "-", mActivityLive.getPeid(), pageid);
     }
 
     public void startPlayer() {
@@ -699,14 +708,14 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
                     ac = "block";
                     ut = 0;
                     play_type = 1;
-                    UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(),  "-", "-", "-", mActivityLive.getPeid(),pageid);
-                    startTime=System.currentTimeMillis();
+                    UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), "-", "-", "-", mActivityLive.getPeid(), pageid);
+                    startTime = System.currentTimeMillis();
                     isblocked = true;
                 }
             } else {
                 if (mLoadingLayout.isShown()) {
                     mLoading_tip_text.setVisibility(View.GONE);
-                    if(isblocked) {
+                    if (isblocked) {
                         ac = "eblock";
                         ut = 0;
                         play_type = 1;
@@ -903,15 +912,16 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
             }
         }
     }
-  /**
+
+    /**
      * 大数据上报
      */
-    public void uploadstat(long timing){
-        if( mPlayContorl !=null) {
+    public void uploadstat(long timing) {
+        if (mPlayContorl != null) {
             ac = "finish";
             ut = 0;
             play_type = 1;
-            UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), timing+"",  "-","-",mActivityLive.getPeid(),pageid);
+            UploadStat.uploadplaystat(mActivityLive.getLiveDataEntity(), ac, ut + "", retry + "", play_type + "", code_rate, mActivityLive.getRef(), timing + "", "-", "-", mActivityLive.getPeid(), pageid);
         }
     }
 }

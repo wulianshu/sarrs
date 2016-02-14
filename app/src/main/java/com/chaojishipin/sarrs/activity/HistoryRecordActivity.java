@@ -32,6 +32,7 @@ import com.chaojishipin.sarrs.listener.UpoloadHistoryRecordListener;
 import com.chaojishipin.sarrs.manager.HistoryRecordManager;
 import com.chaojishipin.sarrs.thirdparty.LoginUtils;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.JsonUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
@@ -141,6 +142,7 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.AND_PLAY_HISTORY,this);
         if (isfirst) {
             getData();
             isfirst = false;
@@ -152,6 +154,12 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                 }
             }, 800);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        UmengPagePath.endpage(ConstantUtils.AND_PLAY_HISTORY, this);
     }
 
     public void getData() {

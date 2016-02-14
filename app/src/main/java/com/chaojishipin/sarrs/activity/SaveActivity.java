@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.fragment.SaveFragment;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 
 
 public class SaveActivity extends ChaoJiShiPinBaseActivity {
@@ -40,6 +42,13 @@ public class SaveActivity extends ChaoJiShiPinBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.AND_FAVOR,this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        UmengPagePath.beginpage(ConstantUtils.AND_FAVOR, this);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class ChaojishipinRegisterActivity extends ChaoJiShiPinBaseActivity imple
         mBack.setOnClickListener(this);
         mSecret.setOnClickListener(this);
         // 为隐私条款文字添加前景色
-        Utils.addForeGroundColor(mSecret, Color.RED, 6, mSecret.getText().toString().length());
+        Utils.addForeGroundColor(mSecret,getResources().getColor(R.color.color_c5242b),6, mSecret.getText().toString().length());
     }
 
 

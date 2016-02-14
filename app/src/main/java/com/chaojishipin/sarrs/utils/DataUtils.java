@@ -22,12 +22,11 @@ import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.download.DownloadProvider;
 import com.chaojishipin.sarrs.download.download.DownloadUtils;
-import com.mylib.download.ShelfDownload;
-import com.mylib.download.ShelfDownloadManager;
+import com.mylib.download.VideoDownload;
+import com.mylib.download.VideoDownloadManager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class DataUtils {
 
     private Context mContext;
     private static DataUtils util;
-    private ShelfDownloadManager mDownloadManager;
+    private VideoDownloadManager mDownloadManager;
     private DownloadProvider mDownloadProvider;
     private boolean isChange = false;
 
@@ -57,29 +56,29 @@ public class DataUtils {
     }
 
     private void init() {
-        mDownloadManager = new ShelfDownloadManager(mContext);
+        mDownloadManager = new VideoDownloadManager(mContext);
         mDownloadProvider = DownloadProvider.getInstance();
     }
 
     public void download(DownloadJob job){
-        ShelfDownload down = new ShelfDownload(mDownloadManager.getModule(), job);
+        VideoDownload down = new VideoDownload(mDownloadManager.getModule(), job);
         mDownloadManager.download(down);
     }
 
-    public void addDownloadListener(ShelfDownloadManager.IShelfDownloadListener l) {
+    public void addDownloadListener(VideoDownloadManager.IShelfDownloadListener l) {
         if (mDownloadManager != null) {
             mDownloadManager.addDownloadListener(l);
         }
     }
 
-    public void removeDownloadListener(ShelfDownloadManager.IShelfDownloadListener l) {
+    public void removeDownloadListener(VideoDownloadManager.IShelfDownloadListener l) {
         if (mDownloadManager != null) {
             mDownloadManager.removeDownloadListener(l);
         }
     }
 
     public void startDownload(DownloadJob job){
-        ShelfDownload down = new ShelfDownload(mDownloadManager.getModule(), job);
+        VideoDownload down = new VideoDownload(mDownloadManager.getModule(), job);
         mDownloadManager.startDownload(down);
     }
 
@@ -106,13 +105,13 @@ public class DataUtils {
         mDownloadManager.pauseAll();
     }
 
-    private void pauseDownload(ShelfDownload down){
+    private void pauseDownload(VideoDownload down){
         mDownloadManager.pauseDownload(down);
     }
 
     public void deleteDownloadFile(DownloadJob job){
         if(job.getStatus() != DownloadJob.COMPLETE) {
-            ShelfDownload down = new ShelfDownload(mDownloadManager.getModule(), job);
+            VideoDownload down = new VideoDownload(mDownloadManager.getModule(), job);
             pauseDownload(down);
         }
         deleteFolder(getLocalFile(job).getAbsolutePath());

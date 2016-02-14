@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
+import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.fragment.ChaoJiShiPinBaseFragment;
 import com.chaojishipin.sarrs.thirdparty.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -65,6 +66,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -322,12 +325,11 @@ public class Utils {
             reId = flag ? R.drawable.main_specail_press : R.drawable.main_specail_normal;
         } else if (contentType.equalsIgnoreCase("9")) {
             reId = flag ? R.drawable.main_rank_press : R.drawable.main_rank_normal;
+        } else if (ConstantUtils.LIVE_CONTENT_TYPE.equalsIgnoreCase(contentType)) {
+            // 直播
+            reId = flag ? R.drawable.main_live_press : R.drawable.main_live_normal;
         }
-
-
         return reId;
-
-
     }
 
 
@@ -981,41 +983,31 @@ public class Utils {
     }
 
 
-
-    public static  boolean getRootAhth()
-    {
+    public static boolean getRootAhth() {
         Process process = null;
         DataOutputStream os = null;
-        try
-        {
+        try {
             process = Runtime.getRuntime().exec("su");
             os = new DataOutputStream(process.getOutputStream());
             os.writeBytes("exit\n");
             os.flush();
             int exitValue = process.waitFor();
-            if (exitValue == 0)
-            {
+            if (exitValue == 0) {
                 return true;
-            } else
-            {
+            } else {
                 return false;
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.d("*** DEBUG ***", "Unexpected error - Here is what I know: "
                     + e.getMessage());
             return false;
-        } finally
-        {
-            try
-            {
-                if (os != null)
-                {
+        } finally {
+            try {
+                if (os != null) {
                     os.close();
                 }
                 process.destroy();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -1085,4 +1077,37 @@ public class Utils {
     public static String getTodayStr(String format) {
         return new SimpleDateFormat(format, Locale.getDefault()).format(new Date());
     }
+
+   public  enum FileType{
+        MP4,
+        M3U8
+    }
+    public FileType getFileType(String path) {
+        FileType mFileType=FileType.MP4;
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(10000);
+            InputStream input = conn.getInputStream();
+            byte[] bytes = new byte[45];
+            input.read(bytes, 0, bytes.length);
+            String str = new String(bytes, "UTF-8");
+            if (str.contains(ConstantUtils.M3U8FILETAG)) {
+                mFileType=FileType.M3U8;
+                return mFileType;
+            } else {
+                mFileType=FileType.MP4;
+                return mFileType;
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+        return mFileType;
+
+    }
+
+
+
 }

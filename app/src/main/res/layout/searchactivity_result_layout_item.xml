@@ -29,8 +29,10 @@
             app:imageWidth="112" />
         <TextView
             android:id="@+id/searchactivity_result_layout_item_categoryName"
-            android:layout_width="@dimen/sarrs_dimen_35dp"
-            android:layout_height="@dimen/sarrs_dimen_14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/sarrs_dimen_1dp"
+            android:paddingBottom="@dimen/sarrs_dimen_2dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/sarrs_dimen_5dp"
             android:background="@drawable/sarrs_pic_categoryname_bg"

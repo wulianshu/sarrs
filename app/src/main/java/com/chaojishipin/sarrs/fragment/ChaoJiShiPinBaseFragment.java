@@ -22,6 +22,7 @@ import de.greenrobot.event.EventBus;
 public abstract class ChaoJiShiPinBaseFragment extends Fragment{
     private boolean mIsWifiTo3GFlag;
     protected UIHandler mHandler;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

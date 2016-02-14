@@ -68,10 +68,9 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
         if (ConstantUtils.SLIDINGMENU_LINE.equals(menuLeft.getContent_type())) {
             return TYPE_LINE;
         }
+
         return TYPE_VIEW;
     }
-
-    ;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -145,7 +144,6 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
     }
 
     /**
-     *
      * @param position -1
      * @param view
      */
@@ -184,11 +182,11 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
                 }
 
                 //now_iv.setImageResource(Utils.loadUrl(slidingMenuLeft.getContent_type(),slidingMenuLeft.getCid(),true));
-                if(NetworkUtil.isNetworkAvailable(mContext)){
+                if (NetworkUtil.isNetworkAvailable(mContext)) {
 
-                    ImageLoader.getInstance().displayImage(slidingMenuLeft.getIcon_select(), now_iv,options1);
-                }else{
-                    now_iv.setImageResource(Utils.loadUrl(slidingMenuLeft.getContent_type(),slidingMenuLeft.getCid(),true));
+                    ImageLoader.getInstance().displayImage(slidingMenuLeft.getIcon_select(), now_iv, options1);
+                } else {
+                    now_iv.setImageResource(Utils.loadUrl(slidingMenuLeft.getContent_type(), slidingMenuLeft.getCid(), true));
                 }
                 now_tv.setTextColor(mContext.getResources().getColor(R.color.color_F8E71C));
                 for (int i = 0; i < isSelectedList.size(); i++) {
@@ -197,7 +195,7 @@ public class SlidingMenuLeftAdapter<LetvBaseBean> extends CommonAdapter<LetvBase
                 isSelectedList.set(position, true);
                 lastview = view;
                 last_sliding = (SlidingMenuLeft) getItem(position);
-                // 更新消息推送ui
+                // 更新消息推送ui (点击)
                 refreshLivePushView(slidingMenuLeft, livePush);
             }
         } else if (position == -1) {

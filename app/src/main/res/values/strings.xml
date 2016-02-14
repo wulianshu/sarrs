@@ -44,6 +44,7 @@
     <string name="pull_refresh_img_des">正在推荐</string>
     <!--toast -->
     <string name="sarrs_tost_close">关闭</string>
+    <string name="done_over">已下载完成</string>
 
     <string name="sarrrs_str_delete">不喜欢</string>
     <string name="sarrs_str_collect">收藏</string>
@@ -68,7 +69,7 @@
     <string name="videodetail_episode_periord">期 </string>
     <string name="search_hint">请输入影片名、导演或演员</string>
     <string name="suggest_play">播放</string>
-    
+
     <string name="search_no_voice">您好像没说话，建议大声说出影片名称试试，或调高话筒声音</string>
     <string name="search_main_tip_before_start">正在倾听中……</string>
     <string name="search_main_tip_start">轻触取消录音</string>
@@ -170,7 +171,7 @@
     <string name="user_xb">性别</string>
     <string name="user_img">头像选择</string>
     <string name="sarrs_str_setting">设置</string>
-    <string name="sarrs_str_download">我的下载</string>
+    <string name="sarrs_str_download">我的缓存</string>
     <!--输入框 -->
     <string name="modify_nc_failed">修改信息失败</string>
     <string name="modify_tx_sucess">头像修改成功</string>
@@ -189,15 +190,15 @@
     <string name="html_notice">用户协议以及隐私政策</string>
     <string name="html_tilte">登录代表同意《超级视频用户协议以及隐私政策》</string>
     <!--下载begin-->
-    <string name="download_title">我的下载</string>
-    <string name="download_is_downloading">正在下载</string>
-    <string name="download_manager">下载管理</string>
+    <string name="download_title">我的缓存</string>
+    <string name="download_is_downloading">正在缓存</string>
+    <string name="download_manager">缓存管理</string>
 
     <string name="edit">编辑</string>
     <string name="check_all">全选</string>
     <string name="delete_up">删除</string>
     <string name="download_space">已占用0M/剩余0.00G可用</string>
-    <string name="download_video">下载视频</string>
+    <string name="download_video">缓存视频</string>
     <string name="local_video">本地视频</string>
     <string name="navi_text_download">正在缓存</string>
     <string name="file_has_been_removed">该文件可能被人为删除或移动</string>
@@ -211,24 +212,24 @@
     <string name="tip">提示</string>
     <string name="confir_delete">确认删除?</string>
     <string name="wireless_tip">正在使用移动网络，可能产生较大流量</string>
-    <string name="continue_download">继续下载</string>
-    <string name="pause_download">暂停下载</string>
+    <string name="continue_download">继续缓存</string>
+    <string name="pause_download">暂停缓存</string>
     <string name="already_pause_download">已暂停</string>
     <string name="sd_change_message_before">还未加载</string>
     <string name="sd_change_message_middle">，确定选用</string>
-    <string name="sd_change_message_after">重新下载影片？</string>
+    <string name="sd_change_message_after">重新缓存影片？</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="video_cannot_play">该视频暂时不能播放</string>
 
     <string name="complete">完成</string>
-    <string name="sdcard_nospace">手机内存不足，暂时无法下载视频</string>
+    <string name="sdcard_nospace">手机内存不足，暂时无法缓存视频</string>
     <string name="download_faile">缓存失败</string>
     <string name="done">完成</string>
     <string name="allpause">全部暂停</string>
     <string name="allstart">全部开始</string>
-    <string name="alldownload">全部下载</string>
-    <string name="downloadingTitle">正在下载</string>
+    <string name="alldownload">全部缓存</string>
+    <string name="downloadingTitle">正在缓存</string>
     <string name="delete_file">确认删除？</string>
     <string name="undefind_delete_file">没有可删除文件！</string>
     <string name="delete_success">删除成功！</string>
@@ -246,8 +247,8 @@
     <string name="filedeletetip">抱歉您所播放的文件已经被移动或删除</string>
     <string name="download_can_play_rate">下完10%即可播放</string>
     <string name="delete_below">个视频?</string>
-    <string name="download_no_item_title">暂无下载的视频</string>
-    <string name="download_no_item_content">在详情页点击下载按钮进行下载</string>
+    <string name="download_no_item_title">暂无缓存的视频</string>
+    <string name="download_no_item_content">在详情页点击缓存按钮进行缓存</string>
     <string name="di">第</string>
     <string name="episode">集</string>
     <string name="download_phone_path">手机内置存储</string>
@@ -261,20 +262,20 @@
     <string name="time_more_than_1_day">%1$s-%2$s</string>
     <string name="updateto">更新至</string>
     <string name="episode_total">集全</string>
-    <string name="down_exists">该视频已在下载列表中！</string>
-    <string name="already_download">下载完毕！</string>
-    <string name="addfailure">暂不支持下载</string>
-    <string name="addok">已添加至下载列表</string>
+    <string name="down_exists">该视频已在缓存列表中！</string>
+    <string name="already_download">缓存完毕！</string>
+    <string name="addfailure">暂不支持缓存</string>
+    <string name="addok">已添加至缓存列表</string>
     <string name="compulate_size">正在计算…</string>
     <string name="video_no_content">未获取到内容，请点击重试</string>
-    <!--下载end-->
+    <!--缓存end-->
     <string name="title_activity_chao_ji_shi_pin_topic_detail">ChaoJiShiPinTopicDetailActivity
     </string>
     <string name="share">分享</string>
     <string name="collection">收藏</string>
     <string name="flash_required">您没有安装flash插件，部分视频无法播放</string>
     <!--sarrs slide menu -->
-    <string name="sarrs_slide_menu_download">下载</string>
+    <string name="sarrs_slide_menu_download">缓存</string>
     <string name="sarrs_slide_menu_save">收藏</string>
     <string name="sarrs_slide_menu_share">分享</string>
 
@@ -290,9 +291,9 @@
 
     <!-- -->
     <string name="view_count">观看</string>
-    <string name="down_load">下载</string>
+    <string name="down_load">缓存</string>
     <string name="do_save">收藏</string>
-    <string name="down_load_more">下载更多剧集</string>
+    <string name="down_load_more">缓存更多剧集</string>
     <!--个人信息 begin-->
     <string name="no_header">您还没设置头像哟</string>
     <!--个人信息 end-->

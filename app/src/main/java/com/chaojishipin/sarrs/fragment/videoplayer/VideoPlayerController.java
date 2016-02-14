@@ -135,7 +135,6 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         OnTouchListener, OnInfoListener, SarrsSlideMenuView.onSlideMenuItemClick, MediaPlayer.OnErrorListener {
 
     private final String TAG = this.getClass().getSimpleName();
-
     private PlayData mPlayData;
     /**
      * 当前播放影片需要用到数据
@@ -200,15 +199,15 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     /**
      * 大数据上报相关
      */
-    private String ac="-";
-    private long timing=0; //毫秒  已经播放的视频长度
+    private String ac = "-";
+    private long timing = 0; //毫秒  已经播放的视频长度
     private long begin_time;
     private long end_time;
     private long ut;//动作耗时 毫秒
     private int vlen;//视频的总长 秒为单位
     private int retry;//重试次数
     private int play_type;//播放类型
-    private String code_rate="-";//码流对照表
+    private String code_rate = "-";//码流对照表
     private String ref = "-";
     private int repeatcount = 0;
     private boolean isblock = false;
@@ -230,7 +229,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         return starttime;
     }
 
-    private int starttime =0;
+    private int starttime = 0;
     /**
      * 当前播放的是否是本地文件
      */
@@ -313,7 +312,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
     private String mdefaultClarity = PlayerUtils.VIDEO_MP4_350;
     private String mHighClarity = PlayerUtils.VIDEO_MP4_720_db;
-    private String mLowClarity=PlayerUtils.VIDEO_MP4;
+    private String mLowClarity = PlayerUtils.VIDEO_MP4;
     /**
      * 当前是否为暂停状态
      */
@@ -332,7 +331,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
     private int mCurrPlayTime = 0;
 
-    private String last_gvid="";
+    private String last_gvid = "";
 
     /**
      * 当前播放时间
@@ -444,16 +443,16 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     private OutSiteData mOutSiteData;
     private List<String> mApi_list;
     private List<String> mStream_list;
-    private List<String>mAllowed_formats;
-    private List<String>mApi_contentlist;
+    private List<String> mAllowed_formats;
+    private List<String> mApi_contentlist;
     //当前截流的清晰度
     private String current_format;
-    private String mEid="";
+    private String mEid = "";
     private String mRule = "";
-    private String mOsType="";
-    private String mUserAgent="";
-    private String mTs="";
-    private String mTe="";
+    private String mOsType = "";
+    private String mUserAgent = "";
+    private String mTs = "";
+    private String mTe = "";
     //当前外网播放地址列表对应索引
     private int mStreamIndex;
     // 是否本地截流通过这个判断
@@ -523,8 +522,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     private SeekBar fast_seekbar;
     private ImageView full_screen;
     /**
-     *  是否锁屏
-     * */
+     * 是否锁屏
+     */
     private boolean isLockScreen;
     /*
        收藏
@@ -590,7 +589,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         fast_seekbar.setMax((int) PLAY_SEEKBAR_MAX);
         fast_seekbar.setProgress(0);
         fast_seekbar.setSecondaryProgress(0);
-        full_screen=(ImageView)mActivity.findViewById(R.id.full_screen);
+        full_screen = (ImageView) mActivity.findViewById(R.id.full_screen);
         mSelectLinearLayout = (FrameLayout) mActivity.findViewById(R.id.mediacontroller_select_layout);
         mSelectListView = (ListView) mActivity.findViewById(R.id.video_player_select_list);
         mLoadingLayout = (LinearLayout) mActivity.findViewById(R.id.layout_loading);
@@ -611,9 +610,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         mPlaySeekBar = (SeekBar) mActivity.findViewById(R.id.full_play_seekbar);
         mPlaySeekBar.setMax((int) PLAY_SEEKBAR_MAX);
         mPlaySeekBar.setProgress(0);
-        mPlaySeekBar.setPadding(Utils.dip2px(7), 0, Utils.dip2px(7), 0);
-
         mPlaySeekBar.setSecondaryProgress(0);
+
         startPlayerTimer();
         setLockScreenVisibile(false);
         // js 截流webview
@@ -688,7 +686,6 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         mPlayNextBtn.setOnTouchListener(new MyOnTouchListener());
 
 
-
     }
 
     private void setPlayerListener() {
@@ -715,6 +712,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             id = item.getId();
             type = "1";
         }
+
+
         HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_ISEXISTS_FAVORITE);
         HttpApi.checkFavorite(id, token, type).start(new RequestListener<CheckFavorite>() {
             @Override
@@ -751,23 +750,22 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
     @Override
     public void onItemClick(int position, View view) {
-
         if (isSlide) {
             switch (position) {
                 case 0:
-                    if(NetWorkUtils.isNetAvailable()){
+                    if (NetWorkUtils.isNetAvailable()) {
                         Log.i("menu click", "click down" + position);
                         EventBus.getDefault().post(new DownloadEpisodeEntity(mPlayData.getKey(), mPlayData.getIndex(), mPlayData.getmEpisodes()));
                         //Umeng统计上报
                         MobclickAgent.onEvent(mActivity, ConstantUtils.FULLSCREEN_DOWNLOAD);
-                    }else{
+                    } else {
                         Toast.makeText(mActivity, mActivity.getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
                     }
 
                     break;
                 case 1:
                     //收藏
-                    if(NetWorkUtils.isNetAvailable()){
+                    if (NetWorkUtils.isNetAvailable()) {
                         if (UserLoginState.getInstance().isLogin()) {
                             buidlParam();
                             checkSave(true);
@@ -775,21 +773,21 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                             mActivity.startActivityForResult(new Intent(mActivity, ChaojishipinRegisterActivity.class), ConstantUtils.SaveJumpTologin.MEDIA_LOGIN);
                         }
                         MobclickAgent.onEvent(mActivity, ConstantUtils.FULLSCREEN_COLLECTION);
-                    }else{
+                    } else {
                         Toast.makeText(mActivity, mActivity.getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
                     }
 
                     Log.i("menu click", "click save" + position);
                     break;
                 case 2:
-                    if(NetWorkUtils.isNetAvailable()){
+                    if (NetWorkUtils.isNetAvailable()) {
                         Log.i("menu click", "click share" + position);
                         // 上报需先设置参数
                         buidlParam();
                         EventBus.getDefault().post(item);
                         DataReporter.reportAddShare(id, source, cid, type, token, nt, "" + bucket, "" + reid);
                         MobclickAgent.onEvent(mActivity, ConstantUtils.FULLSCREEN_SHARE);
-                    }else{
+                    } else {
                         Toast.makeText(mActivity, mActivity.getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
                     }
 
@@ -809,35 +807,36 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     String token = UserLoginState.getInstance().getUserInfo().getToken();
     String type = "";
     String cid = "";
-    String source="";
+    String source = "";
 
-    String bucket="";
-    String reid="";
+    String bucket = "";
+    String reid = "";
 
     VideoItem item = null;
     LocalVideoEpisode localItem;
     String nt = NetWorkUtils.getNetInfo();
+
     // 上报参数
     void buidlParam() {
 
-        if(mActivity.getData()!=null){
-            bucket=mActivity.getData().getBucket();
-            reid=mActivity.getData().getReid();
+        if (mActivity.getData() != null) {
+            bucket = mActivity.getData().getBucket();
+            reid = mActivity.getData().getReid();
         }
-        ArrayList<VideoItem> items=null;
-            //  本地在线剧集格式一致
-            items = mPlayData.getmEpisodes().get(mPlayData.getKey());
-            item = items.get(mPlayData.getIndex());
-            source = item.getSource() + "";
-            cid = item.getCategory_id();
-            if (TextUtils.isEmpty(item.getId())) {
-                id = item.getGvid();
-                type = "2";
-            } else {
-                // 专辑
-                id = item.getId();
-                type = "1";
-            }
+        ArrayList<VideoItem> items = null;
+        //  本地在线剧集格式一致
+        items = mPlayData.getmEpisodes().get(mPlayData.getKey());
+        item = items.get(mPlayData.getIndex());
+        source = item.getSource() + "";
+        cid = item.getCategory_id();
+        if (TextUtils.isEmpty(item.getId())) {
+            id = item.getGvid();
+            type = "2";
+        } else {
+            // 专辑
+            id = item.getId();
+            type = "1";
+        }
 
     }
 
@@ -906,12 +905,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
 
-
-
     /**
      * 点击收藏按钮
      */
-  public  void checkSave(final boolean isByClick) {
+    public void checkSave(final boolean isByClick) {
         initSave();
         HttpManager.getInstance().cancelByTag(ConstantUtils.REQUEST_ISEXISTS_FAVORITE);
         HttpApi.checkFavorite(id, token, type).start(new RequestListener<CheckFavorite>() {
@@ -972,20 +969,20 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
         switch (v.getId()) {
             case R.id.controller_load_timeout_refresh:
-                retry ++;
+                retry++;
                 hideTimeOutLayout();
                 setmPlayData(mPlayData);
                 break;
             case R.id.controller_net_error_play:
-                if(mPlayData == null) {
+                if (mPlayData == null) {
                     ToastUtil.showShortToast(mActivity, mActivity.getResources().getString(R.string.play_no_data));
                     return;
                 }
                 isForcePlay = true;
-                LogUtil.e("xll ","Letv isPause : "+mIsPause);
+                LogUtil.e("xll ", "Letv isPause : " + mIsPause);
                 /*startTime=System.currentTimeMillis();*/
                 //updatePlayBtnBg(false);
-                mIsPause=true;
+                mIsPause = true;
                 hideNetView();
                 clickPauseOrPlay();
                 executePrePare();
@@ -997,7 +994,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
                     showSlideMenu();
                     if (isSlide) {
-                        if(UserLoginState.getInstance().isLogin()&&NetWorkUtils.isNetAvailable()){
+                        if (UserLoginState.getInstance().isLogin() && NetWorkUtils.isNetAvailable()) {
                             initSaveOnLine();
                         }
 
@@ -1007,10 +1004,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
                 break;
             case R.id.btn_play:
-                    clickPauseOrPlay();
-                    mHandler.removeMessages(ConstantUtils.DISSMISS_MEDIACONTROLLER);
-                    mHandler.sendEmptyMessageDelayed(ConstantUtils.DISSMISS_MEDIACONTROLLER,
-                            ConstantUtils.MEDIA_CONTROLLER_DISMISS_TIME);
+                clickPauseOrPlay();
+                mHandler.removeMessages(ConstantUtils.DISSMISS_MEDIACONTROLLER);
+                mHandler.sendEmptyMessageDelayed(ConstantUtils.DISSMISS_MEDIACONTROLLER,
+                        ConstantUtils.MEDIA_CONTROLLER_DISMISS_TIME);
                 break;
             case R.id.btn_play_next:
                 //播放结束 需要上报（切换剧集）
@@ -1125,17 +1122,17 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 stopPlayerTimer();
                 mCurrPlayTime = mPlayContorl.getCurrentPosition();
             } else {
-                    mIsPause = false;
-                    mPlayContorl.start();
-                    startPlayerTimer();
+                mIsPause = false;
+                mPlayContorl.start();
+                startPlayerTimer();
             }
         } else {
 
             if (mIsPause) {
                 if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
                     executeLocalChangePlay();
-                } else if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.ONLINE && mPlayData !=null) {
-                        executeProcessBySite(mPlayData.getSite());
+                } else if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.ONLINE && mPlayData != null) {
+                    executeProcessBySite(mPlayData.getSite());
                 }
 
             }
@@ -1154,9 +1151,9 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         mStreamIndex++;
         executeOutSitePlayCore(mStreamIndex);
         // 播放失败通知服务端更新
-        requestUpdateStream(mPlayUrl,mFormat,mEid);
+        requestUpdateStream(mPlayUrl, mFormat, mEid);
         // TODO update stream-list  report
-       // handlerOutSiteError();
+        // handlerOutSiteError();
         return false;
     }
 
@@ -1180,10 +1177,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      * modify by xll 2015 11 17
      */
     private VideoItem getCurrEpisode() {
-        retryCount=0;
-        mStreamIndex=0;
-         isHasRule=false;
-         isQuitSniff=false;
+        retryCount = 0;
+        mStreamIndex = 0;
+        isHasRule = false;
+        isQuitSniff = false;
         // 设置当前剧集在播放列表中的位置
         mNotifyData.setKey(mPlayData.getKey());
         mNotifyData.setPosition(mPlayData.getIndex());
@@ -1196,10 +1193,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         }
         return episode;
     }
+
     /**
-     *  下载页进入全屏页播放
-     *
-     * */
+     * 下载页进入全屏页播放
+     */
 
    void initLocalFullScreenView(){
 
@@ -1310,28 +1307,28 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
    *
    * */
     public void setmPlayData(PlayData playData) {
-        starttime = (int) (System.currentTimeMillis()/1000);
+        starttime = (int) (System.currentTimeMillis() / 1000);
         hideTimeOutLayout();
         mIsPause = true;
         mPlayData = playData;
         setControllerUI();
         // 从现在页进来UI展示  出在线&进半屏页之外所有入口
-        if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
-                initLocalFullScreenView();
+        if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
+            initLocalFullScreenView();
 
-        }else{
-            LogUtil.e("v1.1.2","play on line & init screen logic");
-           if( mActivity.getSCRREN()== ChaoJiShiPinVideoDetailActivity.SCREEN.HALF){
-               LogUtil.e("v1.1.2","play on line & half screen hide episo");
-               mSelectBtn.setVisibility(View.GONE);
-               mPlayNextBtn.setVisibility(View.GONE);
-               mSlideTrggle.setVisibility(View.GONE);
-               full_screen.setImageResource(R.drawable.sarrs_pic_full_screen);
+        } else {
+            LogUtil.e("v1.1.2", "play on line & init screen logic");
+            if (mActivity.getSCRREN() == ChaoJiShiPinVideoDetailActivity.SCREEN.HALF) {
+                LogUtil.e("v1.1.2", "play on line & half screen hide episo");
+                mSelectBtn.setVisibility(View.GONE);
+                mPlayNextBtn.setVisibility(View.GONE);
+                mSlideTrggle.setVisibility(View.GONE);
+                full_screen.setImageResource(R.drawable.sarrs_pic_full_screen);
 
-           }
+            }
         }
-        if(playData==null){
-            LogUtil.e("v1.1.2","play data is null ");
+        if (playData == null) {
+            LogUtil.e("v1.1.2", "play data is null ");
         }
 
         if (null != mPlayData) {
@@ -1382,16 +1379,17 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      *
      * @param porder xll 2015年11月6日
      */
-    int localIndex=0;
+    int localIndex = 0;
+
     public LocalVideoEpisode getCurrLocalEisode(String porder) {
         // 单视频porder 是空
-        if(TextUtils.isEmpty(porder)){
-             if( null != mLocalPlayLists && mLocalPlayLists.size() > 0){
-                  LogUtil.e("xll ","当前播放单视频 GVid "+mLocalPlayLists.get(0).getGvid());
-                  return mLocalPlayLists.get(0);
-              }
+        if (TextUtils.isEmpty(porder)) {
+            if (null != mLocalPlayLists && mLocalPlayLists.size() > 0) {
+                LogUtil.e("xll ", "当前播放单视频 GVid " + mLocalPlayLists.get(0).getGvid());
+                return mLocalPlayLists.get(0);
+            }
 
-        }else{
+        } else {
             // 专辑porder 取剧集
             if (!TextUtils.isEmpty(porder) && null != mLocalPlayLists && mLocalPlayLists.size() > 0) {
                 int playSize = mLocalPlayLists.size();
@@ -1402,9 +1400,9 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                     if (null != localVideoEpisode) {
                         if (porder.equals(localVideoEpisode.getPorder())) {
                             mNotifyData.setPosition(i);
-                            localIndex=i;
+                            localIndex = i;
                             isFindEpisode = true;
-                            LogUtil.e("xll ","当前播视频 GVid "+localVideoEpisode.getGvid());
+                            LogUtil.e("xll ", "当前播视频 GVid " + localVideoEpisode.getGvid());
                             return localVideoEpisode;
                         }
                     }
@@ -1422,8 +1420,6 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         }
 
 
-
-
         return null;
     }
 
@@ -1437,7 +1433,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
     private void executeLocalChangePlay() {
-        LogUtil.e("v1.1.2","executeLocalChangePlay");
+        LogUtil.e("v1.1.2", "executeLocalChangePlay");
         if (mLocalPlayLists != null) {
             if (mPlayData.getIndex() < mLocalPlayLists.size() - 1) {
                 mPlayData.setIndex(mPlayData.getIndex() + 1);
@@ -1461,16 +1457,15 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     private void executeLocalPlayLogic(VideoItem localVideoEpisode) {
         LogUtil.e(TAG, "msg from Local exute  ！");
-        LogUtil.e("v1.1.2","executeLocalPlayLogic "+ localVideoEpisode.getTitle());
-        if(mNotifyData!=null){
-            LogUtil.e("xll","send  "+mNotifyData.getPosition());
+        LogUtil.e("v1.1.2", "executeLocalPlayLogic " + localVideoEpisode.getTitle());
+        if (mNotifyData != null) {
+            LogUtil.e("xll", "send  " + mNotifyData.getPosition());
             EventBus.getDefault().post(mNotifyData);
             setisPlayEpisode();
         }
 
 
-
-        setTitleText(mActivity.getString(R.string.local_tag)+localVideoEpisode.getTitle());
+        setTitleText(mActivity.getString(R.string.local_tag) + localVideoEpisode.getTitle());
         String downloadType = localVideoEpisode.getDownLoadType();
         String playUrl = "";
         if (PlayerUtils.DOWNLOAD_M3U8.equalsIgnoreCase(downloadType)) {
@@ -1501,8 +1496,6 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             Log.d("Path", " playUrl is " + playUrl);
         }
     }
-
-
 
 
     /**
@@ -1546,7 +1539,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     /**
      * 设置播放下一集的状态
-    */
+     */
     private void playNext() {
         /**
          * 先上报再切换下一集
@@ -1572,10 +1565,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         }
 
         retry = 0;
-        retryCount=0;
-        mStreamIndex=0;
-        isHasRule=false;
-        isQuitSniff=false;
+        retryCount = 0;
+        mStreamIndex = 0;
+        isHasRule = false;
+        isQuitSniff = false;
         hideTimeOutLayout();
         //保存播放记录
          mIsPause=true;
@@ -1965,13 +1958,13 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
    *  retry logic
    * */
 
-    void retryUrl(){
-        if(mOutSiteDataInfo!=null&&!mOutSiteDataInfo.isHasStreamList()) {
+    void retryUrl() {
+        if (mOutSiteDataInfo != null && !mOutSiteDataInfo.isHasStreamList()) {
 
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (retryCount<=1) {
+                    if (retryCount <= 1) {
                         LogUtil.e("xll", "NEW retry streamList " + retryCount);
                         requsetOutSiteData();
                     } else {
@@ -1989,9 +1982,9 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         }
     }
 
-  /**
-   *   return back  os-Type   IOS ： M3U8格式  ANDROID  ： MP4
-   * */
+    /**
+     * return back  os-Type   IOS ： M3U8格式  ANDROID  ： MP4
+     */
 
 
     public class OutSiteDataListener implements RequestListener<OutSiteDataInfo> {
@@ -2715,7 +2708,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
     private void doPlay(final Type currPlayerType, final String playUrl) {
         // UI线程中添加
-        if(TextUtils.isEmpty(playUrl)){
+        if (TextUtils.isEmpty(playUrl)) {
             return;
         }
         PlayerUtils.DEFAULT_PLAYER_TYPE = currPlayerType;
@@ -2731,7 +2724,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         setVideoUri(playUrl);
         LogUtil.e("TestStreamUrl", "" + playUrl);
         Log.e("TestStreamUrl", "" + playUrl);
-        }
+    }
 
     private void setVideoUri(String playUrl) {
         if (!TextUtils.isEmpty(playUrl)) {
@@ -2745,18 +2738,18 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
     void showTimeOutLayout() {
-        if(mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL){
+        if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
             return;
         }
-        if(!mIsPause) {
-        setMediaControllerTopVisibile(true);
+        if (!mIsPause) {
+            setMediaControllerTopVisibile(true);
             videoplayer_load_timeout_layout.setVisibility(View.VISIBLE);
         }
     }
 
     void hideTimeOutLayout() {
         videoplayer_load_timeout_layout.setVisibility(View.GONE);
-       // setPlayLoadingVisibile(true);
+        // setPlayLoadingVisibile(true);
 
     }
 
@@ -2765,6 +2758,11 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     public void onPrepared(MediaPlayer mp) {
         LogUtil.e(TAG, "!!!!!!!!!onPrepared");
         LogUtil.e("v1.1.2", " onprepare  start");
+        if(mPlayContorl.getDuration()!=-1&&mTotalTime!=null){
+            mTotalTime.setText(PlayerUtils.toStringTime((int) mPlayContorl.getDuration()));
+        }
+
+
         //初始化上报
         if (mPlayContorl != null) {
             ac = "init";
@@ -2796,21 +2794,37 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             } else if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.GSM ) {
                 LogUtil.e(TAG, "Media gsm net !");
                 if (null != mPlayContorl && !mIsPrepared) {
-                    LogUtil.e("v1.1.2"," onprepare gsm");
-                    executePrePare();
-                }
-            } else if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.WIFI) {
-                LogUtil.e(TAG, "Media wifi net !");
-                if (null != mPlayContorl && !mIsPrepared) {
-                    LogUtil.e("v1.1.2"," onprepare wifi");
-                    executePrePare();
-                }else{
-                    LogUtil.e("v1.1.2"," onprepare wifi mIspareed "+mIsPrepared);
+                    LogUtil.e("v1.1.2", " onprepare gsm");
+                    if (mPlayEpisode != null && mPlayEpisode.isLocal()) {
+                        isForcePlay = true;
+                        //隐藏掉移动网络提示
+                        showWIFINetView();
+                    }
+                    // else 逻辑
+                    LogUtil.e("v1.1.2", " onprepare gsm");
+                    LogUtil.e("v1.1.2", "isForce play " + isForcePlay);
+
+                    if (isForcePlay) {
+                        executePrePare();
+                    }
+
                 }
 
-            }else{
-                LogUtil.e("v1.1.2", " onprepare unknown state !");
+
+        } else if (mActivity.getNetWork() == ChaoJiShiPinVideoDetailActivity.NetWork.WIFI) {
+            LogUtil.e(TAG, "Media wifi net !");
+            if (null != mPlayContorl && !mIsPrepared) {
+                LogUtil.e("v1.1.2", " onprepare wifi");
+                // 解决 播放无网络界面未刷新
+                showWIFINetView();
+                executePrePare();
+            } else {
+                LogUtil.e("v1.1.2", " onprepare wifi mIspareed " + mIsPrepared);
             }
+
+        } else {
+            LogUtil.e("v1.1.2", " onprepare unknown state !");
+        }
         /*}*/
 
         //开始播放上报
@@ -2827,12 +2841,12 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             end_time = System.currentTimeMillis();
             ut = end_time - begin_time;
             LogUtil.e("wulianshu", "ac = play");
-            if(mActivity.isFullScreen){
+            if (mActivity.isFullScreen) {
                 pageid = mActivity.PAGE_ID_FULL_SCREEN;
-            }else{
+            } else {
                 pageid = mActivity.PAGE_ID_NO_FULL_SCREEN;
             }
-            UploadStat.uploadplaystat(mPlayEpisode, ac, ut + "", retry + "", play_type + "", code_rate, mVideoPlayerFragment.getRef(), timing + "", vlen + "",mVideoPlayerFragment.getSeid(),mVideoPlayerFragment.getPeid(),pageid);
+            UploadStat.uploadplaystat(mPlayEpisode, ac, ut + "", retry + "", play_type + "", code_rate, mVideoPlayerFragment.getRef(), timing + "", vlen + "", mVideoPlayerFragment.getSeid(), mVideoPlayerFragment.getPeid(), pageid);
         }
 
     }
@@ -2841,19 +2855,20 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      * executePrepare
      */
     void executePrePare() {
-        if(mPlayEpisode!=null&&mPlayEpisode.isLocal()){
-            isForcePlay=true;
-        }
 
         if (mPlayContorl == null) {
             return;
         }
 
         mIsPrepared = true;
-        mIsPause=true;
+        mIsPause = true;
         mDuration = mPlayContorl.getDuration();
         // 设置影片总长
-        mTotalTime.setText(PlayerUtils.toStringTime((int) mDuration));
+        // 有些影片在4G网络下加载不出来获取时间戳=-1
+        if(mDuration!=-1){
+            mTotalTime.setText(PlayerUtils.toStringTime((int) mDuration));
+        }
+
         tv_total_length.setText(PlayerUtils.toStringTime((int) mDuration));
         // 设置当前播放时长
         mCurrTime.setText(PlayerUtils.toStringTime(mPlayContorl.getCurrentPosition()));
@@ -2862,31 +2877,31 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 //      setPlayLoadingVisibile(false,mActivity.getString(R.string.player_loading_tip));
         // 影片缓冲成功展现整个控制栏并且5秒后消失
         showControllerLogic();
-        if (mPlayData.getRecordposition() > 0 && Math.abs(mDuration-mPlayData.getRecordposition() * 1000)>1000) {
+        if (mPlayData.getRecordposition() > 0 && Math.abs(mDuration - mPlayData.getRecordposition() * 1000) > 1000) {
             mCurrPlayTime = mPlayData.getRecordposition();
             mPlayContorl.seekTo(mPlayData.getRecordposition() * 1000);
             setPlayLoadingVisibileHasRecord(true, mActivity.getString(R.string.player_loading_record));
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    setPlayLoadingVisibileHasRecord(false,null);
-                    LogUtil.e("xll","loading dismiss 2 second");
+                    setPlayLoadingVisibileHasRecord(false, null);
+                    LogUtil.e("xll", "loading dismiss 2 second");
                 }
             },2000);
 
 
-        }else if( Math.abs(mDuration-mPlayData.getRecordposition() * 1000)<1000){
+        } else if (Math.abs(mDuration - mPlayData.getRecordposition() * 1000) < 1000) {
             mCurrPlayTime = 0;
             mPlayContorl.seekTo(0);
-        }
-        else if (mPlayEpisode !=null && mCurrPlayTime > 0 && last_gvid!=null && last_gvid.equals(mPlayEpisode.getGvid())) {  //PlayerUtils.SITE_CLOUDDISK.equals(mPlayData.getSite()) &&
+        } else if (mPlayEpisode != null && mCurrPlayTime > 0 && last_gvid != null && last_gvid.equals(mPlayEpisode.getGvid())) {  //PlayerUtils.SITE_CLOUDDISK.equals(mPlayData.getSite()) &&
             mPlayContorl.seekTo(mCurrPlayTime);
+            LogUtil.e("v1.2.0","seek to(prepare)  "+mCurrPlayTime);
         }
 
 
         startPlayer();
         startPlayerTimer();
-        if(mPlayEpisode!=null){
+        if (mPlayEpisode != null) {
             last_gvid = mPlayEpisode.getGvid();
         }
 
@@ -2903,7 +2918,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
 
         //播完 播放记录上报
-        if(mPlayContorl!=null&&mPlayContorl.getDuration()!=-1) {
+        if (mPlayContorl != null && mPlayContorl.getDuration() != -1) {
             mCurrPlayTime = getmPlayContorl().getCurrentPosition();
             mVideoPlayerFragment.saveRecord();
 
@@ -3007,9 +3022,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
     public void stop() {
-        if (null != mPlayContorl) {
-            mPlayContorl.stopPlayback();
-        }
+        resetPlayData();
     }
 
 
@@ -3089,9 +3102,9 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
     public void setVideoName(VideoItem episode) {
         mVideoName = episode.getTitle();
-        if(episode.isLocal()){
-            setTitleText(mActivity.getString(R.string.local_tag)+mVideoName);
-        }else{
+        if (episode.isLocal()) {
+            setTitleText(mActivity.getString(R.string.local_tag) + mVideoName);
+        } else {
             setTitleText(mVideoName);
         }
 
@@ -3123,13 +3136,19 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             switch (msg.what) {
                 case ConstantUtils.PROGRESS_CHANGE:
                     // 显示网速
-                    if(!isHasRecord){
-                       // showNetRate();
-                        setPlayLoadingVisibile(true,mActivity.getString(R.string.player_loading_tip));
+                    if (!isHasRecord) {
+                        LogUtil.e("v1.2.0","seek to(mhandle no record )");
+                        // showNetRate();
+                        setPlayLoadingVisibile(true, mActivity.getString(R.string.player_loading_tip));
                     }
                     if (mIsPrepared) {
+                        // 4G网络下总时长丢失
+
                         //小于5秒切换到下一集
-                        long no_play_duration = mDuration - mPlayContorl.getCurrentPosition();
+                        LogUtil.e("v1.2.0","seek to(mhander,mduration)  "+mDuration);
+                        LogUtil.e("v1.2.0","seek to(mhander,getDuration)  "+mPlayContorl.getDuration());
+
+                        long no_play_duration = mPlayContorl.getDuration() - mPlayContorl.getCurrentPosition();
                         if (no_play_duration <= 5 * 1000) {
                             if (mCanPlayNext) {
                                 //切换下一集前 播放完成上报（自动切换下一集）
@@ -3154,41 +3173,35 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                                     }
                                     UploadStat.uploadplaystat(mPlayEpisode, ac, ut + "", retry + "", play_type + "", code_rate, mVideoPlayerFragment.getRef(), timing + "", vlen + "",mVideoPlayerFragment.getSeid(),mVideoPlayerFragment.getPeid(),pageid);
                                 }
-                               // playNext();
-                                LogUtil.e("xll","canPlayNext "+mCanPlayNext);
-                                if (no_play_duration <= 2* 1000) {
-                                    mPlayContorl.seekTo(mPlayContorl.getDuration() - 2000);
-                                    clickPauseOrPlay();
+                                // playNext();
+                                LogUtil.e("xll", "canPlayNext " + mCanPlayNext);
+                                if (no_play_duration <= 2 * 1000) {
+                                    //TODO need check 表示进度条已经走 才执行防止播放器未加载出来频繁刷新进度条
+                                    if(mPlayContorl.getDuration()!=-1){
+                                        LogUtil.e("v1.2.0", "seek to(mhander)  " + mPlayContorl.getDuration());
+                                        mPlayContorl.seekTo(mPlayContorl.getDuration() - 2000);
+                                        clickPauseOrPlay();
+                                    }
 
-                                    if(!mCanPlayNext&&mActivity.getMediaType()==ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
+
+                                    if (!mCanPlayNext && mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
                                         LogUtil.e("xll", "Local Play finish ");
-                                       // LogUtil.e("xll", "Local Play current " + mPlayContorl.getCurrentPosition());
+                                        // LogUtil.e("xll", "Local Play current " + mPlayContorl.getCurrentPosition());
                                         LogUtil.e("xll", "Local Play total  " + mPlayContorl.getDuration());
                                         mActivity.finish();
 
                                     }
 
-                                    if(NetWorkUtils.isNetAvailable()){
+                                    if (NetWorkUtils.isNetAvailable()) {
                                         reportPlayRecord();
                                     }
 
                                 }
                             }
                         }
-
                         refreshPlaySeekBar();
-                        //时间做赋值  检测这次时间和上次时间是否相等 相等调用  executeBufferLogic
-//                        long postion = getCurrPosition();
-                       // repeatSame();
                         reportBlock();
-                        // 每隔3秒判断视频是否缓冲卡
-//                        if (mIsNeddJudgeBuffer && !mIsPlayLocalUrl) {
-//                            executeBufferLogic();
-//                            mHandler.removeMessages(ConstantUtils.JUDGE_BUFFER);
-//                            mHandler.sendEmptyMessageDelayed(ConstantUtils.JUDGE_BUFFER,
-//                                    ConstantUtils.JUDGE_BUFFER_DELAY_TIME);
-//                            mIsNeddJudgeBuffer = false;
-//                        }
+
                     }
                     break;
 //                // 控制栏消失
@@ -3201,10 +3214,10 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 //                    mIsNeddJudgeBuffer = true;
 //                    break;
                 case Utils.GET_JS_RESULT:
-                            LogUtil.e("xll","NEW js call loadUrl !");
-                            mWebView.clearCache(true);
-                            LogUtil.e("xll","NEW　js send params : "+mSnifferParamter);
-                            mWebView.loadUrl("javascript:TestJavaScriptInterface.startFunction(dealWithRequest('" + mSnifferParamter + "'));");
+                    LogUtil.e("xll", "NEW js call loadUrl !");
+                    mWebView.clearCache(true);
+                    LogUtil.e("xll", "NEW　js send params : " + mSnifferParamter);
+                    mWebView.loadUrl("javascript:TestJavaScriptInterface.startFunction(dealWithRequest('" + mSnifferParamter + "'));");
                     break;
                 default:
                     break;
@@ -3341,7 +3354,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             int percent = mPlayContorl.getBufferPercentage();
 //                  LogUtil.d("dyf",percent+"");
             mPlaySeekBar.setSecondaryProgress(percent * 10);
-            mPlaySeekBar.setPadding(Utils.dip2px(7), 0, Utils.dip2px(7), 0);
+
 //            mPlaySeekBar.setSecondaryProgress(percent * 10);
             if (null != mCurrTime) {
                 String currTimeStr = PlayerUtils.toStringTime(currPosition);
@@ -3366,7 +3379,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     public void refreshplaySeekBar(int position) {
         position = (int) ((position * PLAY_SEEKBAR_MAX) / mDuration);
         mPlaySeekBar.setProgress(position);
-        mPlaySeekBar.setPadding(Utils.dip2px(7), 0, Utils.dip2px(7), 0);
+
     }
 
     private OnSeekBarChangeListener mPlaySeekBarChangeListener = new OnSeekBarChangeListener() {
@@ -3381,15 +3394,15 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 //                if (mDuration - position <= 5 * 1000 && mDuration - position > 4 * 1000) {
 //                    ToastUtil.showShortToast(mActivity, mActivity.getResources().getString(R.string.play_finish));
 //                }
-                if(Math.abs(mDuration-position)<=1*1000){
-                    position = mDuration-1*1000;
+                if (Math.abs(mDuration - position) <= 1 * 1000) {
+                    position = mDuration - 1 * 1000;
                 }
                 mPlayContorl.seekTo((int) position);
 
                 // 播放完毕拖动进度条 重置播放状态
-                if(mIsPause){
-                    mIsPause=false;
-                    if(mPlayContorl!=null&&!mPlayContorl.isPlaying()){
+                if (mIsPause) {
+                    mIsPause = false;
+                    if (mPlayContorl != null && !mPlayContorl.isPlaying()) {
                         mPlayContorl.start();
                         startPlayerTimer();
                         updatePlayBtnBg(mIsPause);
@@ -3403,7 +3416,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         public void onStartTrackingTouch(SeekBar seekBar) {
             stopPlayerTimer();
             mHandler.removeMessages(ConstantUtils.DISSMISS_MEDIACONTROLLER);
-            mPlaySeekBar.setPadding(Utils.dip2px(7), 0, Utils.dip2px(7), 0);
+
         }
 
         @Override
@@ -3416,7 +3429,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             int mUserDragTime = (int) ((duration * seekBar.getProgress()) / PLAY_SEEKBAR_MAX);
             String dragTime = PlayerUtils.toStringTime(mUserDragTime);
             mCurrTime.setText(dragTime);
-            mPlaySeekBar.setPadding(Utils.dip2px(7), 0, Utils.dip2px(7), 0);
+
         }
 
     };
@@ -3475,15 +3488,15 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     private void setControllerUI() {
         // 加载影片时不显示底部控制栏
         //本地播放不显示加载进度loading
-        LogUtil.e("wulianshu","setPlayLoadingVisibile 2");
-        setPlayLoadingVisibile(true,mActivity.getString(R.string.player_loading_tip));
+        LogUtil.e("wulianshu", "setPlayLoadingVisibile 2");
+        setPlayLoadingVisibile(true, mActivity.getString(R.string.player_loading_tip));
         setMediaControllerTopVisibile(true);
         // 切换选集上下集时更新播放暂停按钮
         updatePlayBtnBg(false);
         if (null != mPlaySeekBar) {
             mPlaySeekBar.setProgress(0);
             mPlaySeekBar.setSecondaryProgress(0);
-            mPlaySeekBar.setPadding(Utils.dip2px(7), 0, Utils.dip2px(7), 0);
+
         }
     }
 
@@ -3513,12 +3526,15 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         if (null != mLoadingLayout) {
 
             if (flag) {
+                if(!progressBar.isShown()){
                     progressBar.setVisibility(View.VISIBLE);
                     mLoadingLayout.setVisibility(View.VISIBLE);
                     loading_tip_text.setVisibility(View.VISIBLE);
                     mNetRate.setVisibility(View.VISIBLE);
-                    loading_tip_text.setText(showTxt) ;
+                    loading_tip_text.setText(showTxt);
                     showNetRate();
+                }
+
                 //上报卡顿
             } else {
                 // 界面切到后台丢失状态
@@ -3532,11 +3548,12 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     }
 
-  /**
-   *   loading :有播放历史时
-   * */
-   boolean isHasRecord;
-    public void setPlayLoadingVisibileHasRecord(boolean flag,String showTxt) {
+    /**
+     * loading :有播放历史时
+     */
+    boolean isHasRecord;
+
+    public void setPlayLoadingVisibileHasRecord(boolean flag, String showTxt) {
 
         if (null != mLoadingLayout) {
             if (flag) {
@@ -3544,8 +3561,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 mLoadingLayout.setVisibility(View.VISIBLE);
                 loading_tip_text.setVisibility(View.VISIBLE);
                 mNetRate.setVisibility(View.GONE);
-                loading_tip_text.setText(showTxt) ;
-                isHasRecord=true;
+                loading_tip_text.setText(showTxt);
+                isHasRecord = true;
 
             } else {
                 // 界面切到后台丢失状态
@@ -3553,12 +3570,11 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
                 mLoadingLayout.setVisibility(View.GONE);
                 loading_tip_text.setVisibility(View.GONE);
                 mNetRate.setVisibility(View.GONE);
-                isHasRecord=false;
+                isHasRecord = false;
 
             }
         }
     }
-
 
 
     public void setMediaControllerTopVisibile(boolean flag) {
@@ -4207,15 +4223,21 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
     public void showGSMNetView() {
+
+        hideTimeOutLayout();
         mNetLayout.setVisibility(View.VISIBLE);
         controller_net_error.setText(mActivity.getResources().getString(R.string.RPG_net_tip));
         controller_net_error_play.setVisibility(View.VISIBLE);
+        controller_net_error_setting.setVisibility(View.GONE);
+        //
         controller_net_error_setting.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.GONE);
         hideBottomControllView();
     }
 
     public void showWIFINetView() {
+
+        hideTimeOutLayout();
         mNetLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.VISIBLE);
         controller_net_error_play.setVisibility(View.GONE);
@@ -4225,13 +4247,13 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     }
 
     public void showNoNetView() {
-
-        if(mPlayEpisode!=null&&mPlayEpisode.isLocal()){
+        hideTimeOutLayout();
+        if (mPlayEpisode != null && mPlayEpisode.isLocal()) {
 
             return;
         }
-        if(mPlayEpisode==null){
-            LogUtil.e("v1.1.2","local episode is null");
+        if (mPlayEpisode == null) {
+            LogUtil.e("v1.1.2", "local episode is null");
         }
 
 
@@ -4239,7 +4261,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         controller_net_error.setText(mActivity.getResources().getString(R.string.nonet_tip));
         controller_net_error_play.setVisibility(View.GONE);
         controller_net_error_setting.setVisibility(View.VISIBLE);
-        setPlayLoadingVisibile(false,null);
+        setPlayLoadingVisibile(false, null);
         hideBottomControllView();
     }
 
@@ -4259,12 +4281,12 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
     public void hideBottomControllView() {
 //        if (mMediaControllerBottmon.isShown()) {
-            mMediaControllerBottmon.setVisibility(View.GONE);
+        mMediaControllerBottmon.setVisibility(View.GONE);
 //        }
     }
 
     public void showBottomControllView() {
-        if (!mMediaControllerBottmon.isShown()&&!getmLockScreenBtn().isSelected()) {
+        if (!mMediaControllerBottmon.isShown() && !getmLockScreenBtn().isSelected()) {
             mMediaControllerBottmon.setVisibility(View.VISIBLE);
         }
 
@@ -4277,7 +4299,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 
         public boolean onDown(MotionEvent e) {
             // TODO Auto-generated method stub
-            LogUtil.e("xll"," action down Tap ");
+            LogUtil.e("xll", " action down Tap ");
             showControllerLogic();
             return false;
         }
@@ -4285,13 +4307,13 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
 
-            LogUtil.e("xll"," single Tap ");
+            LogUtil.e("xll", " single Tap ");
             return false;
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            if (mActivity.getMediaType()== ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
+            if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
                 return false;
             }
             if (ChaoJiShiPinVideoDetailActivity.isFullScreen) {
@@ -4408,8 +4430,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     /**
      * 收藏状态更新
      */
-    public void updateSaveStatus()
-    {
+    public void updateSaveStatus() {
         if (mActivity != null && ic_loving != null) {
             if (mActivity.isSave()) {
                 ic_loving.setImageResource(R.drawable.vedio_detail_loving_pressed);
@@ -4449,7 +4470,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     class MyOnTouchListener implements OnTouchListener{
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch(motionEvent.getAction()){
+            switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     view.setBackgroundColor(mActivity.getResources().getColor(R.color.color_FF1E27));
                     break;

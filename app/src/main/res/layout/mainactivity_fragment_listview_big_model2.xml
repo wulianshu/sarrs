@@ -21,8 +21,8 @@
             android:layout_below="@+id/divider"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_ffffff"
-            >
+            android:background="@color/color_ffffff">
+
             <RelativeLayout
                 android:id="@+id/big_layout"
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                     android:layout_marginLeft="@dimen/sarrs_dimen_12dp"
                     android:background="@drawable/sarrs_pic_mainactivity_tag"
                     android:gravity="center"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="2dp"
                     android:paddingTop="1dp"
                     android:textColor="@color/color_ffffff"
                     android:textSize="@dimen/sarrs_dimen_12dp" />
@@ -134,9 +134,9 @@
                         android:layout_centerInParent="true"
                         android:gravity="center"
                         android:paddingBottom="@dimen/sarrs_dimen_24dp"
-                        android:textColor="@color/color_999999"
                         android:shadowColor="#000000"
                         android:shadowDx="1"
+                        android:textColor="@color/color_999999"
                         android:textSize="@dimen/sarrs_dimen_12dp" />
 
 

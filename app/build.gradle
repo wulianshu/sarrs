@@ -109,7 +109,7 @@ android {
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     //compile 'com.umeng.analytics:analytics:latest.integration'
     //compile 'de.greenrobot:eventbus:2.4.0'
     compile project(':thirdparty')
@@ -127,8 +127,8 @@ dependencies {
     //    compile files('libs/qq_open_sdk.jar')
     //    compile files('libs/weibosdkcore_v3.1.1.jar')
     //    compile files('libs/fastjson-1.1.45.android.jar')
-    compile files('libs/cde-sdk-0.9.82-13.jar')
     compile files('libs/fastjson-1.2.5.jar')
     //compile 'de.hdodenhof:circleimageview:2.0.0'
     compile files('libs/umeng-analytics-v5.6.1.jar')
+    compile files('libs/cde-sdk-1.0.19.jar')
 }

@@ -1,12 +1,8 @@
 package com.mylib.download;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -16,16 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.chaojishipin.sarrs.R;
-import com.chaojishipin.sarrs.download.download.Constants;
-import com.chaojishipin.sarrs.download.download.DownloadInfo;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
-import com.chaojishipin.sarrs.download.download.DownloadUtils;
 import com.chaojishipin.sarrs.utils.DataUtils;
-import com.chaojishipin.sarrs.utils.LogUtil;
-import com.chaojishipin.sarrs.utils.ToastUtil;
-import com.mylib.download.activity.DownloadJobActivity;
 
-public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener {
+public class DownloadUtil implements VideoDownloadManager.IShelfDownloadListener {
 
 	private Handler mHandler;
 	private AbsListView mListView;
@@ -74,7 +64,7 @@ public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener
 		}
 	}
 
-	private MapItem getView(ShelfDownload download, boolean isFinish){
+	private MapItem getView(VideoDownload download, boolean isFinish){
 		return getView(download.getJobId(), isFinish);
 	}
 	
@@ -107,7 +97,7 @@ public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener
 		return null;
 	}
 
-	private void updateView(MapItem item, ShelfDownload download){
+	private void updateView(MapItem item, VideoDownload download){
 		final ProgressBar v = (ProgressBar) item.view.findViewById(R.id.ProgressBar);
 		final TextView tv = (TextView)item.view.findViewById(R.id.tv_download_status);
 		final TextView downloadLength = (TextView) item.view.findViewById(R.id.tv_download_length);
@@ -120,7 +110,7 @@ public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener
 	}
 
 	@Override
-	public void onDownloading(ShelfDownload download) {
+	public void onDownloading(VideoDownload download) {
 		if(pause)
 			return;
 		MapItem item = getView(download, false);
@@ -130,12 +120,12 @@ public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener
 	}
 
 	@Override
-	public void onDownloadPending(ShelfDownload download){
+	public void onDownloadPending(VideoDownload download){
 		onDownloading(download);
 	}
 	
 	@Override
-	public void onPauseDownload(ShelfDownload download) {
+	public void onPauseDownload(VideoDownload download) {
 		MapItem item = getView(download, false);
 		if(item == null)
 			return;
@@ -143,7 +133,7 @@ public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener
 	}
 
 	@Override
-	public void onDownloadFinish(final ShelfDownload download) {
+	public void onDownloadFinish(final VideoDownload download) {
 		mHandler.post(new Runnable(){
 			public void run(){
 				if(mListener != null)
@@ -157,11 +147,11 @@ public class DownloadUtil implements ShelfDownloadManager.IShelfDownloadListener
 	}
 
 	@Override
-	public void onFileTotalSize(ShelfDownload download) {
+	public void onFileTotalSize(VideoDownload download) {
 	}
 
 	@Override
-	public void onDownloadFailed(final ShelfDownload download, final String msg) {
+	public void onDownloadFailed(final VideoDownload download, final String msg) {
 		MapItem item = getView(download, true);
 		if(item == null)
 			return;

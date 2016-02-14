@@ -57,31 +57,31 @@
             android:src="@drawable/selector_vediodetailfragment_download"></ImageView>
 
     </RelativeLayout>
-    <!--间隔条 -->
-    <LinearLayout
-        android:layout_below="@+id/videodetail_action_ln"
-        android:id="@+id/videodetail_bar1"
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:background="#F3F3F3"
-        android:orientation="horizontal">
-    </LinearLayout>
+
     <com.chaojishipin.sarrs.widget.SarrsScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/videodetail_bar1"
+        android:layout_below="@+id/videodetail_action_ln"
         android:background="#FFF">
 
         <RelativeLayout
             android:id="@+id/videodetail_media_bottom_fragment"
             android:layout_width="fill_parent"
             android:layout_height="match_parent">
+            <!--间隔条   android:layout_below="@+id/videodetail_action_ln"-->
+            <LinearLayout
 
+                android:id="@+id/videodetail_bar1"
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="#F3F3F3"
+                android:orientation="horizontal">
+            </LinearLayout>
 
             <!--专辑详情描述以及 剧集展示 以及评论布局 -->
             <LinearLayout
                 android:id="@+id/videodetail_content"
-
+                android:layout_below="@+id/videodetail_bar1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

@@ -89,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/main_feed_poster_title_margin"
+                android:layout_marginRight="@dimen/main_feed_poster_title_margin"
                 android:lineSpacingExtra="@dimen/sarrs_dimen_3dp"
                 android:layout_marginBottom="@dimen/sarrs_dimen_15dp"
                 android:textColor="@color/color_ffffff"

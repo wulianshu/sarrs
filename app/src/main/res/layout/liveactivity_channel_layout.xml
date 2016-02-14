@@ -57,7 +57,7 @@
 
             <RelativeLayout
                 android:id="@+id/channel_begin_time"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/sarrs_dimen_62.5dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true">
 
@@ -145,7 +145,7 @@
 
             <RelativeLayout
                 android:id="@+id/channel_status"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/sarrs_dimen_56.5dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true">
 
@@ -180,6 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/live_item_layout"
         android:background="@color/color_f3f3f3"
+        android:clickable="false"
         android:gravity="center"
         android:orientation="vertical">
 

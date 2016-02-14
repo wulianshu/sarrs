@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.chaojishipin.sarrs.ChaoJiShiPinApplication;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.activity.ChaoJiShiPinVideoDetailActivity;
@@ -24,6 +25,9 @@ import com.chaojishipin.sarrs.bean.VideoDetailItem;
 import com.chaojishipin.sarrs.bean.VideoItem;
 import com.chaojishipin.sarrs.dao.HistoryRecordDao;
 import com.chaojishipin.sarrs.download.bean.LocalVideoEpisode;
+import com.chaojishipin.sarrs.download.download.DownloadHelper;
+import com.chaojishipin.sarrs.download.download.DownloadInfo;
+import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
 import com.chaojishipin.sarrs.feedback.DataReporter;
 import com.chaojishipin.sarrs.fragment.ChaoJiShiPinBaseFragment;
@@ -40,6 +44,7 @@ import com.chaojishipin.sarrs.utils.TrafficStatsUtil;
 import com.chaojishipin.sarrs.utils.Utils;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
 import de.greenrobot.event.EventBus;
 
 
@@ -581,6 +586,7 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
     public void onDestroy() {
         if(mVideoPlayerController != null){
             mVideoPlayerController.uploadstat(recoderposition);
+			mVideoPlayerController.stop();
             mVideoPlayerController.destroy();
         }
         super.onDestroy();
@@ -678,6 +684,64 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
         }
 
 
+    }
+   /**
+    *  点
+    * */
+    public void onEventMainThread(DownloadJob job) {
+        super.onEventMainThread(job);
+
+        PlayData playingData=null;
+
+        // 合并正在播放剧集
+       if(mVideoPlayerController!=null&& job.getEntity()!=null&&!TextUtils.isEmpty( job.getEntity().getGlobaVid())){
+
+           LogUtil.e("v1.2.0", "down complete -- " + job.getEntity().getDisplayName());
+           LogUtil.e("v1.2.0","down complete gvid "+job.getEntity().getGlobaVid());
+           LogUtil.e("v1.2.0","down complete type "+ job.getEntity().getDownloadType());
+           playingData = mVideoPlayerController.getCurrentPlayData();
+           String path=null;
+
+           if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
+               path =
+                       DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity().getPath())
+                               + "/" + job.getEntity().getSaveName() + ".m3u8";
+           } else {
+               path =
+                       "file://"
+                               + DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity()
+                               .getPath());
+           }
+
+
+           if(playingData!=null&&playingData.getmEpisodes()!=null){
+
+               for(int i=0;i<playingData.getmEpisodes().size();i++){
+
+                   ArrayList<VideoItem> videoItems=playingData.getmEpisodes().get(i);
+
+                   for(int j=0;j<videoItems.size();j++){
+                       VideoItem item=videoItems.get(j);
+                       if(item.getGvid().equalsIgnoreCase(job.getEntity().getGlobaVid())){
+                           item.setIsLocal(true);
+                           item.setPlay_url(path);
+                           LogUtil.e("v1.2.0","down complete make local"+job.getEntity().getDisplayName());
+                           break;
+                       }
+                   }
+
+
+               }
+
+           }
+
+
+       }
+
+
+
+
+
 
 
     }
@@ -764,13 +828,16 @@ public class VideoPlayerFragment extends ChaoJiShiPinBaseFragment implements Vie
 
                 LogUtil.e("xll", "播放本地断开网络！");
             } else {
+                //TODO 春节后逻辑调整  在activity出提出播放数据 判断本地剧集状态   此时拿到剧集状态时机有问题
                 if (mActivity.getEpisodeType() == ChaoJiShiPinVideoDetailActivity.EpisodeType.EPISO_LOCAL) {
                     LogUtil.e("v1.1.2", " local episode not show netview");
                 } else {
                     mVideoPlayerController.playerPause();
                     mVideoPlayerController.resetPlaystate(true);
                     mVideoPlayerController.showGSMNetView();
-                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.RPG_net_tip), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mActivity, mActivity.getResources().getString(R.string.RPG_net_tip), Toast.LENGTH_SHORT).show();
+                    LogUtil.e("v1.2.0","fragment top toast");
+
                 }
 
             }

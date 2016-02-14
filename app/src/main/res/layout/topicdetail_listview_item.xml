@@ -76,7 +76,7 @@
             android:textSize="@dimen/sarrs_text_11sp"
             android:textColor="@color/color_999999"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/sarrs_dimen_11dp"
+            android:layout_marginLeft="@dimen/sarrs_dimen_6dp"
             android:text="aaa"
             android:gravity="center"/>
 

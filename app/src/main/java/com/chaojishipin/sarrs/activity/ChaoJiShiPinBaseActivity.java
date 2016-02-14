@@ -132,14 +132,14 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
     @Override
     protected void onResume() {
         super.onResume();
-        UMengAnalysis.onResume(this);
+//        UMengAnalysis.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         System.out.println("AAAAAonPause");
-        UMengAnalysis.onPause(this);
+//        UMengAnalysis.onPause(this);
         //切换至后台是无需监听网络变化
         unRegisterReceiver();
 

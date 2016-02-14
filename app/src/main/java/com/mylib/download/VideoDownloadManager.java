@@ -2,11 +2,9 @@ package com.mylib.download;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +20,6 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.chaojishipin.sarrs.download.download.Constants;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
-import com.chaojishipin.sarrs.download.download.DownloadUtils;
 import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.mylib.download.DownloadConstant.Status;
@@ -32,17 +29,17 @@ import com.mylib.download.DownloadConstant.Status;
  * @author xiaruri
  *
  */
-public class ShelfDownloadManager {
+public class VideoDownloadManager {
 
-	private String TAG = "ShelfDownloadManager";
+	private String TAG = "VideoDownloadManager";
 	private Context mContext;
 	private DownloadManagerFactory.DownloadModule module = new DownloadManagerFactory.DownloadModule("shelf");
 	private IDownloadManager mDownloadManager;
-	private Class<?> modleKey = ShelfDownloadManager.class;
-	private ConcurrentHashMap<String, ShelfDownload> mMap = new ConcurrentHashMap<String, ShelfDownload>();
+	private Class<?> modleKey = VideoDownloadManager.class;
+	private ConcurrentHashMap<String, VideoDownload> mMap = new ConcurrentHashMap<String, VideoDownload>();
 	private Set<IShelfDownloadListener> mStatusListener = Collections.newSetFromMap(new ConcurrentHashMap<IShelfDownloadListener, Boolean>());
 
-	public ShelfDownloadManager(Context context){
+	public VideoDownloadManager(Context context){
 		initDownload();
 		context = context.getApplicationContext();
 		mContext = context;
@@ -60,17 +57,17 @@ public class ShelfDownloadManager {
 	
 	public interface IShelfDownloadListener {
 
-		public void onDownloading(ShelfDownload download);
+		public void onDownloading(VideoDownload download);
 
-		public void onPauseDownload(ShelfDownload download);
+		public void onPauseDownload(VideoDownload download);
 
-		public void onDownloadFinish(ShelfDownload download);
+		public void onDownloadFinish(VideoDownload download);
 
-		public void onFileTotalSize(ShelfDownload download);
+		public void onFileTotalSize(VideoDownload download);
 
-		public void onDownloadFailed(ShelfDownload download, String msg);
+		public void onDownloadFailed(VideoDownload download, String msg);
 
-		public void onDownloadPending(ShelfDownload download);
+		public void onDownloadPending(VideoDownload download);
 	}
 	
 	final IDownloadManager.IDownloadListener downloadListener;
@@ -81,7 +78,7 @@ public class ShelfDownloadManager {
 			@Override
 			public boolean onDownloading(IDownloadManager.DownloadInfo info) {
 				LogUtil.l("onDownloading info = " + info.toString());
-				ShelfDownload download = mMap.get(info.url);
+				VideoDownload download = mMap.get(info.url);
 				LogUtil.l("onDownloading download = " + download);
 				if (download != null) {
 					download.getJob().setDownloadedSize(info.progress.progress);
@@ -104,7 +101,7 @@ public class ShelfDownloadManager {
 			@Override
 			public void onPauseDownload(IDownloadManager.DownloadInfo info) {
 				LogUtil.l("onPauseDownload info = " + info.toString());
-				ShelfDownload download = changeMap(false, null, info, "pause");
+				VideoDownload download = changeMap(false, null, info, "pause");
 				if (download != null) {
 					download.setStatus(DownloadConstant.Status.PAUSE);
 					updateStatus(download, 0);
@@ -120,7 +117,7 @@ public class ShelfDownloadManager {
 			@Override
 			public void onDownloadFinish(IDownloadManager.DownloadInfo info) {
 				LogUtil.l("onDownloadFinish info = " + info.toString());
-				ShelfDownload download = changeMap(false, null, info, "finish");
+				VideoDownload download = changeMap(false, null, info, "finish");
 				if (download != null) {
 					DataUtils.getInstance().updateDownloadStatus(download.getJob(), DownloadJob.COMPLETE);
 					download.setStatus(DownloadConstant.Status.FINISH);
@@ -144,7 +141,7 @@ public class ShelfDownloadManager {
 			@Override
 			public void onFileTotalSize(IDownloadManager.DownloadInfo info) {
 				LogUtil.l("onFileTotalSize size = " + info.progress.total);
-				ShelfDownload download = mMap.get(info.url);
+				VideoDownload download = mMap.get(info.url);
 				if (download != null) {
 					download.getJob().getEntity().setFileSize(info.progress.total);
 					download.getJob().setTotalSize(info.progress.total);
@@ -161,7 +158,7 @@ public class ShelfDownloadManager {
 
 			@Override
 			public void onDownloadFailed(IDownloadManager.DownloadInfo info, IDownloadManager.DownloadExp exp) {
-				final ShelfDownload download = changeMap(false, null, info, "fail");
+				final VideoDownload download = changeMap(false, null, info, "fail");
 				if (download != null) {
 					initDownloadExpCode("", download);
 					download.setStatus(Status.FAILED);
@@ -222,14 +219,14 @@ public class ShelfDownloadManager {
 		return DownloadJob.INIT;
 	}
 
-	private void updateStatus(ShelfDownload download, long rate){
+	private void updateStatus(VideoDownload download, long rate){
 		download.getJob().setRate(rate);
 		if(!download.isStatusChanged())
 			return;
 		download.getJob().setStatus(convertStatus(download.getStatus()));
 	}
 	
-	private void notifyPending(ShelfDownload download){
+	private void notifyPending(VideoDownload download){
 		Iterator<IShelfDownloadListener> ite = mStatusListener.iterator();				
         while (ite.hasNext()){
         	IShelfDownloadListener l = ite.next();
@@ -238,7 +235,7 @@ public class ShelfDownloadManager {
         }
 	}
 
-	public void startDownload(ShelfDownload download){
+	public void startDownload(VideoDownload download){
 		if(mMap.containsKey(download.getUrl())) {
 			;
 		}else
@@ -249,13 +246,13 @@ public class ShelfDownloadManager {
 		mDownloadManager.pauseAll();
 	}
 
-	public void pauseDownload(ShelfDownload download){
+	public void pauseDownload(VideoDownload download){
 		if(mMap.containsKey(download.getUrl())){
 			mDownloadManager.pauseDownload(download);
 		}
 	}
 
-	public void download(ShelfDownload download){
+	public void download(VideoDownload download){
 //		LogUtil.l("download bookId = " + download.getBookId());
 		if(mMap.containsKey(download.getUrl())){
 			download = mMap.get(download.getUrl());
@@ -290,13 +287,13 @@ public class ShelfDownloadManager {
 		}
 	}
 
-	private ShelfDownload changeMap(boolean add, ShelfDownload download, IDownloadManager.DownloadInfo info, String action){
+	private VideoDownload changeMap(boolean add, VideoDownload download, IDownloadManager.DownloadInfo info, String action){
 		if(add) {
 			mMap.put(download.getUrl(), download);
 			Log.e("mapp", "new download " + download.getUrl());
 			return download;
 		}else {
-			ShelfDownload down = mMap.remove(info.url);
+			VideoDownload down = mMap.remove(info.url);
 			if(down == null)
 				Log.e("mapp", "remove download " + info.url + ", " + action + ", fail");
 			else
@@ -315,7 +312,7 @@ public class ShelfDownloadManager {
 			mStatusListener.add(l);
 	}
 	
-	private void initDownloadExpCode(String json, ShelfDownload download)
+	private void initDownloadExpCode(String json, VideoDownload download)
 			throws JSONException {
 		
 		LogUtil.l("initDownloadExpCode");
@@ -347,9 +344,9 @@ public class ShelfDownloadManager {
 		ArrayList<DownloadJob> list = new ArrayList<>();
 		if(mMap == null)
 			return list;
-		Iterator<Map.Entry<String, ShelfDownload>> it = mMap.entrySet().iterator();
+		Iterator<Map.Entry<String, VideoDownload>> it = mMap.entrySet().iterator();
 		while(it.hasNext()){
-			Map.Entry<String, ShelfDownload> e = it.next();
+			Map.Entry<String, VideoDownload> e = it.next();
 			list.add(e.getValue().getJob());
 		}
 		return list;

@@ -1,8 +1,6 @@
 package com.mylib.download;
 
 import com.chaojishipin.sarrs.download.download.*;
-import com.chaojishipin.sarrs.fragment.videoplayer.PlayerUtils;
-import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.DataUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.StringUtil;
@@ -48,7 +46,7 @@ public class M3u8Download extends CDNDownload {
     private int redirectPort;
     private String redirectScheme;
 
-    public M3u8Download(IDownload request, DownloadQueue.DownloadCallback callback, DownloadJob job, MyDownloadTask task) {
+    public M3u8Download(IDownload request, DownloadQueue.DownloadCallback callback, DownloadJob job, DownloadTask task) {
         super(request, callback, job, task);
     }
 

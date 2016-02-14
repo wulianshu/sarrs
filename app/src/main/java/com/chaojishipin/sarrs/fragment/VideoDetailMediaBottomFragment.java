@@ -2006,16 +2006,16 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
             //流量
             else {
                 if (((ChaoJiShiPinVideoDetailActivity)getActivity()).getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.ONLINE) {
-                    Toast.makeText(mContext, mContext.getResources().getString(R.string.RPG_net_tip), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mContext, mContext.getResources().getString(R.string.RPG_net_tip), Toast.LENGTH_SHORT).show();
+                    LogUtil.e("v1.2.0", "fragment bottom toast");
+                    requestVideoDetailIndex();
+
+
                 }
             }
             //没网络
         } else {
-            //hideLoading();
-            // showRetryLayout();
-            // hideEpisoLayout(null,true);
-            // hideDetailDescription();
-           // Toast.makeText(mContext, mContext.getResources().getString(R.string.nonet_tip), Toast.LENGTH_SHORT).show();
+
         }
     }
 

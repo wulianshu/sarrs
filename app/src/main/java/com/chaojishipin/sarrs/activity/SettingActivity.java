@@ -11,6 +11,8 @@ import android.view.View;
 import com.chaojishipin.sarrs.R;
 import com.chaojishipin.sarrs.fragment.SaveFragment;
 import com.chaojishipin.sarrs.fragment.SettingFragment;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
+import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.widget.TitleActionBar;
 
 
@@ -50,9 +52,21 @@ public class SettingActivity extends ChaoJiShiPinBaseActivity implements TitleAc
         fragmentTransaction.commit();
     }
 
+
+
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.AND_SETTING,this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        UmengPagePath.endpage(ConstantUtils.AND_SETTING, this);
     }
 
     @Override

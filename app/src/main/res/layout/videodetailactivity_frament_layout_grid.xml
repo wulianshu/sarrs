@@ -68,7 +68,6 @@
                      android:verticalSpacing="1dp"
                      android:visibility="gone"
                      android:background="@color/color_ffffff"
-                     android:layout_marginBottom="10dp"
                      android:numColumns="6">
                  </com.chaojishipin.sarrs.widget.NoScrollGridView>
 

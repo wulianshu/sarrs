@@ -65,7 +65,7 @@ public class DataHttpApi {
      * @param <D>
      * @return
      */
-    public static <T extends LetvBaseBean, D> LetvDataHull<T> requestDislikeReport(LetvBaseParser<T, D> parser,
+    public  static <T extends LetvBaseBean, D> LetvDataHull<T> requestDislikeReport(LetvBaseParser<T, D> parser,
                                                                                    String id,
                                                                                    String source,
                                                                                    String cid,

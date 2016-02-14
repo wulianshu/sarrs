@@ -36,8 +36,7 @@
             >
 
             <TextView
-                android:layout_marginLeft="@dimen/sarrs_dimen_7dp"
-
+                android:layout_marginLeft="@dimen/sarrs_dimen_15dp"
                 android:id="@+id/tv_currtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +46,7 @@
                 android:textSize="@dimen/sarrs_text_11sp"/>
 
             <TextView
-                android:layout_marginRight="@dimen/sarrs_dimen_7dp"
+                android:layout_marginRight="@dimen/sarrs_dimen_15dp"
                 android:id="@+id/tv_totaltime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,10 +63,9 @@
                 android:maxHeight="@dimen/mediacontorller_play_seekbar_maxheight"
                 android:minHeight="@dimen/mediacontorller_play_seekbar_minheight"
                 android:progress="10"
-                android:paddingRight="@dimen/sarrs_dimen_7dp"
-                android:paddingLeft="@dimen/sarrs_dimen_7dp"
                 android:progressDrawable="@drawable/progress_style_play"
                 android:thumb="@drawable/videoplayer_loading_btn"
+                android:thumbOffset="@dimen/mediacontorller_play_seekbar_thumboffset"
                 />
         </RelativeLayout>
 

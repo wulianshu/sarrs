@@ -312,7 +312,7 @@ public class ConstantUtils {
     public final static String  AND_LIVE = "And_live";
     public final static String  AND_REGISTER = "And_register";
     public final static String  ANDROID_EDIT_USERINFO = "Android_edit_userinfo";
-
+    public final static String  SEARCHACTIVITY = "SearchActivity";
 
     public interface HttpRequestStatus {
         String STATUSCODE = "200";

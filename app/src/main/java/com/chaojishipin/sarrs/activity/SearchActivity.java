@@ -56,6 +56,8 @@ import com.chaojishipin.sarrs.http.volley.HttpApi;
 import com.chaojishipin.sarrs.http.volley.HttpManager;
 import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.listener.onRetryListener;
+import com.chaojishipin.sarrs.thirdparty.Constant;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.uploadstat.UploadStat;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
@@ -173,6 +175,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     @Override
     protected void onResume() {
         super.onResume();
+        UmengPagePath.beginpage(ConstantUtils.SEARCHACTIVITY,this);
         //高斯模糊，需要等contentView都加载完毕，才能执行，所以需要延时。
 //        new Handler().postDelayed(new Runnable() {
 //            public void run() {
@@ -181,6 +184,12 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         blurBackgound(findViewById(R.id.searchactivity_layout));
 //            }
 //        }, 80);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        UmengPagePath.endpage(ConstantUtils.SEARCHACTIVITY, this);
     }
 
     @Override

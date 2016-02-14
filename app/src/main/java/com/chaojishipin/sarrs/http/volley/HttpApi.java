@@ -223,7 +223,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("cid", cid);
         params.put("id", id);
         params.put("pn", "" + pn);
-       // params.put("index", "" + index);
+        // params.put("index", "" + index);
         addVer(params);
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_1);
@@ -427,8 +427,10 @@ public class HttpApi extends SarrsBaseHttpApi {
     public static SarrsRequest<SarrsArrayList> getTopicRequest() {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_2);
+        HashMap<String, String> params = new HashMap<String, String>();
         sb.append("/sarrs/topiclist");
-        return createRequest(SarrsRequest.Method.GET, sb.toString(), new TopicParser(), null, null);
+        addVer(params);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(), new TopicParser(), params, null);
     }
 
     /**
@@ -438,7 +440,9 @@ public class HttpApi extends SarrsBaseHttpApi {
         StringBuilder sb = new StringBuilder();
         sb.append(ConstantUtils.HOST.DOMON_2);
         sb.append("/sarrs/ranklist");
-        return createRequest(SarrsRequest.Method.GET, sb.toString(), new RankListParser(), null, null);
+        HashMap<String, String> params = new HashMap<String, String>();
+        addVer(params);
+        return createRequest(SarrsRequest.Method.GET, sb.toString(), new RankListParser(), params, null);
     }
 
     /**
@@ -450,6 +454,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         sb.append("/sarrs/topic");
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("tid", tid);
+        addVer(params);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new TopicDetailParser(), params, null);
     }
 
@@ -462,6 +467,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         sb.append("/sarrs/rank");
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("rid", rid);
+        addVer(params);
         return createRequest(SarrsRequest.Method.GET, sb.toString(), new RankListDetailParser(), params, null);
     }
 
@@ -479,10 +485,10 @@ public class HttpApi extends SarrsBaseHttpApi {
         HashMap<String, String> params = getBaseParams();
         params.put(ConstantUtils.LeTvBitStreamParam.KEY_GVID, gvid);
         params.put("platid", "17");
-        params.put("splatid", "1701");
+        params.put("splatid", "1702");
         params.put("vtype", vType);
         params.put("playid", playid);
-        params.put("format",format);
+        params.put("format", format);
         addVer(params);
 
         String tssType;
@@ -520,7 +526,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         HashMap<String, String> params = getBaseParams();
         params.put(ConstantUtils.LeTvBitStreamParam.KEY_GVID, gvid);
         params.put("platid", "17");
-        params.put("splatid", "1701");
+        params.put("splatid", "1409"); //网盘源点播客户端不需要传该字段，代理层会返回splatid且值为1409
         params.put("vtype", vType);
         params.put("type", type);
         params.put("format", format);
@@ -589,7 +595,7 @@ public class HttpApi extends SarrsBaseHttpApi {
         params.put("splatid", "1701");
         params.put("vtype", vType);
         params.put("playid", playId);
-        params.put("format",format);
+        params.put("format", format);
         addVer(params);
         StringBuilder key_sb = new StringBuilder();
         key_sb.append(gvid);

@@ -104,7 +104,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
 
     @Override
     protected void onPause() {
-        UmengPagePath.endpage(ConstantUtils.AND_DOWNLOAD,this);
+        UmengPagePath.beginpage(ConstantUtils.AND_DOWNLOAD,this);
         super.onPause();
     }
 

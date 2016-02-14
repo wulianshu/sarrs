@@ -39,6 +39,7 @@ import com.chaojishipin.sarrs.http.volley.RequestListener;
 import com.chaojishipin.sarrs.listener.MyOnClickListener;
 import com.chaojishipin.sarrs.thirdparty.UIs;
 import com.chaojishipin.sarrs.thirdparty.UserLoginState;
+import com.chaojishipin.sarrs.uploadstat.UmengPagePath;
 import com.chaojishipin.sarrs.utils.ConstantUtils;
 import com.chaojishipin.sarrs.utils.LogUtil;
 import com.chaojishipin.sarrs.utils.NetWorkUtils;
@@ -223,6 +224,7 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		UmengPagePath.endpage(ConstantUtils.AND_PLAY_H5,this);
 		playWeb.pauseTimers();
 		try {
 			playWeb.getClass().getMethod("onPause")
@@ -243,13 +245,12 @@ public class PlayActivityFroWebView extends ChaoJiShiPinBaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		UmengPagePath.beginpage(ConstantUtils.AND_PLAY_H5,this);
 		playWeb.resumeTimers();
 		try {
-			
 			playWeb.getClass().getMethod("onResume")
 			.invoke(playWeb, (Object[]) null);
 			super.onResume();
-			
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {

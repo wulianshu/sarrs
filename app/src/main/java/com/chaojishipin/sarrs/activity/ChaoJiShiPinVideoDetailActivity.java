@@ -75,7 +75,7 @@ import de.greenrobot.event.EventBus;
 
 public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     public static final String PAGE_ID_FULL_SCREEN = "00S002009";
-    public static final String PAGE_ID_NO_FULL_SCREEN ="00S002008";
+    public static final String PAGE_ID_NO_FULL_SCREEN = "00S002008";
     public static final String SAVE_CHECK = "saveCheck";
     public static final String SHARE_CANCEL = "shareCancel";
     public static final String PLAY_DATA_ERR = "play_data_err";
@@ -85,7 +85,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     // 播放器底部布局
     private LinearLayout mMediaBottomView;
     //  本地播放
-    private  M3u8Httpd m3u8Httpd =null;
+    private M3u8Httpd m3u8Httpd = null;
     /**
      * 播放器大小屏幕状态.默认是半屏
      */
@@ -160,12 +160,12 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     protected void onPostResume() {
         super.onPostResume();
         // 本地剧集优先判断逻辑
-        if (getMediaType() == MeDiaType.LOCAL ) {
+        if (getMediaType() == MeDiaType.LOCAL) {
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
-           // mVideoPlayerFragment.showEpisode();
+            // mVideoPlayerFragment.showEpisode();
 
-        }else{
+        } else {
             setSCREEN(SCREEN.HALF);
             //LogUtil.e("v1.1.2", "from online mode");
             //mVideoPlayerFragment.hideEpisode();
@@ -173,15 +173,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     }
 
 
-
-
-
-
-
-
-
-
-   public enum SCREEN{
+    public enum SCREEN {
         FULL, // 全屏
         HALF  // 半屏
 
@@ -203,7 +195,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     void registerFinish(){
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.chaojishipin.mediaplayer.page.finish");
-         finishReceiver = new FinishReceiver();
+        finishReceiver = new FinishReceiver();
         registerReceiver(finishReceiver, filter);
     }
 
@@ -225,9 +217,9 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         // 隐藏网络连接错误界面
         mMediaBottomView = (LinearLayout) findViewById(R.id.videodetail_media_bottom_fragment_container);
         mMediaView = (LinearLayout) findViewById(R.id.videodetail_medie_fragment_container);
-         addDetailFragment();
-         addVideoPlayerFragment();
-         setSmallScreenParam();
+        addDetailFragment();
+        addVideoPlayerFragment();
+        setSmallScreenParam();
     }
 
 
@@ -259,7 +251,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
     }
 
-   public enum NetWork{
+    public enum NetWork {
 
         WIFI,//1
         GSM, //0
@@ -268,14 +260,14 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
     }
     NetWork mNet;
-    public NetWork getNetWork(){
+
+    public NetWork getNetWork() {
         return mNet;
     }
 
-    public void setNetWork(NetWork net){
-        this.mNet=net;
+    public void setNetWork(NetWork net) {
+        this.mNet = net;
     }
-
 
 
     //modify 7
@@ -283,36 +275,37 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
         LogUtil.e(TAG, "NET WORK ! " + netType);
         this.mNetType = netType;
-        if(netType==-1){
+        if (netType == -1) {
             setNetWork(NetWork.OFFLINE);
-        }else if(netType==0){
+        } else if (netType == 0) {
             setNetWork(NetWork.GSM);
-        }else if(netType==1){
+        } else if (netType == 1) {
             setNetWork(NetWork.WIFI);
         }
 
 
         if (mVideoPlayerFragment != null) {
             // 从除缓存界面进入播放页
-            if(this.getMediaType()==MeDiaType.ONLINE){
-                    LogUtil.e("v1.1.2","online mode excute");
-                    //LogUtil.e("v1.1.2","has not local episo excute local play ");
-                    mVideoPlayerFragment.setPlayerControllerBarState(netType);
-                    mVideoBottomFragment.reLoadData();
+            if (this.getMediaType() == MeDiaType.ONLINE) {
+                LogUtil.e("v1.1.2", "online mode excute");
+                //LogUtil.e("v1.1.2","has not local episo excute local play ");
+                mVideoPlayerFragment.setPlayerControllerBarState(netType);
+                mVideoBottomFragment.reLoadData();
             }
         }
         if (mVideoBottomFragment != null) {
             mVideoBottomFragment.setNetStateTip(netName, netType, isHasNetWork);
         }
     }
+
     /**
-     *   activity 启动模式为sigletask，调用后台activity
-     *  */
+     * activity 启动模式为sigletask，调用后台activity
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-         mVideoDetailItem = (VideoDetailItem) intent.getExtras().get("videoDetailItem");
+        mVideoDetailItem = (VideoDetailItem) intent.getExtras().get("videoDetailItem");
 //        initView();
 
         setTitleBarVisibile(false);
@@ -322,95 +315,93 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         addDetailFragment();
         addVideoPlayerFragment();
         initData();
-        if(this.getMediaType()==MeDiaType.LOCAL||(!NetworkUtil.isNetworkAvailable(this)&&isExits)){
+        if (this.getMediaType() == MeDiaType.LOCAL || (!NetworkUtil.isNetworkAvailable(this) && isExits)) {
             // 点击下载管理跳回本地播放
             setFullScreenLocal();
             setSCREEN(SCREEN.FULL);
             //mVideoPlayerFragment.showEpisode();
-        }else{
-            if(isFullScreen){
+        } else {
+            if (isFullScreen) {
                 LogUtil.e("wulianshu", "设置成全屏了======");
                 setFullScreen();
                 setSCREEN(SCREEN.FULL);
-               // mVideoPlayerFragment.showEpisode();
-            }else {
+                // mVideoPlayerFragment.showEpisode();
+            } else {
                 setSmallScreenParam();
                 setSCREEN(SCREEN.HALF);
-               // mVideoPlayerFragment.hideEpisode();
+                // mVideoPlayerFragment.hideEpisode();
             }
         }
         LogUtil.e("wulianshu", " onNewIntent 被调用====== ");
     }
 
-   /**
-    *  判断本地剧集是否含有点播剧集
-    * */
-   private boolean isExits=false;
-   private boolean isLocalEpisoSize=false;
     /**
-     *   本地剧集&本地剧集>1
-     * */
-   public boolean getIslocaEpisoSize(){
-       return isLocalEpisoSize;
-   }
+     * 判断本地剧集是否含有点播剧集
+     */
+    private boolean isExits = false;
+    private boolean isLocalEpisoSize = false;
 
-    public boolean getIsExitLocal(){
+    /**
+     * 本地剧集&本地剧集>1
+     */
+    public boolean getIslocaEpisoSize() {
+        return isLocalEpisoSize;
+    }
+
+    public boolean getIsExitLocal() {
         return isExits;
     }
-   public boolean isExistLocalEpiso(){
 
-       String gvid=null;
-       String id=null;
-       mVideoDetailItem = (VideoDetailItem) getIntent().getExtras().get("videoDetailItem");
-       if(mVideoDetailItem!=null&&mVideoDetailItem.getVideoItems()!=null&&mVideoDetailItem.getVideoItems().size()>0){
-           gvid= mVideoDetailItem.getVideoItems().get(0).getGvid();
-           id=mVideoDetailItem.getId();
-           if(TextUtils.isEmpty(id)){
-               id=mVideoDetailItem.getVideoItems().get(0).getId();
-           }
-       }
-       if(!TextUtils.isEmpty(gvid)){
-          ArrayList<LocalVideoEpisode>locals=getLocalEpisoByFolderId(null,gvid);
-          if(locals==null){
-              isLocalEpisoSize=false;
-              isExits=false;
-              return isExits;
-          }
-           for(LocalVideoEpisode local:locals){
-           if(local.getGvid().equalsIgnoreCase(gvid)){
-               isExits=true;
-               continue;
-           }
-         }
+    public boolean isExistLocalEpiso() {
 
-         if(isExits&&locals!=null&&locals.size()>1){
-             isLocalEpisoSize=true;
-         }else{
-             isLocalEpisoSize=false;
-         }
+        String gvid = null;
+        String id = null;
+        mVideoDetailItem = (VideoDetailItem) getIntent().getExtras().get("videoDetailItem");
+        if (mVideoDetailItem != null && mVideoDetailItem.getVideoItems() != null && mVideoDetailItem.getVideoItems().size() > 0) {
+            gvid = mVideoDetailItem.getVideoItems().get(0).getGvid();
+            id = mVideoDetailItem.getId();
+            if (TextUtils.isEmpty(id)) {
+                id = mVideoDetailItem.getVideoItems().get(0).getId();
+            }
+        }
+        if (!TextUtils.isEmpty(gvid)) {
+            ArrayList<LocalVideoEpisode> locals = getLocalEpisoByFolderId(null, gvid);
+            if (locals == null) {
+                isLocalEpisoSize = false;
+                isExits = false;
+                return isExits;
+            }
+            for (LocalVideoEpisode local : locals) {
+                if (local.getGvid().equalsIgnoreCase(gvid)) {
+                    isExits = true;
+                    continue;
+                }
+            }
 
-       }
+            if (isExits && locals != null && locals.size() > 1) {
+                isLocalEpisoSize = true;
+            } else {
+                isLocalEpisoSize = false;
+            }
 
-       return isExits;
+        }
 
-
-
-   }
+        return isExits;
 
 
-
+    }
 
 
     @Override
     public void onStart() {
         super.onStart();
         try {
-             if(m3u8Httpd==null){
-                 m3u8Httpd = new M3u8Httpd(8084);
-                 LogUtil.e("v1.1.2","local engine init");
-             }
-            if (m3u8Httpd!=null) {
-                LogUtil.e("v1.1.2","local engine start");
+            if (m3u8Httpd == null) {
+                m3u8Httpd = new M3u8Httpd(8084);
+                LogUtil.e("v1.1.2", "local engine init");
+            }
+            if (m3u8Httpd != null) {
+                LogUtil.e("v1.1.2", "local engine start");
                 m3u8Httpd.start();
 
             }
@@ -422,22 +413,22 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (m3u8Httpd!=null&&m3u8Httpd.isAlive()) {
+        if (m3u8Httpd != null && m3u8Httpd.isAlive()) {
             m3u8Httpd.stop();
         }
 
     }
 
     /**
-     *  注册销毁广播
-     * */
+     * 注册销毁广播
+     */
 
-    class FinishReceiver extends BroadcastReceiver{
+    class FinishReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-           LogUtil.e("xll", "first task media close ");
-            if(intent.getAction().equalsIgnoreCase("com.chaojishipin.mediaplayer.page.finish")){
+            LogUtil.e("xll", "first task media close ");
+            if (intent.getAction().equalsIgnoreCase("com.chaojishipin.mediaplayer.page.finish")) {
                 ChaoJiShiPinVideoDetailActivity.this.finish();
             }
         }
@@ -483,81 +474,30 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
              DownloadJob job = downloadJobs.valueAt(j);
               DownloadEntity entity = job.getEntity();
 
-             if(!TextUtils.isEmpty(gvid)){
-                  if (!TextUtils.isEmpty(entity.getGlobaVid()) && entity.getGlobaVid().equalsIgnoreCase(gvid)) {
-                      jobDs=downloadJobs;
-                      break;
-                  }
-              }
-              if(!TextUtils.isEmpty(aid)){
-                  if (!TextUtils.isEmpty(entity.getMid()) && entity.getMid().equalsIgnoreCase(aid)) {
-                      jobDs=downloadJobs;
-                      break;
-                  }
-              }
+                if (!TextUtils.isEmpty(gvid)) {
+                    if (!TextUtils.isEmpty(entity.getGlobaVid()) && entity.getGlobaVid().equalsIgnoreCase(gvid)) {
+                        jobDs = downloadJobs;
+                        break;
+                    }
+                }
+                if (!TextUtils.isEmpty(aid)) {
+                    if (!TextUtils.isEmpty(entity.getMid()) && entity.getMid().equalsIgnoreCase(aid)) {
+                        jobDs = downloadJobs;
+                        break;
+                    }
+                }
 
 
-
-          }
-      }
-      if(jobDs==null){
-          LogUtil.e("v1.1.2","no local episo ");
-          return null;
-      }else{
-          LogUtil.e("v1.1.2","has local episo ");
-      }
-      for(int i=0;i<jobDs.size();i++){
-          DownloadJob job=jobDs.valueAt(i);
-          if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
-              path =
-                      DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity().getPath())
-                              + "/" + job.getEntity().getSaveName() + ".m3u8";
-          } else {
-              path =
-                      "file://"
-                              + DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity()
-                              .getPath());
-          }
-          DownloadEntity entity=job.getEntity();
-          // 创建播放本地视频的类对象
-          LocalVideoEpisode localVideoEpisode = new LocalVideoEpisode();
-          // TODO 单视频时 mid=gvid
-          if(!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())){
-              localVideoEpisode.setAid(entity.getMid());
-              localVideoEpisode.setId(entity.getId());
-          }
-          localVideoEpisode.setDownType(entity.getDownloadType());
-          localVideoEpisode.setPorder(entity.getPorder());
-          localVideoEpisode.setCid(entity.getCid());
-          localVideoEpisode.setName(entity.getMedianame());
-          localVideoEpisode.setTitle(entity.getMedianame());
-          localVideoEpisode.setPlay_url(path);
-          localVideoEpisode.setGvid(entity.getGlobaVid());
-          localVideoEpisode.setVt(entity.getVt());
-          localVideoEpisode.setSource(entity.getSite());
-          LogUtil.e("v1.1.2", " local episo  "+entity.getMedianame());
-          localVideoEpisodeList.add(localVideoEpisode);
-      }
-      return localVideoEpisodeList;
-  }
-
-
-
-   /**
-    *  获取本地下载剧集信息列表 (所有剧集信息)
-    * */
-
-
-    public   ArrayList<LocalVideoEpisode> getAllLocalEpisodes(){
-        ArrayList<DownloadJob> jobs=DataUtils.getInstance().getCompletedDownloads();
-        String path;
-        if(jobs==null){
-            LogUtil.e("xll","v1_1_2  local null");
-        }else{
-            LogUtil.e("xll","v1_1_2  local job size "+jobs.size());
+            }
         }
-        ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>();
-        for(DownloadJob job:jobs){
+        if (jobDs == null) {
+            LogUtil.e("v1.1.2", "no local episo ");
+            return null;
+        } else {
+            LogUtil.e("v1.1.2", "has local episo ");
+        }
+        for (int i = 0; i < jobDs.size(); i++) {
+            DownloadJob job = jobDs.valueAt(i);
             if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
                 path =
                         DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity().getPath())
@@ -568,11 +508,60 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
                                 + DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity()
                                 .getPath());
             }
-            DownloadEntity entity=job.getEntity();
+            DownloadEntity entity = job.getEntity();
             // 创建播放本地视频的类对象
             LocalVideoEpisode localVideoEpisode = new LocalVideoEpisode();
             // TODO 单视频时 mid=gvid
-            if(!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())){
+            if (!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())) {
+                localVideoEpisode.setAid(entity.getMid());
+                localVideoEpisode.setId(entity.getId());
+            }
+            localVideoEpisode.setDownType(entity.getDownloadType());
+            localVideoEpisode.setPorder(entity.getPorder());
+            localVideoEpisode.setCid(entity.getCid());
+            localVideoEpisode.setName(entity.getMedianame());
+            localVideoEpisode.setTitle(entity.getMedianame());
+            localVideoEpisode.setPlay_url(path);
+            localVideoEpisode.setGvid(entity.getGlobaVid());
+            localVideoEpisode.setVt(entity.getVt());
+            localVideoEpisode.setSource(entity.getSite());
+            LogUtil.e("v1.1.2", " local episo  " + entity.getMedianame());
+            localVideoEpisodeList.add(localVideoEpisode);
+        }
+        return localVideoEpisodeList;
+    }
+
+
+    /**
+     * 获取本地下载剧集信息列表 (所有剧集信息)
+     */
+
+
+    public   ArrayList<LocalVideoEpisode> getAllLocalEpisodes(){
+        ArrayList<DownloadJob> jobs=DataUtils.getInstance().getCompletedDownloads();
+        String path;
+        if (jobs == null) {
+            LogUtil.e("xll", "v1_1_2  local null");
+        } else {
+            LogUtil.e("xll", "v1_1_2  local job size " + jobs.size());
+        }
+        ArrayList<LocalVideoEpisode> localVideoEpisodeList = new ArrayList<LocalVideoEpisode>();
+        for (DownloadJob job : jobs) {
+            if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
+                path =
+                        DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity().getPath())
+                                + "/" + job.getEntity().getSaveName() + ".m3u8";
+            } else {
+                path =
+                        "file://"
+                                + DownloadHelper.getAbsolutePath(job.getEntity(), job.getEntity()
+                                .getPath());
+            }
+            DownloadEntity entity = job.getEntity();
+            // 创建播放本地视频的类对象
+            LocalVideoEpisode localVideoEpisode = new LocalVideoEpisode();
+            // TODO 单视频时 mid=gvid
+            if (!entity.getMid().equalsIgnoreCase(entity.getGlobaVid())) {
                 localVideoEpisode.setAid(entity.getMid());
                 localVideoEpisode.setId(entity.getId());
             }
@@ -589,36 +578,34 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         }
 
 
-        return  localVideoEpisodeList;
+        return localVideoEpisodeList;
     }
 
 
     /**
-     *   online 剧集列表和 local 剧集列表合并
-     *   @param localItems 本地下载剧集
-     *   @param onlineItems 在线剧集
+     * online 剧集列表和 local 剧集列表合并
      *
      * */
 
-    public ArrayList<VideoItem> mergeList(ArrayList<LocalVideoEpisode> localItems,ArrayList<VideoItem> onlineItems){
+    public ArrayList<VideoItem> mergeList(ArrayList<LocalVideoEpisode> localItems, ArrayList<VideoItem> onlineItems) {
 
 
-        if(localItems!=null&&localItems.size()>0){
+        if (localItems != null && localItems.size() > 0) {
             // do merge
-            if(onlineItems!=null){
+            if (onlineItems != null) {
 
-                for(int i=0;i<onlineItems.size();i++){
+                for (int i = 0; i < onlineItems.size(); i++) {
 
-                     for(int j=0;j<localItems.size();j++){
+                    for (int j = 0; j < localItems.size(); j++) {
 
-                         if(onlineItems.get(i).getGvid().equalsIgnoreCase(localItems.get(j).getId())){
-                             // 有本地剧集
-                             onlineItems.get(i).setIsLocal(true);
-                             onlineItems.get(i).setDownLoadType(localItems.get(j).getDownType());
-                             onlineItems.get(i).setPlay_url(localItems.get(j).getPlay_url());
-                             LogUtil.e("v1.1.2","merge local episo title "+onlineItems.get(i).getTitle()+" order "+onlineItems.get(i).getOrder());
-                         }
-                     }
+                        if (onlineItems.get(i).getGvid().equalsIgnoreCase(localItems.get(j).getId())) {
+                            // 有本地剧集
+                            onlineItems.get(i).setIsLocal(true);
+                            onlineItems.get(i).setDownLoadType(localItems.get(j).getDownType());
+                            onlineItems.get(i).setPlay_url(localItems.get(j).getPlay_url());
+                            LogUtil.e("v1.1.2", "merge local episo title " + onlineItems.get(i).getTitle() + " order " + onlineItems.get(i).getOrder());
+                        }
+                    }
                 }
             }
         }
@@ -626,67 +613,66 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     }
 
     /**
-     *    只有本地剧集&没有在线剧集 构造出播放器数据
-     *
-     * */
+     * 只有本地剧集&没有在线剧集 构造出播放器数据
+     */
 
-    public PlayData  mergeOnlyLocal(ArrayList<LocalVideoEpisode> localItems){
-            //根据cid 计算分页数据
-            PlayData playData=new PlayData();
-            SparseArray<ArrayList<VideoItem>> fenyeList=new SparseArray<>();
-                int key=0;
-                int pageSize=0;
-                if(ConstantUtils.VARIETY_CATEGORYID.equals(mVideoDetailItem.getCategory_id()) || ConstantUtils.DOCUMENTARY_CATEGORYID.equals(mVideoDetailItem.getCategory_id())){
-                    if(localItems.size() % 10 ==0){
-                        key = localItems.size() / 10;
-                    }else{
-                        key = localItems.size() / 10+1;
-                    }
-                    pageSize=10;
-                }else if(ConstantUtils.TV_SERISE_CATEGORYID.equals(mVideoDetailItem.getCategory_id()) || ConstantUtils.CARTOON_CATEGORYID.equals(mVideoDetailItem.getCategory_id())){
-                    if(localItems.size() % 60 ==0){
-                        key = localItems.size() / 60;
-                    }else{
-                        key = localItems.size() / 60+1;
-                    }
-                    pageSize=60;
-                }
-                ArrayList<VideoItem> newList;
-                ArrayList<VideoItem> tempList=new ArrayList<>();
-                ArrayList<String>tagList=new ArrayList<>();
-                for(int i=0;i<localItems.size();i++){
-                    VideoItem item=new VideoItem();
-                    item.setIsLocal(true);
-                    item.setGvid(localItems.get(i).getGvid());
-                    item.setImage(localItems.get(i).getImage());
-                    item.setOrder(localItems.get(i).getPorder());
-                    item.setPorder(localItems.get(i).getPorder());
-                    LogUtil.e("v1.1.2", "local order" + localItems.get(i).getPorder());
-                    item.setSource(localItems.get(i).getSource());
-                    item.setTitle(localItems.get(i).getTitle());
-                    if(TextUtils.isEmpty(item.getTitle())){
-                        item.setTitle(localItems.get(i).getName());
-                    }
-                    item.setCategory_id(localItems.get(i).getCid());
-                    item.setId(localItems.get(i).getAid());
-                    item.setDownLoadType(localItems.get(i).getDownType());
-                    item.setPlay_url(localItems.get(i).getPlay_url());
-                    item.setName(localItems.get(i).getName());
-                    tempList.add(item);
-                    if(key*pageSize+pageSize-1==i||i==localItems.size()-1){
-                        newList=new ArrayList<>();
-                        newList.addAll(tempList);
-                        tempList.clear();
-                        // 非多集类视频处理key =0
-                        key=key - 1;
-                        if(key<=0){
-                            key=0;
-                        }
-                        fenyeList.append(key, newList);
-                        tagList.add(key+"-"+key*pageSize+pageSize);
-                        key++;
-                    }
+    public PlayData mergeOnlyLocal(ArrayList<LocalVideoEpisode> localItems) {
+        //根据cid 计算分页数据
+        PlayData playData = new PlayData();
+        SparseArray<ArrayList<VideoItem>> fenyeList = new SparseArray<>();
+        int key = 0;
+        int pageSize = 0;
+        if (ConstantUtils.VARIETY_CATEGORYID.equals(mVideoDetailItem.getCategory_id()) || ConstantUtils.DOCUMENTARY_CATEGORYID.equals(mVideoDetailItem.getCategory_id())) {
+            if (localItems.size() % 10 == 0) {
+                key = localItems.size() / 10;
+            } else {
+                key = localItems.size() / 10 + 1;
             }
+            pageSize = 10;
+        } else if (ConstantUtils.TV_SERISE_CATEGORYID.equals(mVideoDetailItem.getCategory_id()) || ConstantUtils.CARTOON_CATEGORYID.equals(mVideoDetailItem.getCategory_id())) {
+            if (localItems.size() % 60 == 0) {
+                key = localItems.size() / 60;
+            } else {
+                key = localItems.size() / 60 + 1;
+            }
+            pageSize = 60;
+        }
+        ArrayList<VideoItem> newList;
+        ArrayList<VideoItem> tempList = new ArrayList<>();
+        ArrayList<String> tagList = new ArrayList<>();
+        for (int i = 0; i < localItems.size(); i++) {
+            VideoItem item = new VideoItem();
+            item.setIsLocal(true);
+            item.setGvid(localItems.get(i).getGvid());
+            item.setImage(localItems.get(i).getImage());
+            item.setOrder(localItems.get(i).getPorder());
+            item.setPorder(localItems.get(i).getPorder());
+            LogUtil.e("v1.1.2", "local order" + localItems.get(i).getPorder());
+            item.setSource(localItems.get(i).getSource());
+            item.setTitle(localItems.get(i).getTitle());
+            if (TextUtils.isEmpty(item.getTitle())) {
+                item.setTitle(localItems.get(i).getName());
+            }
+            item.setCategory_id(localItems.get(i).getCid());
+            item.setId(localItems.get(i).getAid());
+            item.setDownLoadType(localItems.get(i).getDownType());
+            item.setPlay_url(localItems.get(i).getPlay_url());
+            item.setName(localItems.get(i).getName());
+            tempList.add(item);
+            if (key * pageSize + pageSize - 1 == i || i == localItems.size() - 1) {
+                newList = new ArrayList<>();
+                newList.addAll(tempList);
+                tempList.clear();
+                // 非多集类视频处理key =0
+                key = key - 1;
+                if (key <= 0) {
+                    key = 0;
+                }
+                fenyeList.append(key, newList);
+                tagList.add(key + "-" + key * pageSize + pageSize);
+                key++;
+            }
+        }
 
         playData.setmEpisodes(fenyeList);
         playData.setPage_titles(tagList);
@@ -827,10 +813,10 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
             }
         }
     }
-   /**
-    *   播放模式（依据进入播放器入口分 下载入口进入和其他入口进入）
-    *
-    *  */
+
+    /**
+     * 播放模式（依据进入播放器入口分 下载入口进入和其他入口进入）
+     */
 
     public enum MeDiaType {
         ONLINE, //  从除下载页进入半屏页执行播放逻辑
@@ -893,7 +879,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
 
     @Override
     protected void onResume() {
-        UmengPagePath.beginpage(ConstantUtils.AND_HALF_PLAY,this);
+        UmengPagePath.beginpage(ConstantUtils.AND_HALF_PLAY, this);
         super.onResume();
     }
 
@@ -904,10 +890,10 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         abandonAudioFocus();
     }
 
-    void unRegisterFinishReceiver(){
-            if (null != finishReceiver) {
-                unregisterReceiver(finishReceiver);
-            }
+    void unRegisterFinishReceiver() {
+        if (null != finishReceiver) {
+            unregisterReceiver(finishReceiver);
+        }
     }
 
     @Override
@@ -918,8 +904,8 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         unRegistInfo();
         //unRegisterFinishReceiver();
 
-        if(m3u8Httpd!=null){
-            m3u8Httpd= null;
+        if (m3u8Httpd != null) {
+            m3u8Httpd = null;
         }
         isFullScreen = false;
 
@@ -1006,10 +992,10 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        screenWidth =Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH,"0"));
-        screenHeight =Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT,"0"));
+        screenWidth = Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, "0"));
+        screenHeight = Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, "0"));
         //分享进入半屏页初次使用屏幕宽度高度还未获取到需重新获取
-        if(screenWidth==0||screenHeight==0){
+        if (screenWidth == 0 || screenHeight == 0) {
             SPUtil.getInstance().putString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, Utils.getScreenWidth(this) + "");
             SPUtil.getInstance().putString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, Utils.getScreenHeight(this) + "");
             LogUtil.e("xll", "init screen Width " + Utils.getScreenWidth(this));
@@ -1038,33 +1024,35 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         isFullScreen = true;
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        int screenWidth =Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH,"0"));;
-        int screenHeight =Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT,"0"));
+        int screenWidth = Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, "0"));
+        ;
+        int screenHeight = Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, "0"));
         //分享进入半屏页初次使用屏幕宽度高度还未获取到需重新获取
-        if(screenWidth==0||screenHeight==0){
+        if (screenWidth == 0 || screenHeight == 0) {
             SPUtil.getInstance().putString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, Utils.getScreenWidth(this) + "");
             SPUtil.getInstance().putString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, Utils.getScreenHeight(this) + "");
             LogUtil.e("xll", "init screen Width " + Utils.getScreenWidth(this));
             LogUtil.e("xll", "init screen Height " + Utils.getScreenHeight(this));
-            screenWidth =Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH,"0"));;
-            screenHeight =Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT,"0"));
+            screenWidth = Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_WIDTH, "0"));
+            ;
+            screenHeight = Integer.parseInt(SPUtil.getInstance().getString(ConstantUtils.ScreenConstants.SCREEN_HEIGHT, "0"));
 
         }
 
 
         //实际测算宽度
-        int realwidth =mDisplayMetrics.widthPixels;
+        int realwidth = mDisplayMetrics.widthPixels;
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         params.width = realwidth;
         params.height = screenWidth;
-        LogUtil.e("xll"," detail fullscreen matrix height "+mDisplayMetrics.heightPixels);
+        LogUtil.e("xll", " detail fullscreen matrix height " + mDisplayMetrics.heightPixels);
         LogUtil.e("xll", "detail fullscreen matrix width  " + mDisplayMetrics.widthPixels);
-        LogUtil.e("xll"," detail fullscreen height "+params.height);
+        LogUtil.e("xll", " detail fullscreen height " + params.height);
         LogUtil.e("xll", "detail fullscreen width  " + params.width);
-                mMediaView.setLayoutParams(params);
+        mMediaView.setLayoutParams(params);
     }
 
     /**
@@ -1129,14 +1117,14 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(mVideoPlayerFragment.isLockScreen()){
+            if (mVideoPlayerFragment.isLockScreen()) {
                 return false;
             }
             if (MeDiaType.ONLINE == getMediaType()) {
-                if (mVideoPlayerFragment.getmVideoPlayerController().getmLockScreenBtn().isSelected()){
+                if (mVideoPlayerFragment.getmVideoPlayerController().getmLockScreenBtn().isSelected()) {
                     return false;
-                }else{
-                    if(isFullScreen){
+                } else {
+                    if (isFullScreen) {
                         setSmallScreenParam();
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         statusBarShow(true);
@@ -1147,7 +1135,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
                         //mVideoPlayerFragment.getmVideoPlayerController().setSelectVisibile(false);
                         //隐藏下一集按钮
                         mVideoPlayerFragment.getmVideoPlayerController().setPlayNextVisible(false);
-                    }else{
+                    } else {
                         back();
                     }
                 }
@@ -1161,22 +1149,21 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void back()
-    {
+    private void back() {
 
-            // 分享过来
-            if(getIntent().getData()!=null){
-                LogUtil.e("xll", "jump from share");
-                Intent intent = new Intent(this, ChaoJiShiPinMainActivity.class);
-                // 将历史中的activity拉回到栈顶
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);  //注意本行的FLAG设置
-                startActivity(intent);
+        // 分享过来
+        if (getIntent().getData() != null) {
+            LogUtil.e("xll", "jump from share");
+            Intent intent = new Intent(this, ChaoJiShiPinMainActivity.class);
+            // 将历史中的activity拉回到栈顶
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);  //注意本行的FLAG设置
+            startActivity(intent);
 
 
-            }else{
-                LogUtil.e("xll","jump from other(search/download/main/record/save)");
-                this.finish();
-            }
+        } else {
+            LogUtil.e("xll", "jump from other(search/download/main/record/save)");
+            this.finish();
+        }
 
 
     }
@@ -1262,8 +1249,7 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
     /**
      * 关闭分享弹窗框
      */
-    private void dismissShareDialog()
-    {
+    private void dismissShareDialog() {
         ShareDialog.dismiss();
     }
 

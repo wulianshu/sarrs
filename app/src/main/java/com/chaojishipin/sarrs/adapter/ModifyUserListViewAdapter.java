@@ -67,7 +67,6 @@ public class ModifyUserListViewAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ModifyUserListViewHolder) convertView.getTag();
-
         }
             if( listInfo.get(position).isClick()) {
                 holder.mImg.setVisibility(View.VISIBLE);

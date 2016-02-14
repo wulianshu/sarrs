@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!-- 播放器控制面板主题 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:background="@color/color_000000"
+    android:background="@color/color_222222"
     android:clickable="true"
     android:focusable="true"
     android:layout_height="fill_parent">

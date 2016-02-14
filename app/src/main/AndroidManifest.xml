@@ -39,20 +39,21 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
+
     <application
         android:name=".ChaoJiShiPinApplication"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.ChaojishipinSplashActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/myTheme" >
+            android:theme="@style/myTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,16 +73,15 @@
             android:name=".activity.ChaoJiShiPinMainActivity"
             android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
 
             <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
         </activity>
         <activity
             android:name=".activity.SettingActivity"
             android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DefaultHeadNameActivity"
             android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden"
@@ -93,7 +93,7 @@
             android:name=".activity.ChaoJiShiPinVideoDetailActivity"
             android:configChanges="orientation|keyboard|screenSize|fontScale|keyboardHidden|locale|layoutDirection"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
 
             <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
             <intent-filter>
@@ -117,13 +117,11 @@
 
             <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
             <intent-filter>
-
                 <!-- <action android:name="android.intent.action.MAIN" /> -->
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
             </intent-filter>
         </activity>
 
@@ -243,7 +241,7 @@
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:label="@string/title_activity_chao_ji_shi_pin_topic_detail"
             android:launchMode="standard"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
 
                 <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -260,7 +258,7 @@
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:label="@string/title_activity_chao_ji_shi_pin_topic_detail"
             android:launchMode="standard"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
 
                 <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -275,7 +273,7 @@
 
         <service android:name=".download.service.DownloadService" />
 
-        <receiver android:name=".download.download.DownloadBroadcastReceiver" >
+        <receiver android:name=".download.download.DownloadBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="com.funshion.video.DOWNLOADCAN3G" />
@@ -291,7 +289,7 @@
                 <data android:scheme="file" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".download.download.SdcardBroadcastReceiver" >
+        <receiver android:name=".download.download.SdcardBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_EJECT" />

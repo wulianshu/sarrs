@@ -108,6 +108,8 @@
     <dimen name="sarrs_dimen_54dp">54dp</dimen>
     <dimen name="sarrs_dimen_60dp">60dp</dimen>
     <dimen name="sarrs_dimen_62dp">62dp</dimen>
+    <dimen name="sarrs_dimen_62.5dp">62.5dp</dimen>
+    <dimen name="sarrs_dimen_63dp">63dp</dimen>
     <dimen name="sarrs_dimen_64dp">64dp</dimen>
     <dimen name="sarrs_dimen_68dp">68dp</dimen>
     <dimen name="sarrs_dimen_69dp">69dp</dimen>
@@ -142,6 +144,8 @@
     <dimen name="sarrs_dimen_200dp">200dp</dimen>
     <dimen name="sarrs_dimen_250dp">250dp</dimen>
     <dimen name="sarrs_dimen_55dp">55dp</dimen>
+    <dimen name="sarrs_dimen_56dp">56dp</dimen>
+    <dimen name="sarrs_dimen_56.5dp">56.5dp</dimen>
     <dimen name="sarrs_dimen_74dp">74dp</dimen>
     <dimen name="sarrs_dimen_90dp">90dp</dimen>
     <dimen name="sarrs_dimen_97dp">97dp</dimen>

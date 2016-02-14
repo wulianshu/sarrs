@@ -61,11 +61,9 @@ public class LocalVideoEpisode extends VideoItem implements LetvBaseBean {
 	}
 
 	private String des;
-	
 	public String getDownType() {
 		return downType;
 	}
-
 	public void setDownType(String downType) {
 		this.downType = downType;
 	}

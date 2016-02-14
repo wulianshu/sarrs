@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class MoviesHttpApi {
 
-	private final static String TAG = "MoviesHttpApi";
+    private final static String TAG = "MoviesHttpApi";
 
 	public static final boolean TEST =   false;
  
@@ -194,8 +194,8 @@ public class MoviesHttpApi {
         params.putString(SNIFFER_KEY.FILEPATH, snifferReport.getFilepath());
         params.putString(SNIFFER_KEY.SITE, snifferReport.getSite());
         params.putString(SNIFFER_KEY.WAITING, snifferReport.getWaiting());
-        params.putString(SNIFFER_KEY.DEFINITION,snifferReport.getDefinition());
-        params.putString(SNIFFER_KEY.DOWNLOAD,snifferReport.getDownload());
+        params.putString(SNIFFER_KEY.DEFINITION, snifferReport.getDefinition());
+        params.putString(SNIFFER_KEY.DOWNLOAD, snifferReport.getDownload());
         params.putString(SNIFFER_KEY.DURATION, snifferReport.getDuration());
 //        params.putString(PUBLIC_PARAMETERS.LOCATION, MoviesApplication.LOCATION_INFO);
         LetvHttpParameter<T, D> httpParameter =
@@ -321,10 +321,10 @@ public class MoviesHttpApi {
         try {
             String url = getStaticHead()+GET_STREAM_URL;
 //            String url = "http://10.154.252.65:7070/" + GET_STREAM_URL;
-			String gvid = params.getString(MoviesHttpApi.LeTvBitStreamParam.KEY_VID);
-			params.putString(ConstantUtils.LeTvBitStreamParam.KEY_GVID, gvid);
-			params.putString("platid", "17");
-			params.putString("splatid", "1701");
+            String gvid = params.getString(MoviesHttpApi.LeTvBitStreamParam.KEY_VID);
+            params.putString(ConstantUtils.LeTvBitStreamParam.KEY_GVID, gvid);
+            params.putString("platid", "17");
+            params.putString("splatid", "1702");// 网盘源下载客户端不需要传该字段，代理层会返回splatid且值为1409
 //			params.putString("vtype", vType); //乐视网存在
 			params.putString("playid", "2");
 			params.putString("unique_id", MoviesConstant.UUID);

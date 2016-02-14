@@ -1,6 +1,7 @@
 package com.chaojishipin.sarrs.activity;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -74,6 +75,7 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         ref = getIntent().getExtras().getString("ref");
         liveDataEntity = (LiveDataEntity) getIntent().getSerializableExtra("livedataentity");
         setContentView(R.layout.activity_liveplayer);
@@ -187,10 +189,11 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onResume() {
         super.onResume();
-        UmengPagePath.beginpage(ConstantUtils.AND_FULL_PLAY,this);
+        UmengPagePath.beginpage(ConstantUtils.AND_FULL_PLAY, this);
         if (!Utils.getScreenLockStatus() && null != mLiveController) {
             mLiveController.onResume();
         }
+
     }
 
 
@@ -209,7 +212,7 @@ public class ChaojishipinLivePlayActivity extends ChaoJiShiPinBaseActivity imple
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLiveController.uploadstat(System.currentTimeMillis()-begintime);
+        mLiveController.uploadstat(System.currentTimeMillis() - begintime);
         isFromBackground = false;
     }
 

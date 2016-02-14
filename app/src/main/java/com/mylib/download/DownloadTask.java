@@ -39,7 +39,7 @@ import com.mylib.download.DownloadConstant.DownloadType;
 import com.mylib.download.DownloadQueue.DownloadCallback;
 import com.mylib.download.RequestConstant.HttpMode;
 
-public class MyDownloadTask implements Runnable {
+public class DownloadTask implements Runnable {
 
 	protected DownloadJob job;
 	private final int MAX_RETRY_COUNT = 2;
@@ -49,7 +49,7 @@ public class MyDownloadTask implements Runnable {
 	private IDownload mRequest;
 	private DownloadCallback mCallback;
 	
-	public MyDownloadTask(IDownload request, DownloadCallback callback) {
+	public DownloadTask(IDownload request, DownloadCallback callback) {
 		super();
 		this.mRequest = request;
 		this.mCallback = callback;

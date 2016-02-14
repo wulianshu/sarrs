@@ -109,7 +109,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     private ChaoJiShiPinMainActivity activity;
     //    public int firstvisiblecount = 2;
     // listView一屏幕可见最大item项
-    private int mini_visible_count = Integer.MAX_VALUE;
+    private int max_visible_count = Integer.MIN_VALUE;
     /**
      * 构造 添加、是否存在、取消收藏统一参数
      */
@@ -159,13 +159,14 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-				if(visibleItemCount<mini_visible_count){
-                    mini_visible_count = visibleItemCount;
+                if (visibleItemCount > max_visible_count) {
+                    max_visible_count = visibleItemCount;
+                    LogUtil.e(Utils.LIVE_TAG, "%%%%%%%%%%%%%%%%%%%%%%%%%%%cur phone one screen visiable item num is " + max_visible_count);
                 }
                 int lastvisibleposition = view.getLastVisiblePosition();
-                if(lastvisibleposition>mini_visible_count){
+                if (lastvisibleposition > (max_visible_count)) {
                     activity.setmTitleActionBarTitle(activity.getResources().getString(R.string.double_click2top));
-                }else{
+                } else {
                     activity.ResetmTitleActionBarTitle();
                 }
             }
@@ -214,6 +215,8 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     public void onRetry() {
         LogUtil.e("main ", "reloading");
         reQMode = 0;
+        // 刷新必须再次设置listView模式
+        setListViewRefreshMode();
         if (isLiveChannel()) {
             requestLiveData();
         } else {
@@ -297,11 +300,11 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
     }
 
     public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {
-        mini_visible_count = Integer.MAX_VALUE; //必须重新初始化该值，live频道item项与其他频道item项不一样
+        max_visible_count = Integer.MIN_VALUE; //必须重新初始化该值，live频道item项与其他频道item项不一样
         alreadyupgvid.clear();
         this.slidingMenuLeft = slidingMenuLeft;
         //精彩推荐
-        if("7".equals(slidingMenuLeft.getContent_type())) {
+        if ("7".equals(slidingMenuLeft.getContent_type())) {
             if ("0".equals(slidingMenuLeft.getCid())) {
                 pageid = "00S002001";
             } else if ("1".equals(slidingMenuLeft.getCid())) {
@@ -315,7 +318,7 @@ public class MainChannelFragment extends MainBaseFragment implements  View.OnCli
             } else if ("16".equals(slidingMenuLeft.getCid())) {
                 pageid = "00S002001_8";
             }
-        }else if ("6".equals(slidingMenuLeft.getContent_type())){
+        } else if ("6".equals(slidingMenuLeft.getContent_type())) {
             pageid = "00S002004";
         }
         if (!isLiveChannel()) {
