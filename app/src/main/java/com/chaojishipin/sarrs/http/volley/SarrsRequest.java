@@ -158,7 +158,9 @@ public class SarrsRequest<T extends LetvBaseBean> extends Request<LetvDataHull<T
 
     @Override
     protected void deliverResponse(LetvDataHull<T> response) {
-        if (mRequestListener != null) {
+        if(mRequestListener == null)
+            return;
+        try{
             int errorCode = response.getDataType();
             switch (errorCode) {
                 case LetvDataHull.DataType.DATA_IS_INTEGRITY:
@@ -168,31 +170,36 @@ public class SarrsRequest<T extends LetvBaseBean> extends Request<LetvDataHull<T
                     mRequestListener.dataErr(errorCode);
                     break;
             }
+        }catch(Throwable e){
+            e.printStackTrace();
         }
     }
 
     @Override
     public void deliverError(VolleyError error) {
-        super.deliverError(error);
-        if (mRequestListener == null) {
-            return;
-        }
-        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-            mRequestListener.netErr(RequestListener.ERROR_NET_ERROR);
-        } else if (error instanceof AuthFailureError) {
-            mRequestListener.dataErr(RequestListener.ERROR_DATA_ERROR);
-        } else if (error instanceof ServerError) {
-            mRequestListener.netErr(RequestListener.ERROR_SERVER_ERROR);
-        } else if (error instanceof NetworkError) {
-            mRequestListener.netErr(RequestListener.ERROR_NET_ERROR);
-        } else if (error instanceof SarrsParseError) {
-            SarrsParseError httpError = (SarrsParseError) error;
-            mRequestListener.dataErr(httpError.getErrorCode());
-        } else {
-            mRequestListener.dataErr(RequestListener.ERROR_UNKNOWN);
+        try{
+            super.deliverError(error);
+            if (mRequestListener == null) {
+                return;
+            }
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                mRequestListener.netErr(RequestListener.ERROR_NET_ERROR);
+            } else if (error instanceof AuthFailureError) {
+                mRequestListener.dataErr(RequestListener.ERROR_DATA_ERROR);
+            } else if (error instanceof ServerError) {
+                mRequestListener.netErr(RequestListener.ERROR_SERVER_ERROR);
+            } else if (error instanceof NetworkError) {
+                mRequestListener.netErr(RequestListener.ERROR_NET_ERROR);
+            } else if (error instanceof SarrsParseError) {
+                SarrsParseError httpError = (SarrsParseError) error;
+                mRequestListener.dataErr(httpError.getErrorCode());
+            } else {
+                mRequestListener.dataErr(RequestListener.ERROR_UNKNOWN);
+            }
+        }catch(Throwable e){
+            e.printStackTrace();
         }
     }
-
 
     @Override
     protected Map<String, String> getPostParams() throws AuthFailureError {

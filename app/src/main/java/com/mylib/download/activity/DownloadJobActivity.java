@@ -251,7 +251,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements OnC
         adapter = new DownloadJobAdapter(jobs, this, index);
         mListView.setAdapter(adapter);
 
-        mUtil = new DownloadUtil(this, mListView);
+        mUtil = new DownloadUtil(this, this, mListView);
     }
 
     private void checkSwipeStatus() {
@@ -628,14 +628,21 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements OnC
     }
 
     private boolean onClickBackButton() {
+        if(exitEdit())
+            return false;
+        finish();
+        return true;
+    }
+
+    private boolean exitEdit(){
         if (null != adapter && adapter.isEditable()) {
             cancelDelete(false);
             resetCheck();
             adapter.notifyDataSetChanged();
-            return false;
+            return true;
         }
-        finish();
-        return true;
+        adapter.notifyDataSetChanged();
+        return false;
     }
 
     @Override
@@ -784,12 +791,14 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements OnC
     }
 
     public void showLoadingView(Context context, boolean isCouldCancel, int strId) {
-        mTipDialog = new Dialog(context, R.style.waiting);
-        mTipDialog.setContentView(R.layout.dialog_waiting);
+        if(mTipDialog == null) {
+            mTipDialog = new Dialog(context, R.style.waiting);
+            mTipDialog.setContentView(R.layout.dialog_waiting);
+            mTipDialog.setCanceledOnTouchOutside(isCouldCancel);
+            mTipDialog.setCancelable(isCouldCancel);
+        }
         TextView textView = (TextView) mTipDialog.findViewById(R.id.waiting_text);
         textView.setText(strId);
-        mTipDialog.setCanceledOnTouchOutside(isCouldCancel);
-        mTipDialog.setCancelable(isCouldCancel);
         if (!mTipDialog.isShowing()) {
             try {
                 mTipDialog.show();
@@ -873,8 +882,7 @@ public class DownloadJobActivity extends ChaoJiShiPinBaseActivity implements OnC
                         jobs.remove(i);
                     }
                 }
-                if(onClickBackButton())
-                    return;
+                exitEdit();
                 if (index == -1) {
                     iv_download_more.setVisibility(View.GONE);
                     download_more_tip.setVisibility(View.GONE);

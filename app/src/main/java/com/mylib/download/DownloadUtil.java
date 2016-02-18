@@ -30,10 +30,9 @@ public class DownloadUtil implements VideoDownloadManager.IShelfDownloadListener
 
 	private DownloadEndListener mListener;
 
-	public DownloadUtil(Context context, AbsListView listView){
+	public DownloadUtil(Context context, DownloadEndListener listener, AbsListView listView){
 		mContext = context;
-		if(context instanceof DownloadEndListener)
-			mListener = (DownloadEndListener)context;
+		mListener = listener;
 		init(listView);
 	}
 	

@@ -218,7 +218,7 @@ public class DataUtils {
             case DownloadJob.COMPLETE:
                 bar.setVisibility(View.INVISIBLE);
                 speed.setText("下载完成");
-                percent.setVisibility(View.INVISIBLE);
+                percent.setVisibility(View.VISIBLE);
                 if (DownloadInfo.M3U8.equals(job.getEntity().getDownloadType())) {
                     if (job.getEntity().getFileSize() < 1024 * 1024) {
                         job.getEntity().setFileSize(DownloadHelper.getDownloadedFileSize(job.getEntity(), job.getEntity().getPath()));
