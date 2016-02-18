@@ -328,7 +328,6 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         mPlayContorl.setOnBufferingUpdateListener(this);
         mPlayContorl.setOnErrorListener(this);
         mPlayContorl.setOnInfoListener(this);
-        mVideoViewPosition.setOnTouchListener(this);
     }
 
 
@@ -679,7 +678,7 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
                 mActivityLive.startActivityForResult(intent, mActivityLive.NET_SETTING_REQUEST_CODE);
                 break;
             case R.id.mediacontroller_top_back2:
-                mActivityLive.finish();
+                exitForDialog();
                 break;
             default:
                 break;

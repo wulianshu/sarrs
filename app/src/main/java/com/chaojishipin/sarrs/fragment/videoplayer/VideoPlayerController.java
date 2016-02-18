@@ -2877,6 +2877,12 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
 //      setPlayLoadingVisibile(false,mActivity.getString(R.string.player_loading_tip));
         // 影片缓冲成功展现整个控制栏并且5秒后消失
         showControllerLogic();
+        // TODO 移动网络下点击播放按钮读取播放记录播放(此处逻辑是否严密)
+        if (mVideoPlayerFragment.recoderposition > 0 && Math.abs(mDuration - mVideoPlayerFragment.recoderposition) > 1000) {
+            mCurrPlayTime = mVideoPlayerFragment.recoderposition;
+            mPlayContorl.seekTo(mVideoPlayerFragment.recoderposition);
+        }
+        // 退出再次进入
         if (mPlayData.getRecordposition() > 0 && Math.abs(mDuration - mPlayData.getRecordposition() * 1000) > 1000) {
             mCurrPlayTime = mPlayData.getRecordposition();
             mPlayContorl.seekTo(mPlayData.getRecordposition() * 1000);

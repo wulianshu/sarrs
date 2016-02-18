@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_b2000000">
-
+    <!--直播顶部不可以设置系统状态栏，在无网络下状态栏高度有误，-->
     <ImageView
         android:id="@+id/top_status_bar"
         android:layout_width="match_parent"

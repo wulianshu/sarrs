@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:orientation="vertical"
     android:gravity="center"
-  android:background="@color/color_f3f3f3"
+    android:background="@color/color_f3f3f3"
     >
     <ImageView
         android:id="@+id/net_error_img"
@@ -19,7 +19,9 @@
         android:layout_centerInParent="true"
         android:text="@string/net_error_msg"
         android:textColor="@color/color_444444"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/net_error_img"
+        android:layout_marginTop="40dp"/>
     <Button
         android:layout_below="@+id/net_error_title"
         android:layout_width="200dp"

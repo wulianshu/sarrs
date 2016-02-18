@@ -249,7 +249,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 //        if(!TextUtils.isEmpty(channelname)){
 //            requestUpgradinfo(channelname);
 //        }
-        UmengPagePath.beginpage(pagename, this);
+//        UmengPagePath.beginpage(pagename, this);
 
         super.onResume();
 
@@ -297,19 +297,10 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     }
 
 
-
     @Override
     public void onTitleDoubleTap() {
         if (mainF.getPullSwiteView() != null && mainF.mainActivityChannelAdapter != null) {
             mainF.getPullSwiteView().getRefreshableView().smoothScrollToPosition(0);
-
-//          new  Handler().postDelayed(new Runnable() {
-//              @Override
-//              public void run() {
-//                  mainF.getPullSwiteView().getRefreshableView().setSelection(0);              }
-//          },1500);
-
-
         }
     }
     SarrsArrayList slidings_gv = new SarrsArrayList<SlidingMenuLeft>();
@@ -383,7 +374,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         }
     }
 
-    public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {
+        public void onEventMainThread(SlidingMenuLeft slidingMenuLeft) {
 
 
         this.slidingMenuLeft = slidingMenuLeft;
@@ -418,7 +409,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
             //精彩推荐
             if ("0".equals(slidingMenuLeft.getCid())) {
 
-                UmengPagePath.endpage(pagename, this);
+//                UmengPagePath.endpage(pagename, this);
                 pagename = ConstantUtils.AND_RECMAND;
                 UmengPagePath.beginpage(pagename, this);
 
