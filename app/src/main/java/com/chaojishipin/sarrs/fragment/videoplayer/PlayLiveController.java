@@ -157,6 +157,9 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
         videoplayer_net_error_icon = (ImageView) mActivityLive.findViewById(R.id.videoplayer_net_error_icon);
         controller_net_error = (TextView) mActivityLive.findViewById(R.id.controller_net_error);
         controller_net_error_setting = (Button) mActivityLive.findViewById(R.id.controller_net_error_setting);
+
+        mActivityLive.findViewById(R.id.mediacontroller_top_back2).setOnClickListener(this);
+
         if (mActivityLive.getmSysAPILevel() >= PlayerUtils.API_14) {
             // 设置虚拟键显示和隐藏的监听
             mWindow = mActivityLive.getmWindow();
@@ -674,6 +677,9 @@ public class PlayLiveController implements View.OnClickListener, MediaPlayer.OnP
                 Intent intent = new Intent(Settings.ACTION_SETTINGS);
                 mActivityLive.startActivity(intent);
                 mActivityLive.startActivityForResult(intent, mActivityLive.NET_SETTING_REQUEST_CODE);
+                break;
+            case R.id.mediacontroller_top_back2:
+                mActivityLive.finish();
                 break;
             default:
                 break;

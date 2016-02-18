@@ -491,6 +491,8 @@ public class DownloadRequestManager {
     	
 		String json = getHttpRequest(url);
 		CloudDiskBean bean = getCloudDiskBean(json, downloadEntity);
+        if(bean == null)
+            return "";
 		String downLoadUrl = getCloudDiskUrl(bean);
 		int retryNum= 0;
 		while(downLoadUrl == null&&retryNum < 2 ){
