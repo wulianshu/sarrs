@@ -306,9 +306,9 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                         }
                         totallist.removeAll(deletelist);
                         HistoryRecordManager.setHisToryRecordFromServer(totallist);
-                        iniShowTimeList();
+//                      iniShowTimeList();
                         adapter.setEditable(false);
-                        adapter.notifyDataSetChanged();
+//                      adapter.notifyDataSetChanged();
 
                         //删除本地
                         for (HistoryRecord arecord : deletelist) {
@@ -339,10 +339,10 @@ public class HistoryRecordActivity extends ChaoJiShiPinBaseActivity implements T
                         }
                         relativeLayout.setVisibility(View.GONE);
                         adapter.selectcount = 0;
-                        reflashView();
+//                      reflashView();
                         xListView.setSwipeable(true);
                         tv_download_edit.setText(getString(R.string.edit));
-
+                        getData();
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮

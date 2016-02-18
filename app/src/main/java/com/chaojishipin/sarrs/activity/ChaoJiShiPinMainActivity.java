@@ -632,6 +632,12 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         LogUtil.e("xll", "MainActivity netType " + netType);
         if (netType != -1) {
             UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
+            SharedPreferences sharedPreferences = getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
+            String data = sharedPreferences.getString(SlidingMenuFragment.CHANNEL_LIST, "");
+//            LogUtil.e("wulianshu", "data:" + data);
+            if (TextUtils.isEmpty(data) && slidingMenuFragment !=null) {
+                slidingMenuFragment.requestSlidingMenuLeftData();
+            }
         }
 
     }
