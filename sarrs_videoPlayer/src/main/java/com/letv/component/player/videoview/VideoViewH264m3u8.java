@@ -1051,8 +1051,11 @@ public class VideoViewH264m3u8 extends GLSurfaceView implements LetvMediaPlayerC
 		return lastSeekWhenDestoryed;
 	}
 
+	@Override
 	public int getAudioSessionId() {
-		return 0;
+		if(mMediaPlayer == null)
+			return 0;
+		return mMediaPlayer.getAudioSessionId();
 	}
 
 	public boolean isEnforcementWait() {

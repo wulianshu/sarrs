@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import com.media.ffmpeg.FFMpegPlayer;
 import com.media.ffmpeg.MediaDecoder;
 
+import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaCodec.BufferInfo;
 import android.media.MediaCodecInfo;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.Surface;
 
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class CodecWrapper{
 	
 	private static final int RENDER_SUCCESS = 0; //渲染成功
@@ -77,7 +79,12 @@ public class CodecWrapper{
 		mWidth = videoWidth;
 		mHeight = videoHeight;
 		mSurface = surface;
-	    codec = MediaCodec.createDecoderByType("video/avc");
+		try{
+			codec = MediaCodec.createDecoderByType("video/avc");
+		}catch(Throwable e){
+			e.printStackTrace();
+			codec = null;
+		}
 	    if(codec == null)
 	    {
 	    	Log.d(LOG_TAG, "Hardware codec is not available");

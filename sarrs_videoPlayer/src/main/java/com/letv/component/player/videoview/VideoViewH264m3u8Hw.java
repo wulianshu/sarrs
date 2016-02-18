@@ -66,7 +66,7 @@ public class VideoViewH264m3u8Hw extends SurfaceView implements LetvMediaPlayerC
 	private final int REWIND_TIME = 15000 ;
 
 	private SurfaceHolder mSurfaceHolder = null;
-	private static FFMpegPlayer mMediaPlayer = null;
+	private FFMpegPlayer mMediaPlayer = null;
 	private Context mContext;
 	private int mVideoWidth;
 	private int mVideoHeight;
@@ -941,8 +941,11 @@ public class VideoViewH264m3u8Hw extends SurfaceView implements LetvMediaPlayerC
 		return lastSeekWhenDestoryed;
 	}
 
+	@Override
 	public int getAudioSessionId() {
-		return 0;
+		if(mMediaPlayer == null)
+			return 0;
+		return mMediaPlayer.getAudioSessionId();
 	}
 
 	public boolean isEnforcementWait() {

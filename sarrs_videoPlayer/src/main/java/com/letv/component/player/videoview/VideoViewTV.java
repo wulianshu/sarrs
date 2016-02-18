@@ -158,6 +158,13 @@ public class VideoViewTV extends SurfaceView implements
         return this.mCanSeekForward;
     }
 
+    @Override
+    public int getAudioSessionId() {
+        if(mMediaPlayer == null)
+            return 0;
+        return mMediaPlayer.getAudioSessionId();
+    }
+
     public void stopPlayback() {
         if (this.mMediaPlayer != null) {
             this.mMediaPlayer.reset();

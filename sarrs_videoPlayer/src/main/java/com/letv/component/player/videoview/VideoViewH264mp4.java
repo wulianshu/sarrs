@@ -731,6 +731,13 @@ public class VideoViewH264mp4 extends SurfaceView implements LetvMediaPlayerCont
 		return mCanSeekForward;
 	}
 
+	@Override
+	public int getAudioSessionId() {
+		if(mMediaPlayer == null)
+			return 0;
+		return mMediaPlayer.getAudioSessionId();
+	}
+
 	public boolean isEnforcementWait() {
 		return enforcementWait;
 	}

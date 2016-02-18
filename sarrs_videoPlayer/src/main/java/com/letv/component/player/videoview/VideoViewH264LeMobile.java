@@ -731,6 +731,13 @@ public class VideoViewH264LeMobile extends SurfaceView implements LetvMediaPlaye
 		return mCanSeekForward;
 	}
 
+	@Override
+	public int getAudioSessionId() {
+		if(mMediaPlayer == null)
+			return 0;
+		return mMediaPlayer.getAudioSessionId();
+	}
+
 	public boolean isEnforcementWait() {
 		return enforcementWait;
 	}
