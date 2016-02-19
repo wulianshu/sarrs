@@ -57,17 +57,6 @@ public class UIs {
         mToast.show();
     }
 
-    public static void hideSoftkeyboard(Activity mActivity) {
-        if (null != mActivity && null != mActivity.getCurrentFocus()) {
-            InputMethodManager mInputMethodManager =
-                    (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (null != mInputMethodManager) {
-                mInputMethodManager.hideSoftInputFromWindow(mActivity.getCurrentFocus()
-                        .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-        }
-    }
-
     public static int dipToPx(int dipValue) {
         final float scale =ChaoJiShiPinApplication.getInstatnce().getResources().getDisplayMetrics().density;
         int pxValue = (int) (dipValue * scale + 0.5f);

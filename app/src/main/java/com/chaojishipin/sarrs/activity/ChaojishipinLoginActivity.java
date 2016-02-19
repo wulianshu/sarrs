@@ -316,11 +316,7 @@ public class ChaojishipinLoginActivity extends ChaoJiShiPinBaseActivity implemen
                 mEdit.setText("");
                 break;
             case R.id.register_activity_notify_login:
-
-                if (view != null) {
-                    InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+                Utils.hideInput(this);
                 verCode = mEdit.getText().toString();
                 if (verCode != null && verCode.length() == 4) {
                     LoginRequest(verCode);
@@ -343,17 +339,8 @@ public class ChaojishipinLoginActivity extends ChaoJiShiPinBaseActivity implemen
                 break;
             case R.id.allparentview:
             case R.id.buttomview:
-//                if(getWindow().getAttributes().softInputMode==WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED)
-//                {
-//                //隐藏软键盘
-//                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//                    getWindow().getAttributes().softInputMode=WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED;
-//                }
-                /**隐藏软键盘**/
-                if (view != null) {
-                    InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+                Utils.hideInput(this);
+                break;
         }
     }
 
