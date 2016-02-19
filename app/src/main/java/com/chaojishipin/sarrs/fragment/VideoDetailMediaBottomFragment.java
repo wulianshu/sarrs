@@ -260,8 +260,11 @@ public class VideoDetailMediaBottomFragment extends ChaoJiShiPinBaseFragment imp
         }
         // 本地剧集
         localEpisodes=  activity.getAllLocalEpisodes();
-
-
+        String token = null;
+        if(UserLoginState.getInstance().isLogin()){
+            token = UserLoginState.getInstance().getUserInfo().getToken()
+        }
+        requestUserCommentInfo(mGvid,  token, int hot, long cursor, int forward, String device);
 
 
         return mBottomView;
