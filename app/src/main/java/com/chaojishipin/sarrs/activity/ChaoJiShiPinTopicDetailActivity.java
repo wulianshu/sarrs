@@ -46,13 +46,11 @@ public class ChaoJiShiPinTopicDetailActivity extends ChaoJiShiPinBaseActivity im
             topic.setTid(shareParams.get(0));
         }
         linearLayout = (LinearLayout) this.findViewById(R.id.topicdetail_content);
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         TopicDetailFragment topicDetailFragment = new TopicDetailFragment();
         Bundle mBundle = new Bundle();
         mBundle.putSerializable("topic", topic);
         topicDetailFragment.setArguments(mBundle);
-        fragmentTransaction.replace(R.id.topicdetail_content, topicDetailFragment);
-        fragmentTransaction.commit();
+        replaceFragment(R.id.topicdetail_content, topicDetailFragment);
     }
 
     @Override

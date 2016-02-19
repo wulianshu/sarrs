@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
@@ -217,7 +218,6 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
 
     private void initView() {
         mTitleActionBar = (TitleActionBar) findViewById(R.id.mainactivity_title_layout);
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         mainF = new MainChannelFragment();
         topiclistFragment = new TopiclistFragment();
         rankListfragment = new RankListFragment();
@@ -225,8 +225,7 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         //TODO
         title = this.getResources().getString(R.string.recommend);
         mTitleActionBar.setTitle(title);
-        fragmentTransaction.replace(R.id.content, mainF);
-        fragmentTransaction.commitAllowingStateLoss();
+        replaceFragment(R.id.content, mainF);
 
         Log.d("upgrade", " mUpgradeType " + mUpgradeType);
         if (!TextUtils.isEmpty(mUpgradeType)) {
@@ -284,11 +283,10 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         //将滑动菜单依附于当前Activity
         mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         mSlidingMenu.setMenu(R.layout.slidingmenulayout);
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+
         slidingMenuFragment = new SlidingMenuFragment();
         slidingMenuFragment.setSlideMenu(mSlidingMenu);
-        fragmentTransaction.replace(R.id.slidingmenu_content_layout, slidingMenuFragment);
-        fragmentTransaction.commitAllowingStateLoss();
+        replaceFragment(R.id.slidingmenu_content_layout, slidingMenuFragment);
     }
 
     @Override
@@ -387,21 +385,18 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
         // TODO
         mTitleActionBar.setmRightButtonVisibility(true);
         mTitleActionBar.setRightEditButtonVisibility(false);
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         //专题
+            Fragment frag = null;
         if (ConstantUtils.TOPIC_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type())) {
-            fragmentTransaction.replace(R.id.content, topiclistFragment);
+            frag = topiclistFragment;
         }
         //排行榜
         else if (ConstantUtils.RANKLIST_CONTENT_TYPE.equals(slidingMenuLeft.getContent_type())) {
-            fragmentTransaction.replace(R.id.content, rankListfragment);
+            frag = rankListfragment;
         } else {
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("slidingMenuLeft", slidingMenuLeft);
-//            mainF.setArguments(bundle);
-            fragmentTransaction.replace(R.id.content, mainF);
+            frag = mainF;
         }
-        fragmentTransaction.commitAllowingStateLoss();
+            replaceFragment(R.id.content, frag);
 
         //Umeng页面路径上报
         //精彩推荐

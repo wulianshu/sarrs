@@ -46,10 +46,8 @@ public class SettingActivity extends ChaoJiShiPinBaseActivity implements TitleAc
         mTitleActionBar.setRightEditButtonVisibility(false);
         mTitleActionBar.setOnActionBarClickListener(this);
         mTitleActionBar.getmLeftButton().setBackgroundResource(R.drawable.selector_ranklistdetail_titlebar);
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         SettingFragment settingFragment=new SettingFragment();
-        fragmentTransaction.replace(R.id.save_content, settingFragment);
-        fragmentTransaction.commit();
+        replaceFragment(R.id.save_content, settingFragment);
     }
 
 

@@ -440,11 +440,8 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
      * 添加详情Fragment
      */
     private void addDetailFragment() {
-        FragmentManager mFragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaciton = mFragmentManager.beginTransaction();
         mVideoBottomFragment = new VideoDetailMediaBottomFragment();
-        fragmentTransaciton.replace(R.id.videodetail_media_bottom_fragment_container, mVideoBottomFragment);
-        fragmentTransaciton.commitAllowingStateLoss();
+        replaceFragment(R.id.videodetail_media_bottom_fragment_container, mVideoBottomFragment);
     }
 
   /**
@@ -690,16 +687,10 @@ public class ChaoJiShiPinVideoDetailActivity extends ChaoJiShiPinBaseActivity {
         if (null == mVideoPlayerFragment) {
             mVideoPlayerFragment = new VideoPlayerFragment();
         }
-        FragmentManager mFragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaciton = mFragmentManager.beginTransaction();
         //如果当播放页面没有被添加则开始添加当前播放页面
         if (!mVideoPlayerFragment.isAdded()) {
-            fragmentTransaciton.add(R.id.videodetail_medie_fragment_container, mVideoPlayerFragment);
-            fragmentTransaciton.commit();
+            addFragment(R.id.videodetail_medie_fragment_container, mVideoPlayerFragment);
         }
-
-
-
     }
 
     /**

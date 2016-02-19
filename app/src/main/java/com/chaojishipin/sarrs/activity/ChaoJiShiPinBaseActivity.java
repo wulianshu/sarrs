@@ -17,8 +17,10 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -413,6 +415,18 @@ public abstract class ChaoJiShiPinBaseActivity extends FragmentActivity implemen
 //            }
 //        }
 //    }
+
+    public void replaceFragment(int id, Fragment fragment){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(id, fragment);
+        transaction.commitAllowingStateLoss();
+    }
+
+    public void addFragment(int id, Fragment fragment){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(id, fragment);
+        transaction.commitAllowingStateLoss();
+    }
 
     protected static class UIHandler extends Handler {
         private final WeakReference<ChaoJiShiPinBaseActivity> mFragmentView;

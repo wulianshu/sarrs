@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,16 @@ public abstract class ChaoJiShiPinBaseFragment extends Fragment{
 //            }
 //        }
 //    }
+
+    public void replaceFragment(int id, Fragment fragment){
+        try{
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(id, fragment);
+            transaction.commitAllowingStateLoss();
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
+    }
 
     protected static class UIHandler extends Handler {
         private final WeakReference<ChaoJiShiPinBaseFragment> mFragmentView;
