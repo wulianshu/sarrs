@@ -33,10 +33,8 @@ public class SaveActivity extends ChaoJiShiPinBaseActivity {
 
     private void initView() {
         setTitleBarVisibile(false);
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         SaveFragment saveF=new SaveFragment();
-        fragmentTransaction.replace(R.id.save_content, saveF);
-        fragmentTransaction.commit();
+        replaceFragment(R.id.save_content, saveF);
     }
 
     @Override

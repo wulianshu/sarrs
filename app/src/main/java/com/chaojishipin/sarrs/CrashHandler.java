@@ -156,6 +156,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             fw.flush();
             fw.close();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return true;
     }

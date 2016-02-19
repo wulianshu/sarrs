@@ -78,6 +78,7 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.sina.weibo.sdk.utils.UIUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
@@ -426,8 +427,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     inputtype = "2";
                     mSearchKey = mAutoCompleteTextView.getText().toString();
                     requestSearchResultData(null);
-
-                    hideSoftKeyboard();
+                    Utils.hideInput(SearchActivity.this);
 
                     return true;
                 }
@@ -441,6 +441,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                 if(!TextUtils.isEmpty(search_key)){
                     getSuggest(search_key);
                 }
+                Utils.showInput(SearchActivity.this);
             }
         });
         //搜索框文本变化监听
@@ -473,7 +474,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
         mPullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    hideSoftKeyboard(mPullToRefreshListView);
+                    Utils.hideInput(SearchActivity.this);
                 }
             }
 
@@ -601,7 +602,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     mAutoCompleteTextView.setFocusable(true);
                     mAutoCompleteTextView.requestFocus();
                     mAutoCompleteTextView.setText("");
-                    showSoftKeyboard();
+                    Utils.showInput(this);
                     mSearchactivity_main_icon_layout_textsearch.setImageResource(R.drawable.selector_search_voicesearch);
                     //Umeng上报
                     MobclickAgent.onEvent(this, ConstantUtils.SEARCH_KEYBOARD);
@@ -609,7 +610,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
                     pageid = "00S002005";
                     //切换至语言搜索
                     mSearchKey = null;
-                    hideSoftKeyboard(mSearchactivity_main_icon_layout_textsearch);
+                    Utils.hideInput(this);
                     mVoiceText.setVisibility(View.VISIBLE);
                     mSearchactivity_main_layout_tipTest.setText(R.string.search_main_tip_before_start);
                     executeTipTextShow();
@@ -1336,30 +1337,6 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
     }
 
     /**
-     * 显示软键盘
-     */
-    private void showSoftKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-    /**
-     * 收起软键盘
-     */
-    private void hideSoftKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mAutoCompleteTextView.getWindowToken(), 0);
-    }
-
-    /**
-     * 收起软键盘
-     */
-    private void hideSoftKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    /**
      * 保存搜索历史
      *
      * @param word
@@ -1384,7 +1361,7 @@ public class SearchActivity extends ChaoJiShiPinBaseActivity implements View.OnC
 
                 case MotionEvent.ACTION_DOWN: {
                     //收期软键盘
-                    hideSoftKeyboard(mPullToRefreshListView);
+                    Utils.hideInput(SearchActivity.this);
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {

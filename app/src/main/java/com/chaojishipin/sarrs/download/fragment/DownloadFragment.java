@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -29,6 +30,7 @@ import com.chaojishipin.sarrs.download.activity.DownloadActivity;
 import com.chaojishipin.sarrs.download.download.ContainSizeManager;
 import com.chaojishipin.sarrs.download.download.DownloadJob;
 import com.chaojishipin.sarrs.download.util.NetworkUtil;
+import com.chaojishipin.sarrs.fragment.ChaoJiShiPinBaseFragment;
 import com.chaojishipin.sarrs.fragment.videoplayer.PlayerUtils;
 import com.chaojishipin.sarrs.thirdparty.swipemenulistview.SwipeMenuLayout;
 import com.chaojishipin.sarrs.utils.DataUtils;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 /**
  * Created by vicky on 15/9/5.
  */
-public class DownloadFragment extends Fragment implements
+public class DownloadFragment extends ChaoJiShiPinBaseFragment implements
         View.OnClickListener {
     private ViewGroup rootView;
 
@@ -90,6 +92,11 @@ public class DownloadFragment extends Fragment implements
     }
 
     @Override
+    protected void handleInfo(Message msg) {
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         registerCheckNetwork();
@@ -105,10 +112,7 @@ public class DownloadFragment extends Fragment implements
     private void initContent() {
         mDownloadListFragment = new DownloadListFragment();
         mDownloadListFragment.downloadFragment = this;
-        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.download_content, mDownloadListFragment);
-        fragmentTransaction.commit();
-
+        replaceFragment(R.id.download_content, mDownloadListFragment);
     }
 
     /**

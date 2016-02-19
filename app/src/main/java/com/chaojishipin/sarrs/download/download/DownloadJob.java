@@ -425,8 +425,12 @@ public class DownloadJob implements Comparable<DownloadJob>{
                         doOutsideDownload();
                     }
                 } else {
-                    currentdownloadpositon++;
-                    doOutsideDownload();
+                    if(outSiteDataInfo == null){
+                        downloadfailure();
+                    }else {
+                        currentdownloadpositon++;
+                        doOutsideDownload();
+                    }
                 }
 
             }
@@ -448,7 +452,6 @@ public class DownloadJob implements Comparable<DownloadJob>{
                 downloadfailure();
             }
         }
-
     }
 
     void downloadfailure() {

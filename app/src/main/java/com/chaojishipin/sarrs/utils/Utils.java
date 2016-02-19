@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -1108,6 +1109,28 @@ public class Utils {
 
     }
 
+    /**
+     * 显示软键盘
+     */
+    public static void showInput(Context context) {
+        try{
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
+    }
 
-
+    /**
+     * 收起软键盘
+     */
+    public static void hideInput(Context context) {
+        try {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm.isActive())
+                imm.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+//			e.printStackTrace();
+        }
+    }
 }

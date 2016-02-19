@@ -79,6 +79,9 @@ public class SwipeMenuListView extends ListView {
         MAX_X = dp2px(MAX_X);
         MAX_Y = dp2px(MAX_Y);
         mTouchState = TOUCH_STATE_NONE;
+        this.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        this.setHorizontalFadingEdgeEnabled(false);
+        this.setVerticalFadingEdgeEnabled(false);
     }
 
     public SwipeMenuLayout getSwipeMenuLayout() {

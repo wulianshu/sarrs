@@ -60,9 +60,7 @@ public class DownloadActivity extends ChaoJiShiPinBaseActivity implements
         mEditBtn = (TextView) findViewById(R.id.right_edit_btn);
         mTitleActionBar.setTitle(getResources().getString(R.string.download_title));
         downloadFragment = new DownloadFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.download_content, downloadFragment);
-        transaction.commit();
+        replaceFragment(R.id.download_content, downloadFragment);
         updateDeleteIcon();
 
     }

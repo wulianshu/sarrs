@@ -115,6 +115,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -539,6 +540,8 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
     String pageid = "-";
     FavoriteDao fdao = null;
 
+    private Handler mHandler;
+
     public VideoPlayerController(ChaoJiShiPinBaseFragment videoPlayerFragment) {
         isfeedbackalready = false;
         if (videoPlayerFragment instanceof VideoPlayerFragment) {
@@ -548,6 +551,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
             mActivity = mVideoPlayerFragment.getmActivity();
         }
         mVideoViewBuilder = LetvVideoViewBuilder.getInstants();
+        mHandler = new MyHandler(this);
         initView();
         initData();
         setListener();
@@ -1910,6 +1914,7 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
      */
     private int retryCount=0;
     private String mFormat="0,1,2,3,4";
+
     private void requsetOutSiteData() {
         isfeedbackalready = false;
         isjscut = false;
@@ -3132,104 +3137,120 @@ public class VideoPlayerController implements OnClickListener, OnPreparedListene
         }
     }
 
-    /**
-     * 处理消息的handler
-     */
-    private Handler mHandler = new Handler() {
+    protected static class MyHandler extends Handler {
+        private final WeakReference<VideoPlayerController> mFragmentView;
+
+        MyHandler(VideoPlayerController view) {
+            this.mFragmentView = new WeakReference<>(view);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case ConstantUtils.PROGRESS_CHANGE:
-                    // 显示网速
-                    if (!isHasRecord) {
-                        LogUtil.e("v1.2.0","seek to(mhandle no record )");
-                        // showNetRate();
-                        setPlayLoadingVisibile(true, mActivity.getString(R.string.player_loading_tip));
-                    }
-                    if (mIsPrepared) {
-                        // 4G网络下总时长丢失
+            VideoPlayerController service = mFragmentView.get();
+            if (service != null) {
+                try {
+                    super.handleMessage(msg);
+                    service.handleInfo(msg);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-                        //小于5秒切换到下一集
-                        LogUtil.e("v1.2.0","seek to(mhander,mduration)  "+mDuration);
-                        LogUtil.e("v1.2.0","seek to(mhander,getDuration)  "+mPlayContorl.getDuration());
+    private void handleInfo(Message msg){
+        switch (msg.what) {
+            case ConstantUtils.PROGRESS_CHANGE:
+                // 显示网速
+                if (!isHasRecord) {
+                    LogUtil.e("v1.2.0","seek to(mhandle no record )");
+                    // showNetRate();
+                    setPlayLoadingVisibile(true, mActivity.getString(R.string.player_loading_tip));
+                }
+                if (mIsPrepared && mPlayContorl.getDuration() > 0) {
+                    // 4G网络下总时长丢失
 
-                        long no_play_duration = mPlayContorl.getDuration() - mPlayContorl.getCurrentPosition();
-                        if (no_play_duration <= 5 * 1000) {
-                            if (mCanPlayNext) {
-                                //切换下一集前 播放完成上报（自动切换下一集）
+                    //小于5秒切换到下一集
+//                    LogUtil.e("v1.2.0","seek to(mhander,mduration)  "+mDuration);
+                    LogUtil.e("v1.2.0","seek to(mhander,getDuration)  "+mPlayContorl.getDuration());
+                    LogUtil.e("v1.2.0","seek to(mhander,current)  "+mPlayContorl.getCurrentPosition());
 
-                                playNext();
-                            } else {
-                                if (mPlayContorl != null) {
-                                    ac = "finish";
+                    long no_play_duration = mPlayContorl.getDuration() - mPlayContorl.getCurrentPosition();
+                    if (no_play_duration <= 5 * 1000) {
+                        if (mCanPlayNext) {
+                            //切换下一集前 播放完成上报（自动切换下一集）
+
+                            playNext();
+                        } else {
+                            if (mPlayContorl != null) {
+                                ac = "finish";
 //                              end_time = System.currentTimeMillis();
-                                    ut = 0;
-                                    if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
-                                        play_type = 2;
-                                    } else {
-                                        play_type = 0;
-                                    }
-                                    timing = getmCurrPlayTime();
-                                    vlen = mPlayContorl.getDuration() / 1000;
-                                    if(mActivity.isFullScreen){
-                                        pageid = mActivity.PAGE_ID_FULL_SCREEN;
-                                    }else{
-                                        pageid = mActivity.PAGE_ID_NO_FULL_SCREEN;
-                                    }
-                                    UploadStat.uploadplaystat(mPlayEpisode, ac, ut + "", retry + "", play_type + "", code_rate, mVideoPlayerFragment.getRef(), timing + "", vlen + "",mVideoPlayerFragment.getSeid(),mVideoPlayerFragment.getPeid(),pageid);
+                                ut = 0;
+                                if (mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
+                                    play_type = 2;
+                                } else {
+                                    play_type = 0;
                                 }
-                                // playNext();
-                                LogUtil.e("xll", "canPlayNext " + mCanPlayNext);
-                                if (no_play_duration <= 2 * 1000) {
-                                    //TODO need check 表示进度条已经走 才执行防止播放器未加载出来频繁刷新进度条
-                                    if(mPlayContorl.getDuration()!=-1){
-                                        LogUtil.e("v1.2.0", "seek to(mhander)  " + mPlayContorl.getDuration());
-                                        mPlayContorl.seekTo(mPlayContorl.getDuration() - 2000);
-                                        clickPauseOrPlay();
-                                    }
+                                timing = getmCurrPlayTime();
+                                vlen = mPlayContorl.getDuration() / 1000;
+                                if(mActivity.isFullScreen){
+                                    pageid = mActivity.PAGE_ID_FULL_SCREEN;
+                                }else{
+                                    pageid = mActivity.PAGE_ID_NO_FULL_SCREEN;
+                                }
+                                UploadStat.uploadplaystat(mPlayEpisode, ac, ut + "", retry + "", play_type + "", code_rate, mVideoPlayerFragment.getRef(), timing + "", vlen + "",mVideoPlayerFragment.getSeid(),mVideoPlayerFragment.getPeid(),pageid);
+                            }
+                            // playNext();
+                            LogUtil.e("xll", "canPlayNext " + mCanPlayNext);
+                            if (no_play_duration <= 2 * 1000) {
+                                //TODO need check 表示进度条已经走 才执行防止播放器未加载出来频繁刷新进度条
+                                if(mPlayContorl.getDuration()!=-1){
+                                    LogUtil.e("v1.2.0", "seek to(mhander)  " + mPlayContorl.getDuration());
+                                    mPlayContorl.seekTo(mPlayContorl.getDuration() - 2000);
+                                    clickPauseOrPlay();
+                                }
 
 
-                                    if (!mCanPlayNext && mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
-                                        LogUtil.e("xll", "Local Play finish ");
-                                        // LogUtil.e("xll", "Local Play current " + mPlayContorl.getCurrentPosition());
-                                        LogUtil.e("xll", "Local Play total  " + mPlayContorl.getDuration());
-                                        mActivity.finish();
-
-                                    }
-
-                                    if (NetWorkUtils.isNetAvailable()) {
-                                        reportPlayRecord();
-                                    }
+                                if (!mCanPlayNext && mActivity.getMediaType() == ChaoJiShiPinVideoDetailActivity.MeDiaType.LOCAL) {
+                                    LogUtil.e("xll", "Local Play finish ");
+                                    // LogUtil.e("xll", "Local Play current " + mPlayContorl.getCurrentPosition());
+                                    LogUtil.e("xll", "Local Play total  " + mPlayContorl.getDuration());
+                                    mActivity.finish();
 
                                 }
+
+                                if (NetWorkUtils.isNetAvailable()) {
+                                    reportPlayRecord();
+                                }
+
                             }
                         }
-                        refreshPlaySeekBar();
-                        reportBlock();
-
                     }
-                    break;
+                    refreshPlaySeekBar();
+                    reportBlock();
+
+                }
+                break;
 //                // 控制栏消失
-                case ConstantUtils.DISSMISS_MEDIACONTROLLER:
-                    dissMissMediaControll();
-                    setLockScreenVisibile(false);
-                    hideSlideMenu();
-                    break;
+            case ConstantUtils.DISSMISS_MEDIACONTROLLER:
+                dissMissMediaControll();
+                setLockScreenVisibile(false);
+                hideSlideMenu();
+                break;
 //                case ConstantUtils.JUDGE_BUFFER:
 //                    mIsNeddJudgeBuffer = true;
 //                    break;
-                case Utils.GET_JS_RESULT:
-                    LogUtil.e("xll", "NEW js call loadUrl !");
-                    mWebView.clearCache(true);
-                    LogUtil.e("xll", "NEW　js send params : " + mSnifferParamter);
-                    mWebView.loadUrl("javascript:TestJavaScriptInterface.startFunction(dealWithRequest('" + mSnifferParamter + "'));");
-                    break;
-                default:
-                    break;
-            }
+            case Utils.GET_JS_RESULT:
+                LogUtil.e("xll", "NEW js call loadUrl !");
+                mWebView.clearCache(true);
+                LogUtil.e("xll", "NEW　js send params : " + mSnifferParamter);
+                mWebView.loadUrl("javascript:TestJavaScriptInterface.startFunction(dealWithRequest('" + mSnifferParamter + "'));");
+                break;
+            default:
+                break;
         }
-    };
+    }
+
    boolean blockReport=false;
 
    boolean eblockReport=false;

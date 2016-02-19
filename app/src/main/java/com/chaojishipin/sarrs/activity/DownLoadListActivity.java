@@ -77,7 +77,7 @@ public class DownLoadListActivity extends ChaoJiShiPinBaseActivity implements Vi
         setTitleBarVisibile(false);
         setContentView(R.layout.activity_download_layout);
         initView();
-        mUtil = new DownloadUtil(this, null);
+        mUtil = new DownloadUtil(this, this, null);
         registeListener();
         //接收数据
         initData();
