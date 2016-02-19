@@ -630,6 +630,8 @@ public class ChaoJiShiPinMainActivity extends ChaoJiShiPinBaseActivity implement
     @Override
     public void handleNetWork(String netName, int netType, boolean isHasNetWork) {
         LogUtil.e("xll", "MainActivity netType " + netType);
+
+        
         if (netType != -1) {
             UpgradeHelper.requestUpgradeData(new RequestUpgradeListener());
             SharedPreferences sharedPreferences = getSharedPreferences(ConstantUtils.SHARE_APP_TAG, Activity.MODE_PRIVATE);
